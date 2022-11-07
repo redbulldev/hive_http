@@ -1,0 +1,9 @@
+
+
+https://staging-hrm.ossigroup.net/setting/release
+
+
+http://192.168.1.32:6060/index.php?route=/database/structure&db=hr-tool-dev
+
+
+

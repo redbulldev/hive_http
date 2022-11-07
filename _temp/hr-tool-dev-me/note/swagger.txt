@@ -1,0 +1,166 @@
+***structs
+#templates/swagger.json
+
+{
+    "swagger": "2.0",
+
+    "info": {
+        "title": "HR TOOL API",
+        "description": "",
+        "version": "1.0"
+    },
+
+    "produces": [
+        "application\/json"
+    ],
+
+    "host": "https:\/\/api-staging-hrm.ossigroup.net\/",
+
+    "basePath": "\/",
+
+    "paths": {
+        //nơi định nghĩa các api
+    },
+
+    "definitions": {
+        //định nghĩa dữ liệu theo cấu trúc
+    },
+
+    "examples": {
+        //ví dụ dữ liệu hiển thị trong thực tế
+    },
+
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
+
+
+
+*struct một API
+"\/v1\/dashboard": {
+    "get": {
+        "operationId": "request",
+        "tags": [
+            "Dashboard"
+        ],
+        "security": {
+            "bearerAuth": []
+        },
+        "parameters": [
+            {
+                "name": "keyword",
+                "in": "query",
+                "type": "string",
+                "example": "namng",
+                "description": "Từ khóa tìm kiếm"
+            },
+            {
+                "name": "orderby",
+                "in": "query",
+                "type": "string",
+                "example": "parent_id-ASC__author_id-DESC",
+                "description": "Sắp xếp dữ liệu"
+            },
+            {
+                "name": "[column]",
+                "in": "query",
+                "type": "string",
+                "example": "1-2",
+                "description": "Filter data: [column] là tên cột\/key dữ liệu muốn filter "
+            }
+        ],
+        "description": "Lấy tất cả thông tin Dashboard có phân trang",
+        "responses": {
+            "201": {
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "status": {
+                            "type": "string",
+                            "description": "Trạng thái lỗi",
+                            "example": "error"
+                        },
+                        "message": {
+                            "type": "string",
+                            "description": "Nội dung thông báo lỗi",
+                            "example": "Error connection"
+                        },
+                        "code": {
+                            "type": "string",
+                            "description": "Mã lỗi",
+                            "example": "dberror"
+                        }
+                    }
+                }
+            },
+            "401": {
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "status": {
+                            "type": "string",
+                            "description": "Trạng thái lỗi",
+                            "example": "error"
+                        },
+                        "message": {
+                            "type": "string",
+                            "description": "Nội dung thông báo lỗi",
+                            "example": "You have not logged into your account"
+                        },
+                        "code": {
+                            "type": "string",
+                            "description": "Mã lỗi",
+                            "example": "auth"
+                        }
+                    }
+                }
+            },
+            "200": {
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "status": {
+                            "type": "string",
+                            "description": "Trạng thái thành công",
+                            "example": "success"
+                        },
+                        "data": {
+                            "type": "array",
+                            "description": "Danh sách Dashboard",
+                            "items": {
+                                "$ref": "#\/definitions\/DashboardModel"
+                            },
+                            "examples": [
+                                {
+                                    "$ref": "#\/examples\/DashboardItem"
+                                }
+                            ]
+                        },
+                        "total": {
+                            "type": "number",
+                            "description": "Tổng số dữ liệu đang có",
+                            "example": 2000
+                        },
+                        "summary": {
+                            "$ref": "#\/definitions\/MrSummaryModel",
+                            "examples": [
+                                {
+                                    "$ref": "#\/examples\/MrSummaryItem"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+},

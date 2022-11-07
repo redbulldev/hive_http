@@ -1,0 +1,3 @@
+Rocket chat : chat.ossigroup.net
+name: hungnv1
+password: P@zzw0rd

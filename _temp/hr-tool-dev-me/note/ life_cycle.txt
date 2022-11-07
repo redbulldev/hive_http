@@ -1,0 +1,78 @@
+
+- thêm data vào csdl tên file với hậu tố  _before trong folder crud/add
+ex: 
+- tạo file /crud/add/test_before.php
+<?php
+
+// thay đổi status trong bảng test thành 3
+$data->status = 0;
+
+---chạy trên postman
+- khi chạy ta sẽ thêm một recoll mới
+mothod: post
+api: http://localhost:3009/v1/test
+raw: 
+{
+    "title":"Chi Thai",
+    "des":"Echomi",
+    "status":0
+}
+
+===> body 
+{
+    "status": "success",
+    "id": 4,
+    "time": 1667467525
+}
+
+- với điều kiện 
+\config.localhost.3009.php
+- leck permission vì chưa có quền của api ("v1/test")
+$conf=[
+    ...
+    'ignore'=>["v1/login",'v1/faker/1',"v1/createsg","v1/meta", "v1/mail","v1/request-auto", "v1/release_note","v1/test"],//Đường dẫn public
+    ...
+];
+
+///////////////////////////////////////////////////////
+- cập nhập data vào csdl tên file với hậu tố  _before trong folder crud/edit
+ex: 
+- tạo file /crud/edit/test_before.php
+
+
+http://localhost:3009/v1/test/4
+
+
+
+/////////////////////
+câu hỏi khi chạy api: http://localhost:3009/v1/test
+khi đó dữ liệu sẽ được thêm vào csdl? câu hỏi tại sao
+
+-------
+1: tạo table:test_history
+2: tạo file test_history.php
+3: run api: http://localhost:3009/v1/test_history
+4: data được thêm vào table: test_history
+
+--------
+làm sét được biến $data ở dạng all
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

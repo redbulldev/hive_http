@@ -1,0 +1,143 @@
+
+http://localhost:3009/v1/login
+{
+  "username": "hungnv1",
+  "password": "P@zzw0rd"
+}
+
+- login để  kết nối tới api 
+ex: http://localhost:3009/v1/test
+
+
+
+
+
+/////////////////////////////////
+http://localhost:3009/v1/test
+\config.localhost.3009.php
+- leck permission vì chưa có quền của api (v1/test)
+$conf=[
+    ...
+    'ignore'=>["v1/login",'v1/faker/1',"v1/createsg","v1/meta", "v1/mail","v1/request-auto", "v1/release_note","v1/test"],//Đường dẫn public
+    ...
+];
+
+from file - /crud/add/test_before.php
+
+////////////////////////
+*****C1*****
+- kết nối csdl trên dbeaver-ce
+server-host: 192.168.1.32
+port: 3306 / or default
+username: root
+password: 123
+
+*****C2*****
+- http://192.168.1.32:6060/
+username: root
+password: 123
+
+---
+- kết nối trên tham khảo file 
+config.localhost.3009.php
+config.localhost.3002.php
+
+//////////////////////////
+- validate
+hr-tool-be/crud/add/source_before.php
+
+- 
+
+//////////////////////////////
+khi muốn customize(crud - full tất cả) ta có thể thực hiện ở 
+/hr-tool-be/method/post
+/hr-tool-be/index.php
+
+---or cho một chức năng nào đó---
+/crud/folder(add, edit, ...)
+
+ví dụ: /crud/add/test_before.php
+- với file có hậu tố: _before.php là trước khi thực hiện một hành động nào đó, ta có thể validate , update ...
+- với file có hậu tố: _alter.php là sau khi thực hiện một hành động nào đó
+
+
+
+//////////////////////////////////
+
+
+////////////////////////////
+//tạo csdl theo mẫu 
+
+http://192.168.1.32:6060/index.php?route=/table/structure&db=hr-tool-dev&table=language
+
+#	Name	Type	Collation	Attributes	Null	Default	Comments	Extra	Action
+id Primary	int			No	None	ID language;21	AUTO_INCREMENT	Change Change	Drop Drop	
+2	author_id Index	varchar(150)	utf8mb4_unicode_ci		No	None	ID người tạo;namng		Change Change	Drop Drop	
+3	title	varchar(200)	utf8mb4_unicode_ci		No	None	Tên language;English		Change Change	Drop Drop	
+4	description	text	utf8mb4_unicode_ci		Yes	NULL	Mô tả;Lorem ipsum dolor sit amet...		Change Change	Drop Drop	
+
+- khi tạo bảng csdl phải thao mẫu trên 
++ khi tạo bảng phải comment cho bảng 
++ khi tạo cột phải commnet cho cột 
+ex cột: title 
+#	Name	Type	        Collation	            Attributes	Null	Default	Comments
+3	title	varchar(200)	utf8mb4_unicode_ci		No	        None	Tên language;English
+- --
+Default	Comments
+Tên language;English
+định nghĩa  của cột (Tên language) | ví dụ (English)
+
+///////////////////////////////
+*khi login thành công - để có thể thực hiện call api
+api: http://localhost:3009/v1/login
+raw
+{
+  "username": "hungnv1",
+  "password": "P@zzw0rd"
+}
+
+boby
+{
+    "status": "success",
+    "data": {
+        "username": "hungnv1",
+        "sid": "hungnv1",
+        "role_id": 65,
+        "fullname": "Hưng",
+        "email": "hungnv@hivetech.vn",
+        "author_id": null,
+        "datecreate": 1667464175,
+        "datemodified": 1667464217,
+        "status": 1,
+        "isdelete": 0,
+        "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2Njc0NjQyMjgsImV4cCI6MTY2NzQ5MzAyOCwianRpIjoiNzZhOGl5SlFzS0hVTWZRbVhpRHdkWiIsInN1YiI6eyJ1c2VybmFtZSI6Imh1bmdudjEiLCJzaWQiOiJodW5nbnYxIiwicm9sZV9pZCI6NjUsImZ1bGxuYW1lIjoiSFx1MDFiMG5nIiwiZW1haWwiOiJodW5nbnZAaGl2ZXRlY2gudm4iLCJhdXRob3JfaWQiOm51bGwsImRhdGVjcmVhdGUiOjE2Njc0NjQxNzUsImRhdGVtb2RpZmllZCI6MTY2NzQ2NDIxNywic3RhdHVzIjoxLCJpc2RlbGV0ZSI6MH19.R9JOpIuFW_MRRQs7mB_hae_3owIYWdyPuHtguL2YaIQ",
+        "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2Njc0NjQyMjgsImV4cCI6MTY3MDA1NjIyOCwianRpIjoiNldiYnA4c1lxY3pJSHV5czJtcFZZVyIsInN1YiI6eyJ1c2VybmFtZSI6Imh1bmdudjEiLCJzaWQiOiJodW5nbnYxIiwicm9sZV9pZCI6NjUsImZ1bGxuYW1lIjoiSFx1MDFiMG5nIiwiZW1haWwiOiJodW5nbnZAaGl2ZXRlY2gudm4iLCJhdXRob3JfaWQiOm51bGwsImRhdGVjcmVhdGUiOjE2Njc0NjQxNzUsImRhdGVtb2RpZmllZCI6MTY2NzQ2NDIxNywic3RhdHVzIjoxLCJpc2RlbGV0ZSI6MCwiYWNjZXNzX3Rva2VuIjoiZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKSVV6STFOaUo5LmV5SnBZWFFpT2pFMk5qYzBOalF5TWpnc0ltVjRjQ0k2TVRZMk56UTVNekF5T0N3aWFuUnBJam9pTnpaaE9HbDVTbEZ6UzBoVlRXWlJiVmhwUkhka1dpSXNJbk4xWWlJNmV5SjFjMlZ5Ym1GdFpTSTZJbWgxYm1kdWRqRWlMQ0p6YVdRaU9pSm9kVzVuYm5ZeElpd2ljbTlzWlY5cFpDSTZOalVzSW1aMWJHeHVZVzFsSWpvaVNGeDFNREZpTUc1bklpd2laVzFoYVd3aU9pSm9kVzVuYm5aQWFHbDJaWFJsWTJndWRtNGlMQ0poZFhSb2IzSmZhV1FpT201MWJHd3NJbVJoZEdWamNtVmhkR1VpT2pFMk5qYzBOalF4TnpVc0ltUmhkR1Z0YjJScFptbGxaQ0k2TVRZMk56UTJOREl4Tnl3aWMzUmhkSFZ6SWpveExDSnBjMlJsYkdWMFpTSTZNSDE5LlI5Sk9wSXVGV19NUlJRczdtQl9oYWVfM293SVlXZHlQdUh0Z3VMMllhSVEifX0.YyLrblSJA0Q7x4e2Xoq4FrGOAsGhRDp7yhNki3jDKZA",
+        "expires_in": 28800,
+        "permission": {
+            "cv": {
+                "add": true,
+                "all": true,
+                "edit": true,
+                "menu": true,
+                "view": true,
+                "delete": true,
+                "decision": true
+            },
+            .....
+        }
+    },
+    "time": 1667464228
+}
+
+
+- copy access_token dán vào
+vào phần Authorization - type ^ Bearer Token -> select (Bearer Token )
+
+
+
+
+
+
+
+
+

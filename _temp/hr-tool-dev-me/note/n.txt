@@ -1,0 +1,83 @@
+
+*****package-library*****
+*version slim
+"slim/slim": "^3.12",
+
+*lưu trữ dữ liệu
+"firebase/php-jwt": "^5.5.1.0",
+
+*view
+"slim/twig-view": "^2.5",
+
+*thao thác với csdl
+"illuminate/database": "^5.8",
+"illuminate/pagination": "^5.8",
+
+*resize-updaload image
+"intervention/image": "^2.5",
+
+*gửi mail 
+"phpmailer/phpmailer": "^6.3",
+
+*tạo dữ liệu mẫu
+"fakerphp/faker": "^1.19",
+
+
+
+*****struct-folder*****
+
+/shared
+- lưu trữ các thư viện
++ OAuth, POP3, SMTP, PHPMailer
+...
+
+/templates
+- định nghĩa swagger
+
+/method
+- import, login, upload, refresh
+
+
+
+*****file*****
+/hr-tool-be/initiate.php
+/hr-tool-be/model.php
+/hr-tool-be/config.php
+
+
+
+
+
+
+
+
+
+
+*****lưu trữ dữ liệu*****
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

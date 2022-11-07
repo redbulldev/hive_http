@@ -1,0 +1,44 @@
+https://www.slimframework.com/docs/v3/concepts/life-cycle.html
+https://www.freetimelearning.com/software-interview-questions-and-answers.php?What-is-Application-Life-Cycle-in-Slim-Framework?&id=5649
+
+1. Khởi tạo: Đầu tiên, khởi tạo class Slim\App. Đây là đối tượng ứng dụng Slim. Trong quá trình khởi tạo, Slim đăng ký các dịch vụ mặc định cho từng ứng dụng phụ thuộc.
+
+2. Định nghĩa routes: Thứ hai, xác định các tuyến bằng cách sử dụng các method routing get(), post(), put(), delete(), patch(), head() và options() của các instance ứng dụng. Các method instance này đăng ký một router với đối tượng Bộ routingcủa ứng dụng. Mỗi method định tuyến trả về Route instance để có thể gọi ngay các method của Route instance để thêm middleware or assign a name.
+
+
+3. Application Runner: Thứ ba, gọi method run() của application instance’s. Phương pháp này bắt đầu quá trình sau:
+
+A. Nhập Middleware Stack: method run () bắt đầu đi qua bên trong stack middleware của ứng dụng. Đây là cấu trúc của các middleware layer nhận (và tùy chọn thao tác) các đối tượng Môi trường, Yêu cầu và Phản hồi trước (và sau khi) ứng dụng Slim chạy. Ứng dụng Slim là lớp trong cùng của the concentric middleware structure. Mỗi middleware layer  được gọi bên trong bắt đầu từ lớp ngoài cùng.
+
+B. Chạy ứng dụng: Sau khi method run () đạt đến middleware layer bên trong nhất, nó gọi phiên bản ứng dụng và gửi yêu cầu HTTP hiện tại đến đối tượng tuyến ứng dụng thích hợp. Nếu một tuyến phù hợp với method HTTP và URI, middleware  và phần mềm có thể gọi của tuyến sẽ được gọi. Nếu không tìm thấy một tuyến phù hợp, trình xử lý Không tìm thấy hoặc Không được phép sẽ được gọi.
+
+C.  Exit Middleware Stack: Sau khi quá trình gửi ứng dụng hoàn tất, mỗi middleware layer lấy lại quyền kiểm soát ra bên ngoài, bắt đầu từ lớp bên trong nhất.
+
+D. Gửi phản hồi HTTP: Sau khi middleware layer ngoài cùng nhường quyền kiểm soát, phiên bản ứng dụng chuẩn bị, tuần tự hóa và trả về phản hồi HTTP. Tiêu đề phản hồi HTTP được đặt bằng phương thức header() của PHP và nội dung phản hồi HTTP được xuất ra bộ đệm đầu ra hiện tại.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

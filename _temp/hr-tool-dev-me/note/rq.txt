@@ -1,0 +1,28 @@
+
+
+
+- cách thức kết nối với csdl 
+- show csdl on design
+- tìm hiểu swagger 
+- chức năng của các module, folder, file
+- tìm cách thêm chức năng vào project để  chạy demo
+- 
+
+
+
+
+
+/////////////////////////////////////////////
+- công việc chính trong project hr-tool-dev
++ thêm csdl
++ cung cấp api
++ có thể phải customize
+
+
+
+
+
+
+
+
+

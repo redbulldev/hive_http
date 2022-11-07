@@ -1,0 +1,163 @@
+
+1:
+- thống kê theo yêu cầu -> thống kê theo CV (Reports)
+
+2:
+- điểm quy đổi (setting)
+
+https://www.figma.com/file/zNoia6vkn1rLJVvNvgquzG/HR-tool?node-id=160845%3A294449
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+1:
+crud/more/dashboard.php
+crud/more/dashboard_after.php
+crud/all_where.php
+crud/all.php
+
+*table
+request
+positions
+
+
+/////////////
+---crud/more/dashboard_after.php
+- khi thêm dashboard_after vào ta được thêm data nhưng mất đi "obj"
+"obj": "select `positions`.`title` as `positions_title`, `parent`.`title` as `department_title`, `request`.* from `request` inner join `positions` on `positions`.`id` = `request`.`position_id` and (`positions`.`status` = ? and `positions`.`isdelete` = ?) inner join `positions` as `parent` on `parent`.`id` = `positions`.`parent_id` and (`parent`.`status` = ? and `parent`.`isdelete` = ?) where `request`.`status` in (?, ?) and `request`.`isdelete` = ? and `request`.`isdelete` = ?",
+
+
+"summary": {
+    "target": "154",
+    "total_cv": "2",
+    "interview_cv": "2",
+    "pass_cv": "2",
+    "offer_cv": "2",
+    "offer_success": "2",
+    "onboard_cv": "2",
+    "fail_job": "0",
+    "list_target": "6,5,5,5,8,106,9,10",
+    "list_total": "0,0,0,0,0,1,0,1",
+    "list_onboard": "0,0,0,0,0,1,0,1",
+    "labels": "Test,Quality Control,Quality Assurance,Pháp chế,test 1,test 3,test 7,Front-end"
+},
+"department": {
+    "labels": [
+        "Sales",
+        "Phòng ăn",
+        "BAC",
+        "Test",
+        "BOD",
+        "Production",
+        "Abc"
+    ],
+    "values": [
+        "106",
+        null,
+        null,
+        "10",
+        "5",
+        "27",
+        "6"
+    ],
+    "colors": [
+        "#32E875",
+        "#FBB13C",
+        "#FF5D73",
+        "#8A84E2",
+        "#A3F4FF",
+        "#3495eb",
+        "#9e0211"
+    ]
+},
+
+
+////////////////////
+*triển khai
+- dựa vào chức năng "thống kê theo yêu cầu" để làm chức năng "thống kê theo cv"
+
+- khác nhau giữa chức "thống kê theo yêu cầu" và "thống kê theo cv"
+
+- thống kê theo cv
++ thêm tổng hợp (điểm)
+
+- "thống kê theo yêu cầu"
+Bảng xếp hạng số lượng nhân sự yêu cầu:
+- Thống kê theo phòng ban
+- Sắp xếp theo số lượng nhân sự yêu cầu từ cao đến thấp
+- Không hiển thị các phòng ban không có yêu cầu
+- Chỉ hiện số lượng phòng ban đủ độ dài bảng (phụ thuộc vào thực tế dev), không scroll
+
+
+- "thống kê theo cv"
+Bảng xếp hạng số lượng nhân sự đã tuyển:
+- Thống kê theo vị trí
+- Sắp xếp theo số lượng nhân sự onboard từ cao đến thấp
+- Chỉ hiện số lượng vị trí đủ độ dài bảng (phụ thuộc vào thực tế dev), không scroll
+
+
+- "thống kê theo cv"
+Biểu đồ Đơn ứng tuyển/qua phỏng vấn:
+- Bar chart
+- Thống kê theo vị trí
+- Hiển thị giá trị ở đầu cột
+- Số lượng cv trong tạo mới/Số lượng cv pass phỏng vấn
+- Sắp xếp theo số lượng CV giảm dần
+
+
+- "thống kê theo yêu cầu"
+Biểu đồ Yêu cầu/Onboard:
+- Bar chart
+- Thống kê theo vị trí
+- Hiển thị giá trị ở đầu cột
+
+
+
+
+- "thống kê theo cv"
+Bảng thống kê:
+Phòng ban	
+Vị trí	
+Trình độ
+Số lượng CV	
+Số CV tham dự buổi phỏng vấn	
+Số CV pass phỏng vấn	
+Số UV được offer	
+Offer thành công	
+Số lượng UV đã đi làm	
+Tỉ lệ offer/ yêu cầu	
+Tỉ lệ onboard/ yêu cầu	
+Tỉ lệ onboard/ tỉ lệ offer	
+Ngày hoàn thành	
+Danh sách UV đi làm
+
+
+- "thống kê theo yêu cầu"
+Bảng thống kê:
+Phòng ban
+Vị trí
+Trình độ
+Ưu tiên     //diff
+Số lượng yêu cầu //diff
+Số lượng CV
+Số CV tham dự buổi phỏng vấn
+Số CV pass phỏng vấn
+Số UV được offer
+Offer thành công
+Số lượng UV đã đi làm
+Tỉ lệ offer/ yêu cầu
+Tỉ lệ onboard/ yêu cầu
+Tỉ lệ onboard/ tỉ lệ offer
+Ngày hoàn thành
+Còn lại     //diff
+Danh sách UV đi làm
+
+
+
+
+
+
