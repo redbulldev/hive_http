@@ -22,6 +22,29 @@
 
 
 
+////////////////////////////////////////////////////////////////////////////////////
+/8/11
+- defiend table in database
+- do "thong ke theo cv: swagger, show,  "
+- test before, after
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

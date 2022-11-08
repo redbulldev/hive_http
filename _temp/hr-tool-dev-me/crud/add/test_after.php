@@ -3,7 +3,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 // die('ok');
 $data = [
-    'title' => 'test',
+    'title' => 'test123',
     'des' => 'test',
     'status' => 0
 ];

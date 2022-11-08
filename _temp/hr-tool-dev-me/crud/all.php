@@ -9,13 +9,14 @@ $name = str_replace('-', '_', $args['name']);
 // die($name);
 
 if (in_array($name,$conf['block'])) {
+
     $httpStatus= 201;
     $results = ['status' => 'error', 'message' => 'API is Block', 'code' => 'block'];
 } else {
-    
+      
     try {
         require('./shared/getToken.php');
-         if (!$ignoreUrl)checkRole($permission, $name, 'view');
+        if (!$ignoreUrl)checkRole($permission, $name, 'view'); //
         function filterparam($table, $params)
         {
             $allcolumn = DB::select('SHOW FULL COLUMNS FROM ' . $table);
@@ -37,8 +38,9 @@ if (in_array($name,$conf['block'])) {
                             $newparam['like'][$table . '.' . $key] = $val;
                         }
                     }
-            return $newparam;
+            // die($newparam); //Aray 
         }
+        // die('ok');
         try {
             $hearkey = $request->getHeader('key');
             $hearsearch = $request->getHeader('search');
@@ -54,6 +56,7 @@ if (in_array($name,$conf['block'])) {
             if (!is_numeric($page) || $page < 1) $page = 1;
             //if (!is_numeric($limit) || $limit < 1) $limit = 30;
             $params = $request->getQueryParams();
+            // die($params); //Array
             unset($params['limit']);
             unset($params['page']);
             unset($params['key']);
@@ -61,8 +64,10 @@ if (in_array($name,$conf['block'])) {
             unset($params['daterange']);
         
             $file = $name;
-            //  die($file); //dashboard
+             // die($file); //dashboard
             if (file_exists(__DIR__ . '/all/' . $file . '_before.php')) require(__DIR__ . '/all/' . $file . '_before.php');
+
+            // die($name); khi require thì ghi đè table thành request 
 
             // die($results); //null
             if (!isset($results)) {
@@ -75,9 +80,10 @@ if (in_array($name,$conf['block'])) {
                             if (file_exists(__DIR__ . '/all/' . $file . '_after.php')) require(__DIR__ . '/all/' . $file . '_after.php');
                     } else  $ketqua = null;
                 } else {
-                    // nếu params không tương ứng với một table trong csdl thì sẽ call trong /crud/more
+                    // nếu params không tương ứng với một table trong csdl thì sẽ gi đề table trong /crud và call trong /crud/more
 
                     $where = filterparam($name, $params);
+
                     $obj = DB::table($name);
                     // die($name); table request
                     
@@ -90,10 +96,20 @@ if (in_array($name,$conf['block'])) {
                     }
                     
                     //echo $obj->toSql();die(); explain sql
-                    if (isset($select)) $moreselect = $select;
+
+                    if (isset($select))  $moreselect = $select;
                     else if ($asselect && is_array($asselect)) $moreselect = $asselect;
-                    else if (isset($moreselect)) $moreselect = array_merge($moreselect, [$name . '.*']);
+                    else if (isset($moreselect)) $moreselect = array_merge($moreselect, [$name . '.*']);  //chay vao day
                     else $moreselect =  [$name . '.*'];
+                    // $moreselect được get từ /more/dashboard.php
+                    // $moreselect
+                    // Array
+                    // (
+                    //     [0] => positions.title as positions_title
+                    //     [1] => parent.title as department_title
+                    //     [2] => request.*
+                    // )
+
                     // die($moreselect); Array
                     // die($disableLimit); 1
                     if(empty($disableLimit))

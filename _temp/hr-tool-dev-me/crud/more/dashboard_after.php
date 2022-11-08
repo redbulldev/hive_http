@@ -6,6 +6,7 @@ $obj = DB::table($name);
 
 require './crud/all_where.php';   
 
+// data summary
 $obj->selectRaw('
     SUM(target) AS target,
     SUM(total_cv) AS total_cv, 
@@ -37,6 +38,9 @@ $newlabel=[];
 $newlist_target=[];
 $newlist_total=[];
 $newlist_onboard=[];
+
+// print_r($list_target );
+// die($labels );
 
 foreach($labels as $key=>$label)
 {
@@ -74,17 +78,21 @@ foreach($all as $key=>$item)
     // nếu 'positions.parent_id' = $item->id ở table positions thì đếm sum target ở table request
     $kq = $obj1->where('positions.parent_id',$item->id)->selectRaw('SUM(target) AS target')->first();
     
-    $department['labels'][] = $item->title;
-    $department['values'][] = $kq->target;
+    //Bảng xếp hạng số lượng nhân sự yêu cầu
+    $department['labels'][] = $item->title; //phòng ban
+    $department['values'][] = $kq->target; //yêu cầu (số lượng)
     $department['colors'][] = !empty($colors[$key])?$colors[$key]:'#000';
 }
 
 // return data
+
+// die($ketqua->get());
+// die('ok');
 $results = [
     'status' => 'success',
     'summary' => $summary,
     'department' => $department,
-    // variable $ketqua from table request intro file all.php
+    // variable $ketqua get from table request intro file all.php
     'data' => $ketqua ? $ketqua->get() : null,
     'total' => $ketqua ? $ketqua->count() : null,
     'time' => time(),

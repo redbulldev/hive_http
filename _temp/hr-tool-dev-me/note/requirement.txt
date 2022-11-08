@@ -14,7 +14,34 @@ https://www.figma.com/file/zNoia6vkn1rLJVvNvgquzG/HR-tool?node-id=160845%3A29444
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-1:
+1: để làm được chức năng "thống kê theo CV" cần hiểu được
+- hiểu được ý nghĩa các table liên quan
+- dựa vào chức năng "thống kê theo yêu cầu" để làm chức năng "thống kê theo cv"
+- chức năng "thống kê theo yêu cầu" cần phải nắm được
++ cách thức triển khai chức năng liên quan đến các file, folder nào
++ ý nghĩa của từng dòng code, function
++ hiểu được ý nghĩa function, table, chức năng 
++ hiểu được yêu cầu chức năng này
+- giáp các yêu cầu chức năng vào code của chức năng "thống kê theo yêu cầu" để hiểu hơn tiến tới làm chức năng "thống kê theo cv"
+
+
+*table 
+- cv, deparment(positions), request // tư vấn từ anh nam 
+
+/crud/more/dashboard_cv.php
+/crud/more/dashboard_cv_after.php
+
+
+
+
+
+
+
+
+
+-----------------------------------------------
+- chức năng "thống kê theo yêu cầu " liên quan đến
+
 crud/more/dashboard.php
 crud/more/dashboard_after.php
 crud/all_where.php
@@ -76,14 +103,82 @@ positions
 },
 
 
+
+
+---------------------
+- cấu trúc data (from table request)
+"data": [
+    {
+        "positions_title": "Test",
+        "department_title": "Abc",
+        "id": 1342,
+        "author_id": "ngocltb",
+        "requestor_id": "ngocltb",
+        "decision_id": null,
+        "position_id": 661,
+        "typework_id": 358,
+        "assignee_id": null,
+        "levels": "[{\"id\": 317, \"title\": \"Test\"}]",
+        "assessment": 1,
+        "target": 5,
+        "languages": null,
+        "priority": 1,
+        "day": 30,
+        "month": 9,
+        "year": 2022,
+        "date": "2022-09-30",
+        "deadline": "2022-09-30",
+        "total_cv": 0,
+        "interview_cv": 0,
+        "pass_cv": 0,
+        "offer_cv": 0,
+        "offer_success": 0,
+        "onboard_cv": 0,
+        "fail_job": 0,
+        "employees": "[\"\"]",
+        "sources": null,
+        "description": null,
+        "jd": null,
+        "datecreate": 1662350648,
+        "datemodified": 1662350657,
+        "status": 2,
+        "isauto": 0,
+        "isdelete": 0
+    },
+]
+
+
+
 ////////////////////
 *triển khai
 - dựa vào chức năng "thống kê theo yêu cầu" để làm chức năng "thống kê theo cv"
 
 - khác nhau giữa chức "thống kê theo yêu cầu" và "thống kê theo cv"
 
+
+- "thống kê theo cv"
+Bộ lọc thông tin:
+    Người được giao
+        - Danh sách Người được giao
+        - Mặc định: Tất cả
+
+    Phòng ban
+        - Danh sách Phòng ban
+        - Mặc định: Tất cả
+
+
+- "thống kê theo yêu cầu" 
+Bộ lọc thông tin:
+    Vị trí
+        - Danh sách vị trí
+        - Mặc định: Tất cả
+    Trình độ
+        - Danh sách trình độ
+        - Mặc định: Tất cả
+
+
 - thống kê theo cv
-+ thêm tổng hợp (điểm)
++ thêm "tổng hợp (điểm)"
 
 - "thống kê theo yêu cầu"
 Bảng xếp hạng số lượng nhân sự yêu cầu:

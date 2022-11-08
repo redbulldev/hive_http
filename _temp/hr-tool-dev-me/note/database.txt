@@ -1,0 +1,62 @@
+	
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+*database
+
+*positions(Phòng ban/Vị trí)
+#	Name			Comments
+1	id Primary		vị trí/Phòng ban;21	A
+2	parent_id		phòng ban;4		
+3	title			Tên vị trí/Phòng ban;Sales		
+4	author_id   	người tạo;namng		
+5	manager_id  	ID người quản lý;dungptp		
+6	requestor		Danh sách ID requestor;["chaupt","trangpm"]		
+7	description		Mô tả;Lorem ipsum dolor sit amet...		
+8	datecreate		Ngày tạo;1622504033		C
+9	datemodified	Ngày sửa cuối;1622505033		
+10	status			Trạng thái:1 Hoạt động,0 khoá;1		
+11	isdelete					
+
+
+
+
+
+
+
+
+*request (yêu cầu)
+#	Name				Comments	
+1	id 	 				level;21	AUTO_INCREMENT	
+2	author_id  			người tạo;namng		
+3	requestor_id		Người yêu cầu;huynhnv		
+4	decision_id 		Người quyết định;thangpm		
+5	position_id 		ID vị trí;123		
+6	typework_id 		ID hình thức làm việc;12		
+7	assignee_id 		Người xử lý;thanglv		
+8	levels				Danh sách Level;[ { "id": 1, "title": "Fresher" } ]		
+9	assessment			Đánh giá: 0 Easy, 1Medium,2 Hard , 3Very Hard;2		
+10	target				Số lượng;5		
+11	languages			Ngoại ngữ;["English","Japanese"]		
+12	priority			Độ ưu tiên; 2		
+13	day					Ngày;24		
+14	month				Tháng;3		
+15	year				Năm;2022		
+16	date				Ngày kế hoạch;2022-04-30		
+17	deadline			Ngày hết hạn;2022-04-30		
+18	total_cv			Tổng số lượng CV;234		
+19	interview_cv		CV được tham gia phỏng vấn;120		
+20	pass_cv				Số lượng CV pass phỏng vấn;40		
+21	offer_cv			Số lượng CV tham gia offer;30		
+22	offer_success		Số lượng CV offer thành công;20		
+23	onboard_cv			Số lượng CV đi làm;15		
+24	fail_job			Số lượng Fail thử việc;10		
+25	employees			Danh sách nhân sự đi làm;["Nguyễn Văn A","Hoàng Thị B"]		
+26	sources				Danh sách Nguồn;["TopCV","ViecIT"]		
+27	description			Mô tả;Lorem ipsum dolor sit amet...		
+28	jd					JS;Lorem ipsum dolor sit amet...		
+29	datecreate			Ngày tạo;1622504033		
+30	datemodified		Ngày sửa cuối;1622505033		
+31	status				Trạng thái:1 mới,0: từ chối, 2: Đồng ý;1		
+32	isauto				Request tự động hàng tháng;1		
+33	isdelete	
