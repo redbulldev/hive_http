@@ -20,7 +20,10 @@ positions,
 column: phòng ban(ex:sales), đơn ứng tuyển(30), pass phỏng vấn(16)
 
 *table
-
+- request 
+- dự kiến column 
+19  interview_cv    int         Yes 0   CV được tham gia phỏng vấn;120     
+20  pass_cv         int         Yes 0   Số lượng CV pass phỏng vấn;40
 -----------------------------------------------------------------------
 *column
 - Bảng thống kê:
@@ -29,7 +32,7 @@ column: phòng ban(ex:sales), đơn ứng tuyển(30), pass phỏng vấn(16)
 *table
 
 
-/////////////////////////////////////////////////////////////////////////////////////
+------------------------------
 *struct data trả về 
 
 {
@@ -61,6 +64,66 @@ column: phòng ban(ex:sales), đơn ứng tuyển(30), pass phỏng vấn(16)
     "total": 13,
     'time' => time()
 }
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+2: task "qui đổi điểm"
+
+
+
+*table 
+- level, positions,  level_positions
+
+//theo như bàn bạc với mai huy thái thì tạo thêm table level_positions 
+với logic người  dùng tạo vị trí chon trình độ(mutible), như vậy ta thêm table level_positions  để tạo mối quan hệ n-n
+- ở table positions thêm trường point(1) 
+- ở màn hình  sửa thì điểm admin tự set 
+
++ với logic trên ta giải quết task "qui đổi điểm" với logic chỉ get những  trường mà ở phần tạo mới position có chọn trình độ như vậy với tất cacr các trình độ ta get ra 
+//ở đây có thể ta phân theo trình độ : intern -> tech lead 
+
+
+------------------------------
+*struct data trả về 
+
+{
+    'status' => 'success',
+    "data": { //project manager
+        "title": [
+            "position": [ 
+                "java",
+                "php",
+                "BAC",
+                "Test",
+                "BOD",
+                "Production",
+                "Abc"
+            ],
+            "values": [
+                "2",
+                "1",
+                "1",
+                "0",
+                "3",
+                "1",
+                "2"
+            ]
+        ]
+    }
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+3: task hiển thị data last_level 
+
+link:
+http://localhost:3000/cv/15490?limit=10&page=1
+
+api:
+http://localhost:3009/v1/cv/15490?limit=10&page=1
+
+với last_level_id hiển thị data last_level tương ứng ở tab interview
 
 
 

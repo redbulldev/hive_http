@@ -69,8 +69,10 @@ if (in_array($name,$conf['block'])) {
 
             // die($results); //null
             if (!isset($results)) {
+                // nếu params tương ứng với một table trong csdl thì sẽ require file vào 
                 if (file_exists(__DIR__ . '/all/' . $file . '.php')) {
                     require(__DIR__ . '/all/' . $file . '.php');
+                    // kiểm tra xem obj có data 
                     if (isset($obj)) {
                         if (!isset($results))
                             if (!isset($moreselect)) $ketqua = $obj->paginate($limit, ['*'], 'page', $page);
@@ -89,6 +91,7 @@ if (in_array($name,$conf['block'])) {
 
                     require 'all_where.php';
 
+                    // kiểm tra column isdelete có tồn tại trong table hay không nếu có where column isdelete có value = 0
                     if (colExist($name, 'isdelete')) {
                         $obj->where($name.'.isdelete', 0);
                     }
@@ -130,6 +133,7 @@ if (in_array($name,$conf['block'])) {
             }
             if(empty($disableLimit))
             {
+                // die('ok');
                 if (!isset($results)) $results = [
                     'status' => 'success',
                     'data' => $ketqua ? $ketqua->items() : null,

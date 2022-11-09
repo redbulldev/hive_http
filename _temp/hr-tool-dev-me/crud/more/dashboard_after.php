@@ -65,6 +65,8 @@ $colors = ['#32E875','#FBB13C','#FF5D73','#8A84E2','#A3F4FF','#3495eb','#9e0211'
 $department=['labels'=>[],'values'=>[],'colors'=>[]];
 
 $all = DB::table('positions')->where(['isdelete'=>0,'status'=>1,'parent_id'=>0])->get();
+// die($all);
+// die('ok');
 
 // $obj1 = clone  $obj;
 // print_r($obj1);

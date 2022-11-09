@@ -3,7 +3,7 @@
 if (file_exists(__DIR__ . '/more/' . $file . '.php'))
     require(__DIR__ . '/more/' . $file . '.php');
 
-// die($file); dashboard
+// die($file); //dashboard
 
 if (isset($params['orderby'])) {
     $arrmtob = explode('__', $params['orderby']);

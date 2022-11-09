@@ -60,3 +60,68 @@
 31	status				Trạng thái:1 mới,0: từ chối, 2: Đồng ý;1		
 32	isauto				Request tự động hàng tháng;1		
 33	isdelete	
+
+
+
+
+
+
+ 
+*cv (thông tin cv)
+
+
+
+*cv_history (lịch sử cv)
+
+
+
+*cv_offer (được offter chưa đi làm)
+
+
+
+*cv_onboard (cv người đang làm việc)
+
+
+
+*cv_preoffer (được đề nghị trước)
+
+
+
+*cv_probation (tập sự , thử việc)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
