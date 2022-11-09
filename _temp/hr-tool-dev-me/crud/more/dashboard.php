@@ -54,5 +54,5 @@ $obj->join('positions as parent', function ($join) {
     $join->where(['parent.status' => 1, 'parent.isdelete' => 0]);
 });
 
-// thêm column
+// thêm column vào struct data[]
 $moreselect= ['positions.title as positions_title', 'parent.title as department_title'];

@@ -9,11 +9,9 @@ $name = str_replace('-', '_', $args['name']);
 // die($name);
 
 if (in_array($name,$conf['block'])) {
-
     $httpStatus= 201;
     $results = ['status' => 'error', 'message' => 'API is Block', 'code' => 'block'];
 } else {
-      
     try {
         require('./shared/getToken.php');
         if (!$ignoreUrl)checkRole($permission, $name, 'view'); //

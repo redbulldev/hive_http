@@ -1,0 +1,77 @@
+1: thống kê theo yêu cầu -> thống kê theo CV (Reports)
+
+- Bộ lọc thông tin:
+
+
+
+
+-----------------------------------------------------------------------
+*column
+- Bảng xếp hạng số lượng nhân sự đã tuyển:
+column: vị trí(ex:java), số lượng(13)
+
+*table
+positions, 
+
+
+-----------------------------------------------------------------------
+*column
+- Biểu đồ Đơn ứng tuyển/qua phỏng vấn:
+column: phòng ban(ex:sales), đơn ứng tuyển(30), pass phỏng vấn(16)
+
+*table
+
+-----------------------------------------------------------------------
+*column
+- Bảng thống kê:
+
+
+*table
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+*struct data trả về 
+
+{
+    'status' => 'success',
+    "summary": {
+        "target": "154",
+        ...
+    },
+    "department": {
+        "labels": [
+            "Sales",
+            ...
+        ],
+        "values": [
+            "106",
+            ...
+        ],
+        "colors": [
+            "#9e0211"
+            ...
+        ]
+    },
+    "data": [
+        {
+            "positions_title": "Test",
+        ...
+        }
+    ],
+    "total": 13,
+    'time' => time()
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
