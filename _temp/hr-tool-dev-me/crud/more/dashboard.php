@@ -12,11 +12,12 @@ $obj->whereIn('request.status', [2, 4])->where('request.isdelete',0);
 if(!empty($params['level_id']))
 {
     $idrole= explode('-',$params['level_id']);
-
+    // print_r($idrole);
+   
     $obj->where(function($query) use ($idrole){
         foreach ($idrole as $id) {
-             // print_r($id);
-             //  die('ok');
+            //  print_r($query);
+            //   die('ok');
             $k1='"'.$id.'"';
             $k2=': '.$id.',';
             $k3=':'.$id.',';
@@ -28,6 +29,8 @@ if(!empty($params['level_id']))
         }
     });
 }
+
+
 
 if (!empty($params['from']) && !empty($params['to'])) {
     $from = $params['from'];
@@ -56,3 +59,6 @@ $obj->join('positions as parent', function ($join) {
 
 // thêm column vào struct data[]
 $moreselect= ['positions.title as positions_title', 'parent.title as department_title'];
+
+// print_r();
+//  die($response->withJson($obj->get()));

@@ -111,8 +111,8 @@ if (in_array($name,$conf['block'])) {
                     //     [2] => request.*
                     // )
 
-                    // die($moreselect); Array
-                    // die($disableLimit); 1
+                    // print_r($moreselect); //Array
+                    // die($disableLimit); //1
                     if(empty($disableLimit))
                     {
                         if ($hearkey && isset($hearkey[0])) {
@@ -133,7 +133,7 @@ if (in_array($name,$conf['block'])) {
             }
             if(empty($disableLimit))
             {
-                // die('ok');
+                // die('ok1');
                 if (!isset($results)) $results = [
                     'status' => 'success',
                     'data' => $ketqua ? $ketqua->items() : null,
@@ -144,6 +144,7 @@ if (in_array($name,$conf['block'])) {
                     'totalpage' => $ketqua ? $ketqua->lastPage() : null
                 ];
             }else{
+                // die('ok');
                 if (!isset($results)) {
                     $results = [
                         'status' => 'success',
