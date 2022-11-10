@@ -33,10 +33,30 @@
 
 
 
+////////////////////////////////////////////////////////////////////
+- khi thêm, sửa, xóa một column mới phải viết migration 
+- hoặc khi create table mới phải viết migration 
+- với duôi file .sql
+
+
+///////////
 
 
 
+- table postitions
++ point(float)
++ seen(người được xem)
++ level_id (longText)
++ key
 
+
+
+- view create positions
++ thêm trường điểm qui đổi
++ thêm trường người được xem
++ thêm trường danh sách trình độ 
++ thêm trường key 
++ thêm trường trình độ
 
 
 
