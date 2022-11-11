@@ -4,7 +4,6 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 // lọc data in table request //
 
-// die($params['department_id']);
 $obj->whereIn('request.status', [2,4])->where('request.isdelete',0);
 
 // die($params['department_id']);
@@ -13,7 +12,7 @@ if(!empty($params['department_id']))
 {
     $idDepartment = explode('-',$params['department_id']);
 
-    $obj->orWhere(function($query) use ($idDepartment){
+    $obj->where(function($query) use ($idDepartment){
         foreach ($idDepartment as $id) {
             $query->orWhere('request.position_id' , 'LIKE', "%$id%");
         }
@@ -26,7 +25,7 @@ if(!empty($params['assignee_id']))
 {
     $idAssignee = explode('-',$params['assignee_id']);
 
-    $obj->orWhere(function($query) use ($idAssignee){
+    $obj->where(function($query) use ($idAssignee){
         foreach ($idAssignee as $key  => $id) {
         	// echo $id;
             $query->orWhere('request.assignee_id' , 'LIKE', "%$id%");
@@ -42,13 +41,21 @@ if (!empty($params['from']) && !empty($params['to'])) {
 }
 
 // // map -> position_id
-// // die($params['position_id']);
+// die($params['position_id']);
+// get ra những bản ghi có position_id trùng với id trong bảng positions
 $obj->join('positions', function ($join) {
     $join->on('positions.id', '=', 'request.position_id');
     $join->where(['positions.status'=>1, 'positions.isdelete'=>0]);
 });
 
+$obj->join('cv', function ($join) {
+    $join->on('cv.position_id', '=', 'request.position_id');
+    $join->where(['cv.step'=>1, 'cv.isdelete'=>0]);
+    // $join->where(['positions.status'=>1, 'positions.isdelete'=>0]);
+}); 
+
 // // map -> parent_id
+// get ra những bản ghi có id trùng với parent_id trong bảng positions
 $obj->join('positions as parent', function ($join) {
     $join->on('parent.id', '=', 'positions.parent_id');
     $join->where(['parent.status' => 1, 'parent.isdelete' => 0]);

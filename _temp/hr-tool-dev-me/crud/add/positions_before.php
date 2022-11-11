@@ -61,3 +61,25 @@ if(isset($data->title))
 }
 
 
+ID vị trí/Phòng ban;21
+parent_id
+ID phòng ban;4
+title
+Tên vị trí/Phòng ban;Sales
+author_id
+ID người tạo;namng
+manager_id
+ID người quản lý;dungptp
+requestor
+Danh sách ID requestor;["chaupt","trangpm"]
+description
+Mô tả;Lorem ipsum dolor sit amet...
+datecreate
+Ngày tạo;1622504033
+datemodified
+Ngày sửa cuối;1622505033
+status
+Trạng thái:1 Hoạt động,0 khoá;1
+point_status
+Tính điểm quy đổi;0;1
+isdelete

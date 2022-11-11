@@ -40,9 +40,7 @@
 
 
 ///////////
-
-
-
+*dự kiến thêm trường 
 - table postitions
 + point(float)
 + seen(người được xem)

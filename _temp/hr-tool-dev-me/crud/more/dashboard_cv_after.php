@@ -11,6 +11,7 @@ require './crud/all_where.php';
 // data summary
 $obj->selectRaw('
     SUM(target) AS target, 
+    SUM(cv.step) AS step_total,
     SUM(total_cv) AS total_cv, 
     SUM(interview_cv) AS interview_cv, 
     SUM(pass_cv) AS pass_cv, 
@@ -23,39 +24,90 @@ $obj->selectRaw('
     GROUP_CONCAT(onboard_cv) as list_onboard,
     GROUP_CONCAT(positions.title,\'\') as labels
 ');
-// SUM(step) AS target, 
 
-// task - Đơn ứng tuyển/qua phỏng vấn:
-// $test = $obj->selectRaw('
-//     SUM(target) AS target
-// ');
+// $c = $obj->where('request.status', 1)->count();
+// die($c);
 
-// $countCv = $obj->where('step', 1)->count();
+$summary=$obj->first();
 
-// $countStep = $obj->count();
-// echo "<pre>";
-// print_r($test ) ;
-// echo "</pre>";
+$list_target = explode(',',$summary->list_target);
 
+$list_total = explode(',',$summary->list_total);
+
+$list_onboard = explode(',',$summary->list_onboard);
+
+$labels = explode(',',$summary->labels);
+
+$newlabel=[];
+
+$newlist_target=[];
+
+$newlist_total=[];
+
+$newlist_onboard=[];
+
+foreach($labels as $key=>$label)
+{
+    if($label)
+    {
+        $newlabel[$label]= $label;
+
+        $newlist_target[$label]= (!empty($newlist_target[$label])?$newlist_target[$label]:0) + $list_target[$key];
+
+        $newlist_total[$label]= (!empty($newlist_total[$label])?$newlist_total[$label]:0) + $list_total[$key];
+
+        $newlist_onboard[$label]= (!empty($newlist_onboard[$label])?$newlist_onboard[$label]:0) + $list_onboard[$key];
+    }
+}
+
+$summary->labels = implode(',',array_keys($newlabel));
+
+$summary->list_target =  implode(',',array_values($newlist_target));
+
+$summary->list_total =  implode(',',array_values($newlist_total));
+
+$summary->list_onboard =  implode(',',array_values($newlist_onboard));
+
+
+// $cv_news = DB::table('cv')->where(['isdelete'=>0,'step'=>1])->where('request.position_id', 'position_id')->first(); 
+// // $ts = $obj->where('position_id', 'cv.position_id')
+// print_r($cv_news);
+// die();
 
 // die($response->withJson($obj->get()));
 
 // die('ok');
 
+//////////////////////////
+// SUM(target) AS target,  //Vị trí cần tuyển(Vị trí)
+// SUM(total_cv) AS total_cv, //Đơn ứng tuyển(Đơn)
+// SUM(interview_cv) AS interview_cv, //CV được tham gia phỏng vấn;
+// SUM(pass_cv) AS pass_cv, //Số lượng CV pass phỏng vấn;
+// SUM(offer_cv) AS offer_cv, //số lượng cv tham gia offer
+// SUM(offer_success) AS offer_success, //offer thành công/
+// SUM(onboard_cv) AS onboard_cv, //Ứng viên đã tuyển(Ứng viên)
+// SUM(fail_job) AS fail_job, //Số lượng Fail thử việc;
+// GROUP_CONCAT(target) as list_target, //ds Yêu cầu
+// GROUP_CONCAT(total_cv) as list_total, //ds Đã tuyển
+// GROUP_CONCAT(onboard_cv) as list_onboard, // giôngs với list_total
+// GROUP_CONCAT(positions.title,\'\') as labels //phòng ban
+
 
 // Số lượng cần tuyển:
 // − Tổng số lượng cần tuyển (= tổng trong kế hoạch)
+
 // Số lượng CV:
-// − Tổng số cv (= tổng số CV được tạo)
-// Tổng hợp điểm:
-// − Số lượng CV của ứng viên actual onboard nhân với điểm tương ứng từng <vị trí + trình độ>
-// (điểm tương ứng từng vị trí trình độ ở Bảng điểm quy đổi)
+// − Tổng số cv (= tổng số CV được tạo) //table cv column status=1(cv mới)
+
 // Ứng viên đã tuyển:
 // − = tổng ứng viên actual onboard
+
 // Tỉ lệ offer thành công:
 // − = offer thành công/offer (pass offer/pass pre offer)
 
-
+// Tổng hợp điểm:
+// − Số lượng CV của ứng viên actual onboard nhân với điểm tương ứng từng <vị trí + trình độ>
+// (điểm tương ứng từng vị trí trình độ ở Bảng điểm quy đổi)
 
 // Biểu đồ Đơn ứng tuyển/qua phỏng vấn:
 // − Thống kê theo vị trí
@@ -75,89 +127,58 @@ $obj->selectRaw('
 
 
 
+
+////////////////////////////////////////////////////////////////////////
 // *Bảng xếp hạng số lượng đã tuyển //
 // data - department //
-$colors = ['#32E875','#FBB13C','#FF5D73','#8A84E2','#A3F4FF','#3495eb','#9e0211','#ad4731','#066917','#ded750','#f707c7'];
+// $colors = ['#32E875','#FBB13C','#FF5D73','#8A84E2','#A3F4FF','#3495eb','#9e0211','#ad4731','#066917','#ded750','#f707c7'];
 
-$department = ['labels'=>[],'values'=>[],'colors'=>[]]; 
+$department = ['labels'=>[],'values'=>[]]; 
 
-// $item = DB::table('positions')->where(['isdelete'=>0,'status'=>1, 'parent_id'=>0])->get(); 
+$itemPositions = DB::table('positions')->where(['isdelete'=>0,'status'=>1, 'parent_id'=>0])->get(); 
 
-// $all = DB::table('positions')->where(['isdelete'=>0,'status'=>1])->get(); 
+$allPositions = DB::table('positions')->where(['isdelete'=>0,'status'=>1])->get(); 
 
-// // die($response->withJson($item));
-// // get all position of phongban
-// $data = [];
-// $count = 0;
-// foreach($item as $key => $value) {
-//     foreach($all as $index => $l) {
-//         if($l->parent_id == $value->id){
-//             $department['labels'][] = $l->title;   
-//             $data[$count] = $l->id; 
-//             $count++;
-//         }
-//     }
-// }
+// die($response->withJson($item));
+// get all position of phongban
+$data = [];
+$count = 0;
+foreach($itemPositions as $key => $value) {
+    foreach($allPositions as $index => $l) {
+        if($l->parent_id == $value->id){
+            $department['labels'][$l->id] = $l->title;   
+            $data[$count] = $l->id; 
+            $count++;
+        }
+    }
+}
 // print_r($data);
 // die();
-// die( $response->withJson($data));
+// die( $response->withJson($department));
 
-
-$test=[];
-
-// // $values = DB::table('request')->where(['isdelete'=>0])->get(); 
-// // foreach($values as $key => $value) {
-//     foreach ($data as $key  => $id) {
-//         // if($id == $value->position_id){
-//         //    $d = $value->author_id;
-//         //    die($d);
-//         // }
-//         $value = DB::table('request')->where(['isdelete'=>0])->where('request.position_id' , $id)->selectRaw('SUM(target) AS target')->first();
-// // die($value->target);
-//         $test[$key]  = $value->target;
-//     }
-// // }
-// die($response->withJson($test));
-
-// $obj1 = clone  $obj;
-// $obj1->where(function($query) use ($data){
-//     foreach ($data as $key  => $id) {
-//         // echo $id;
-//         $c = $query->where('request.position_id' , $id)->selectRaw('SUM(target) AS target')->first();
-// print_r($c->target);
-//         $test['values'][] = $c->target;
-//     }
-// });
-
-// print_r($department['values'][] );
-
-
-$valueAndColor = DB::table('positions')->where(['isdelete'=>0,'status'=>1, 'parent_id'=>0])->get(); 
-// $all = DB::table('positions')->where(['isdelete'=>0,'status'=>1])->get(); 
-
-foreach($valueAndColor as $key => $k)
+foreach($data as $key => $k)
 {
     $obj1 = clone  $obj; //request
 
-    $res = $obj1->where('positions.parent_id',$k->id)->selectRaw('SUM(onboard_cv) AS onboard_cv')->first();
-// die($res->onboard_cv);
-// die( $response->withJson($res->onboard_cv));
+    $res = $obj1->where('positions.id',$k)->selectRaw('SUM(onboard_cv) AS onboard_cv')->first();
 
-    // foreach($all as $index => $l) {
-    //     if($l->parent_id == $k->id){
-    //         $department['labels'][] = $l->title;   
-    //     }
-    // }
-
-    $department['values'][$k->id] = $res->onboard_cv; //yêu cầu (số lượng)
-    $department['colors'][] = !empty($colors[$key]) ? $colors[$key]:'#000';
+    $department['values'][$k] = $res->onboard_cv; //yêu cầu (số lượng)
 }
-die( $response->withJson($department));
-// print_r($department);
-die();
+// die($response->withJson($department));
+// // print_r($department);
+// die();
+
+$results = [
+    'status' => 'success',
+    'summary' => $summary,
+    'department' => $department,
+    'data' => $ketqua ? $ketqua->all() : null,
+    'total' => $ketqua ? $ketqua->count() : null,
+    'time' => time(),
+];
+//
 
 
 // các bước 
 // + get phòng ban
 // + get số lượng yêu cầu 
-// + get colors 
