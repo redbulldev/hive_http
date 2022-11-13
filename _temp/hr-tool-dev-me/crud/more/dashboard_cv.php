@@ -48,20 +48,20 @@ $obj->join('positions', function ($join) {
     $join->where(['positions.status'=>1, 'positions.isdelete'=>0]);
 });
 
-$obj->join('cv', function ($join) {
-    $join->on('cv.position_id', '=', 'request.position_id');
-    $join->where(['cv.step'=>1, 'cv.isdelete'=>0]);
-    // $join->where(['positions.status'=>1, 'positions.isdelete'=>0]);
-}); 
+// $obj->join('cv', function ($join) {
+//     $join->on('cv.position_id', '=', 'request.position_id');
+//     $join->where(['cv.step'=>1, 'cv.isdelete'=>0]);
+//     // $join->where(['positions.status'=>1, 'positions.isdelete'=>0]);
+// }); 
 
 // // map -> parent_id
 // get ra những bản ghi có id trùng với parent_id trong bảng positions
-$obj->join('positions as parent', function ($join) {
-    $join->on('parent.id', '=', 'positions.parent_id');
-    $join->where(['parent.status' => 1, 'parent.isdelete' => 0]);
-});
+// $obj->join('positions as parent', function ($join) {
+//     $join->on('parent.id', '=', 'positions.parent_id');
+//     $join->where(['parent.status' => 1, 'parent.isdelete' => 0]);
+// });
 
 // thêm column vào struct data[]
-$moreselect= ['positions.title as positions_title', 'parent.title as department_title'];
+$moreselect= ['positions.title as positions_title'];
 
 // die($response->withJson($obj->get()));

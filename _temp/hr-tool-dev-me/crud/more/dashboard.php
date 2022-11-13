@@ -44,14 +44,14 @@ if (!empty($params['requestor'])) {
     });
 }
 
-// map -> position_id
+// map -> position_id (lấy ra vị trí)
 // die($params['position_id']);
 $obj->join('positions', function ($join) {
     $join->on('positions.id', '=', 'request.position_id');
     $join->where(['positions.status'=>1, 'positions.isdelete'=>0]);
 });
 
-// map -> parent_id
+// map -> parent_id (lấy ra phòng ban)
 $obj->join('positions as parent', function ($join) {
     $join->on('parent.id', '=', 'positions.parent_id');
     $join->where(['parent.status' => 1, 'parent.isdelete' => 0]);

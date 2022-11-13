@@ -7,11 +7,58 @@ $obj = DB::table($name);
 require './crud/all_where.php';   
 
 
+////////////////////////////////////////////////////////////////////////
+// *Bảng xếp hạng số lượng đã tuyển //
+// data - department //
+$department = ['labels'=>[],'values'=>[]]; 
+
+$dataParentId = $obj->get();
+
+$allPositions = DB::table('positions')->where(['isdelete'=>0,'status'=>1])->get(); 
+
+$positionId = [];
+
+foreach($dataParentId as $key => $value) {
+    foreach($allPositions as $index => $l) {
+        if($l->id == $value->position_id){
+            $department['labels'][$l->id] = $l->title;   
+            $positionId[$index] = $l->id;
+        }
+    }
+}
+
+// die($response->withJson($department));
+
+foreach($positionId as $key => $k)
+{
+    $obj1 = clone  $obj; //request
+
+    $res = $obj1->where('positions.id',$k)->selectRaw('SUM(onboard_cv) AS onboard_cv')->first();
+
+    $department['values'][$k] = $res->onboard_cv; //yêu cầu (số lượng)
+}
+die($response->withJson($department));
+// // print_r($department);
+// die();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////
 // $objRequest = DB::table('request');
 // data summary
 $obj->selectRaw('
     SUM(target) AS target, 
-    SUM(cv.step) AS step_total,
     SUM(total_cv) AS total_cv, 
     SUM(interview_cv) AS interview_cv, 
     SUM(pass_cv) AS pass_cv, 
@@ -27,6 +74,9 @@ $obj->selectRaw('
 
 // $c = $obj->where('request.status', 1)->count();
 // die($c);
+
+
+
 
 $summary=$obj->first();
 
@@ -128,45 +178,6 @@ $summary->list_onboard =  implode(',',array_values($newlist_onboard));
 
 
 
-////////////////////////////////////////////////////////////////////////
-// *Bảng xếp hạng số lượng đã tuyển //
-// data - department //
-// $colors = ['#32E875','#FBB13C','#FF5D73','#8A84E2','#A3F4FF','#3495eb','#9e0211','#ad4731','#066917','#ded750','#f707c7'];
-
-$department = ['labels'=>[],'values'=>[]]; 
-
-$itemPositions = DB::table('positions')->where(['isdelete'=>0,'status'=>1, 'parent_id'=>0])->get(); 
-
-$allPositions = DB::table('positions')->where(['isdelete'=>0,'status'=>1])->get(); 
-
-// die($response->withJson($item));
-// get all position of phongban
-$data = [];
-$count = 0;
-foreach($itemPositions as $key => $value) {
-    foreach($allPositions as $index => $l) {
-        if($l->parent_id == $value->id){
-            $department['labels'][$l->id] = $l->title;   
-            $data[$count] = $l->id; 
-            $count++;
-        }
-    }
-}
-// print_r($data);
-// die();
-// die( $response->withJson($department));
-
-foreach($data as $key => $k)
-{
-    $obj1 = clone  $obj; //request
-
-    $res = $obj1->where('positions.id',$k)->selectRaw('SUM(onboard_cv) AS onboard_cv')->first();
-
-    $department['values'][$k] = $res->onboard_cv; //yêu cầu (số lượng)
-}
-// die($response->withJson($department));
-// // print_r($department);
-// die();
 
 $results = [
     'status' => 'success',
