@@ -47,7 +47,7 @@ if (in_array($name,$conf['block'])) {
             if ($hearsearch && isset($hearsearch[0])) $moresearch = json_decode(str_replace('\"', '"', $hearsearch[0]), true);
             if ($asselect && isset($asselect[0])) $asselect = json_decode($asselect[0]);
             $page = $request->getQueryParam('page', 1);
-            $limit = $request->getQueryParam('limit', 10);
+            $limit = $request->getQueryParam('limit', 100);
             if($limit==0)$limit = 1000;
             $key = $request->getQueryParam('key', $request->getQueryParam('keyword', ''));
             $daterange = $request->getQueryParam('daterange', '');

@@ -12,13 +12,13 @@ require './crud/all_where.php';
 // data - department //
 $department = ['labels'=>[],'values'=>[]]; 
 
-$dataParentId = $obj->get();
+$dataPositionId = $obj->get();
 
 $allPositions = DB::table('positions')->where(['isdelete'=>0,'status'=>1])->get(); 
 
 $positionId = [];
 
-foreach($dataParentId as $key => $value) {
+foreach($dataPositionId as $key => $value) {
     foreach($allPositions as $index => $l) {
         if($l->id == $value->position_id){
             $department['labels'][$l->id] = $l->title;   
@@ -28,16 +28,19 @@ foreach($dataParentId as $key => $value) {
 }
 
 // die($response->withJson($department));
+// $allCvs = DB::table('cv')->where(['isdelete'=>0, 'step'=> 5])->get(); 
 
 foreach($positionId as $key => $k)
 {
     $obj1 = clone  $obj; //request
 
-    $res = $obj1->where('positions.id',$k)->selectRaw('SUM(onboard_cv) AS onboard_cv')->first();
+    $res = $obj1->where('request.position_id',$k)->selectRaw('count(cv.step) AS total_cv')->where('cv.status', 2)->first();
+// die($response->withJson($res));
 
-    $department['values'][$k] = $res->onboard_cv; //yêu cầu (số lượng)
+
+    $department['values'][$k] = $res->total_cv; //yêu cầu (số lượng)
 }
-die($response->withJson($department));
+// die($response->withJson($department));
 // // print_r($department);
 // die();
 

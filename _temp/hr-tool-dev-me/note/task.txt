@@ -93,9 +93,10 @@ với logic người  dùng tạo vị trí chon trình độ(mutible), như v�
 
 {
     'status' => 'success',
-    "data": { //project manager
-        "title": [
-            "position": [ 
+    "data": { 
+        "title": //project manager
+        [ 
+            "positions": [ 
                 "java",
                 "php",
                 "BAC",
@@ -132,6 +133,35 @@ với last_level_id hiển thị data last_level tương ứng ở tab interview
 
 
 
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+*đơn ứng tuyển / pass phỏng vấn 
+/crud/add/cv_review_interview.php
+
+
+join: positions -> request -> cv
+
+
+- đơn ứng tuyển 
+'review_physiognomy1' => ['title' => 'Physiognomy 1', 'current' => 2, 'step' => 1, 'old' => 'HR Review'],
+
+'review_physiognomy2' => ['title' => 'Physiognomy 2', 'current' => 6, 'step' => 5, 'old' => 'HR Tech Interview'],
+
+
+'step' => 1: đơn ứng tuyển 
+
+'step' => 5: pass phỏng vấn 
+
+
+
+- pass phỏng vấn 
+join: positions -> request -> cv --> count data
 
 
 
