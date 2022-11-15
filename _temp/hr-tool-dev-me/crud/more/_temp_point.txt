@@ -1,0 +1,282 @@
+<?php
+
+use Illuminate\Database\Capsule\Manager as DB;
+
+
+
+// $getLevels = DB::table('level')->where(['status' => 1, 'isdelete' => 0])->get();
+
+// die($response->withJson($getLevels));
+
+$levelPositions = DB::table('level_positions as lp')->where('isdelete', 0)->get();
+// die($response->withJson($levelPositions));
+
+
+$lables = [];
+
+$levels = [];
+
+$values = [];
+
+$allPositions = $obj->get(); 
+// die($response->withJson($allPositions));
+
+	
+
+function datatest($value){
+
+	// foreach ($levelPositions as $i => $k) {
+	// 		// 		print_r($k->position_id );
+
+	// 		// die();
+	// 	if ($k->position_id == $value->id) {
+	// 		// print_r($value->id);
+	// 		// die();
+	// 		return $k->point;
+	// 	}
+	// }
+
+	// return false;
+
+
+	$data = DB::table('level_positions as lp')->where('position_id', $value->id)->where('isdelete', 0)->first();
+
+		// if($data) {		
+		// 	return $data ;//$values[$count++] = $data->point;
+		// } else {
+		// 	return false;//$values[$count++] = 1;	
+		// }
+
+		if($data) {		
+			 return $data->point;
+		} 
+
+		return false;
+}
+
+function datalevel(){
+	$getLevels = DB::table('level')->where(['status' => 1, 'isdelete' => 0])->get();
+
+	foreach ($getLevels as $index => $v) {			
+		$levels[$v->id] = $v->title;
+	}
+
+	return $levels;
+}
+
+function datavalue(){
+	$value = DB::table('level_positions as lp')->where('isdelete', 0)->get();
+
+	foreach ($value as $index => $v) {			
+		$values[$v->position_id] = $v->point;
+	}
+
+	return $values;
+}
+
+foreach ($allPositions as $key => $value) {
+	$lables[$value->id] = $value->title;
+}
+
+// die($response->withJson($lables));
+// $data_summaries = [array_flip($lables)];
+
+$testdata = [];
+foreach($lables as $item => $value) {
+	// print_r($item);die();
+	$level_positions = DB::table('level_positions as lp')->where('isdelete', 0)->get();
+
+	foreach($level_positions as $key => $l )
+	{
+		foreach($levels as $i => $k){
+			if ($item == $l->position_id && $l->level_id == $i) {
+				$testdata[$k] = $l->point;
+			}
+		}
+		// $data_summaries[$key] = array($levels, $values);
+	}
+}
+
+
+
+
+// // $test = datalevel();
+$test = datavalue();
+die($response->withJson($testdata));
+
+
+
+
+
+
+// $count = 0;
+// foreach ($allPositions as $key => $value) {
+// 	$lables[$key] = $value->title;
+
+	
+
+// 	$check = datatest($value);
+
+// 	if ($check == false) {
+// 		// echo 'fai';
+
+// 		$values[$count++] = 1;		
+// 	} else {
+// 		// echo 'ok';
+// 		$values[$count++] = $ckeck;	
+// 	}
+// }
+// // print_r($values);
+// // die();
+
+
+// $summaries = array(
+// 		'positions' => array($lables),
+// 		'levels' => array($levels),
+// 		'values' => array($values)
+
+// );
+
+// $positionTitles = array(
+// 		'positions' => array($lables),
+// );
+
+// $data_summaries = [array_flip($lables)];
+
+// foreach($data_summaries as $test) {
+// 	foreach($test as $key => $value)
+// 	{
+// 		$data_summaries[$key] = array($levels, $values);
+// 	}
+// }
+
+// die($response->withJson($data_summaries));
+
+
+// foreach ($summaries['lables']['position'] as $value) {
+// 	echo $value;
+// }
+
+// foreach($summaries as $book) {
+// 	echo "<br>";
+// 	foreach($book['positions'] as $key => $value)
+// 	{
+// 		echo $value. "<br>";
+// 	}
+// }
+// die();
+// die($response->withJson($summaries));
+
+// echo count($levels);
+// die();
+
+
+
+// $results = [
+//     'status' => 'success',
+//     'summary' => $data_summaries,
+//     // 'department' => $department,
+//     'data' => $ketqua ? $ketqua->all() : null,
+//     'total' => $ketqua ? $ketqua->count() : null,
+//     'time' => time(),
+// ];
+
+
+
+
+
+
+
+// 
+//  positions 
+// a, b ,c 
+
+
+//  add level_positions
+// a1, b1 
+// point
+
+// level - 
+// update point
+
+// a
+// b
+// c 
+// d
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+<?php
+
+use Illuminate\Database\Capsule\Manager as DB;
+
+
+$getLevels = DB::table('level')->where(['status' => 1, 'isdelete' => 0])->get();
+
+$lables = [];
+
+$levels = [];
+
+$values = [];
+
+$allPositions = $obj->get(); 
+
+foreach ($allPositions as $key => $value) {
+	$lables[$key] = $value->title;
+	foreach ($getLevels as $index => $v) {
+		$levels[$index] = $v->title;
+		$values[$index] = $v->point;
+	}
+}
+
+
+$data_summaries = [array_flip($lables)];
+
+foreach($data_summaries as $test) {
+	foreach($test as $key => $value)
+	{
+		$data_summaries[$key] = array($levels, $values);
+	}
+}
+
+
+$results = [
+    'status' => 'success',
+    'summary' => $data_summaries,
+    // 'department' => $department,
+    'data' => $ketqua ? $ketqua->all() : null,
+    'total' => $ketqua ? $ketqua->count() : null,
+    'time' => time(),
+];
