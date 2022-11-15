@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Capsule\Manager as DB;
 
-// $obj->where(['point_status' => 1, 'isdelete' => 0, 'status' => 1])->where('parent_id', '!=', 0);
+$obj->where(['point_status' => 1, 'isdelete' => 0, 'status' => 1])->where('parent_id', '!=', 0);
 
 
 // $levels = DB::table('level')->where(['status' => 1, 'isdelete' => 0]);
@@ -37,9 +37,9 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 // die($response->withJson($obj->get()));
 
-$getAll = $obj->join('level_positions', 'positions.id', '=', 'level_positions.position_id')->where(['level_positions.isdelete'=>0])
-            ->join('level', 'level.id', '=', 'level_positions.level_id')->where(['level.isdelete'=>0])
-            ->get(); 
+// $getAll = $obj->join('level_positions', 'positions.id', '=', 'level_positions.position_id')->where(['level_positions.isdelete'=>0])
+//             ->join('level', 'level.id', '=', 'level_positions.level_id')->where(['level.isdelete'=>0])
+//             ->get(); 
 
 
 // $getAll = DB::table('level_positions as lp')->join('level', 'level.id', '=', 'lp.level_id')->where(['lp.isdelete'=>0])
@@ -49,7 +49,7 @@ $getAll = $obj->join('level_positions', 'positions.id', '=', 'level_positions.po
 // foreach($getAll as $key => $value){
 //     $dataid[$key] = $value->level_id;
 // }           
-die($response->withJson($getAll));
+// die($response->withJson($getAll));
 
 
 
