@@ -2,6 +2,7 @@
 use Illuminate\Database\Capsule\Manager as DB;
 use Respect\Validation\Validator as v;
 
+die($data->title);
 
 echo $data->title; //set id mới get được data
 // echo $args['id']; //get id trên parameter

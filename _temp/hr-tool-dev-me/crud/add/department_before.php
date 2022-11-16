@@ -2,6 +2,7 @@
 use Illuminate\Database\Capsule\Manager as DB;
 use Respect\Validation\Validator as v;
 $name='positions';
+print_r($data->title);die();
 throwError($container,$request, [
     'title' => v::length(2, 200)->notEmpty()
 ]);

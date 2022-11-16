@@ -19,15 +19,30 @@ use Respect\Validation\Validator as v;
 //////////////
 // // validate - 
 
-// throwError($container,$request, [
-//     'title' => v::length(3, 200)->notEmpty()
-// ]);
+throwError($container,$request, [
+    'title' => v::length(3, 200)->notEmpty()
+]);
 
-// if(isset($data->title))
-// {
-//     if(DB::table($name)->where('title',trim($data->title))->count())
-//     {
-//         throw new Exception('Title already exists');
+// if (!empty($data->title)) {
+//     if (!preg_match("?<=^| )\d+(\.\d+)?(?=$|", $data->title)) {
+//         throw new Exception('Enter only numbers and periods (.)');
 //     }
 // }
+
+
+// if (!empty($data->title)) {
+//     if (preg_match("^(\d)*(\.)?([0-9]{1})?$", $data->title)) {
+//         throw new Exception('Enter only numbers and periods (.)');
+//     }
+
+// }
+
+die($data->title);
+if(isset($data->title))
+{
+    if(DB::table($name)->where('title',trim($data->title))->count())
+    {
+        throw new Exception('Title already exists');
+    }
+}
 // from - hr-tool-be/crud/add/source_before.php

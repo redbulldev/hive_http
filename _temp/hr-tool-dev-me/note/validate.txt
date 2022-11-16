@@ -1,0 +1,10 @@
+
+
+https://regexr.com/3eqpa
+
+
+
+https://stackoverflow.com/questions/5570820/regex-allow-digits-and-a-single-dot
+
+
+https://social.msdn.microsoft.com/Forums/en-US/23467ae1-ebba-4915-bc0e-20a8827d174f/4-digits-after-decimal-point?forum=asphtmlcssjavascript
