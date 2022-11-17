@@ -13,6 +13,7 @@ require './crud/all_where.php';
 $department = ['labels'=>[],'values'=>[]]; 
 
 $dataPositionId = $obj->get();
+// die($response->withJson($dataPositionId));
 
 $allPositions = DB::table('positions')->where(['isdelete'=>0,'status'=>1])->get(); 
 
@@ -34,19 +35,31 @@ foreach($positionId as $key => $k)
 {
     $obj1 = clone  $obj; //request
 
-    $res = $obj1->where('request.position_id',$k)->selectRaw('count(cv.step) AS total_cv')->where('cv.status', 2)->first();
+    $res = $obj1->where('request.position_id',$k)->selectRaw('count(cv.step) AS total_cv')->where('cv.step', 6)->first();
 // die($response->withJson($res));
 
 
     $department['values'][$k] = $res->total_cv; //yêu cầu (số lượng)
 }
-// die($response->withJson($department));
+// die($response->withJson($dataPositionId));
 // // print_r($department);
 // die();
 
+/////////////////////////////////////////
+// Tổng điểm
+$all_level_positions = DB::table('level_positions')->where(['isdelete'=>0])->get(); 
 
-
-
+$count_point = 0;
+foreach ($all_level_positions as $key => $value) {
+    foreach($positionId as $index => $k) {
+        if ($value->position_id == $k) {
+            $count_point += $value->point;
+        }
+    }
+}
+// print_r($positionId);
+// echo $count_point;
+// die();
 
 
 
@@ -60,6 +73,8 @@ foreach($positionId as $key => $k)
 //////////////////////////////////////////////////////////////////////
 // $objRequest = DB::table('request');
 // data summary
+// $test = $obj->where('step', 5)->get();
+// die($test);
 $obj->selectRaw('
     SUM(target) AS target, 
     SUM(total_cv) AS total_cv, 
@@ -73,7 +88,7 @@ $obj->selectRaw('
     GROUP_CONCAT(total_cv) as list_total, 
     GROUP_CONCAT(onboard_cv) as list_onboard,
     GROUP_CONCAT(positions.title,\'\') as labels
-');
+');//->where('cv.step', [1,5]);
 
 // $c = $obj->where('request.status', 1)->count();
 // die($c);

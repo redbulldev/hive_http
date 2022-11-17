@@ -61,4 +61,4 @@ $obj->join('positions as parent', function ($join) {
 $moreselect= ['positions.title as positions_title', 'parent.title as department_title'];
 
 // print_r();
-//  die($response->withJson($obj->get()));
+ die($response->withJson($obj->get()));
