@@ -1,0 +1,30 @@
+.message {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  padding: 10px 16px;
+  display: inline-block;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  animation: moveTop 0.3s linear;
+  z-index: 100000;
+  p {
+    font-size: 14px;
+    color: rgb(0, 0, 0, 0.85);
+    line-height: 1.5715;
+    margin-bottom: 0;
+  }
+}
+@keyframes moveTop {
+  from {
+    top: 0;
+  }
+  to {
+    top: 16px;
+  }
+}

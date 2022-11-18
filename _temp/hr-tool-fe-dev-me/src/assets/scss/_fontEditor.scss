@@ -1,0 +1,59 @@
+@import url('https://fonts.cdnfonts.com/css/arial');
+@import url('https://fonts.cdnfonts.com/css/sans-comic-sans');
+@import url('https://fonts.cdnfonts.com/css/courier-new');
+@import url('https://fonts.cdnfonts.com/css/georgia');
+@import url('https://fonts.cdnfonts.com/css/helvetica-neue-9');
+@import url('https://fonts.cdnfonts.com/css/lucida-sans');
+@import url('https://fonts.cdnfonts.com/css/times-new-roman');
+
+#toolbar-container .ql-font span[data-label='Arial']::before {
+  font-family: 'Arial';
+}
+
+#toolbar-container .ql-font span[data-label='Comic Sans']::before {
+  font-family: 'Sans Comic Sans';
+}
+
+#toolbar-container .ql-font span[data-label='Courier New']::before {
+  font-family: 'Courier New';
+}
+
+#toolbar-container .ql-font span[data-label='Georgia']::before {
+  font-family: 'Georgia';
+}
+
+#toolbar-container .ql-font span[data-label='Helvetica']::before {
+  font-family: 'Helvetica Neue';
+}
+#toolbar-container .ql-font span[data-label='Lucida']::before {
+  font-family: 'Lucida Sans';
+}
+#toolbar-container .ql-font span[data-label='Times']::before {
+  font-family: 'Times New Roman';
+}
+/* Set content font-families */
+
+.ql-font-georgia {
+  font-family: 'Georgia';
+}
+
+.ql-font-courier-new {
+  font-family: 'Courier New';
+}
+
+.ql-font-comic-sans {
+  font-family: 'Sans Comic Sans';
+}
+
+.ql-cursor {
+  font-family: 'Arial';
+}
+.ql-font-helvetica {
+  font-family: 'Helvetica Neue';
+}
+.ql-font-lucida {
+  font-family: 'Lucida Sans';
+}
+.ql-font-times-new-roman {
+  font-family: 'Times New Roman';
+}

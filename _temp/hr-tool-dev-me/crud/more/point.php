@@ -2,9 +2,9 @@
 
 use Illuminate\Database\Capsule\Manager as DB;
 
-$obj->where(['point_status' => 1, 'isdelete' => 0, 'status' => 1])->where('parent_id', '!=', 0);
+// $obj->where(['point_status' => 1, 'isdelete' => 0, 'status' => 1])->where('parent_id', '!=', 0);
 
-die('ok1');
+// die('ok1');
 // $levels = DB::table('level')->where(['status' => 1, 'isdelete' => 0]);
 
 // $results = [

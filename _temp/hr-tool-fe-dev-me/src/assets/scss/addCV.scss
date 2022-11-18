@@ -1,0 +1,114 @@
+.cv__drawer-add {
+  .ant-upload-list-item {
+    padding: 0 !important;
+    border: unset !important;
+  }
+  .ant-upload-list-picture-card-container,
+  .ant-upload.ant-upload-select-picture-card {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  .ant-upload-list-picture-card-container {
+    .ant-upload-list-item-thumbnail {
+      opacity: 1 !important;
+    }
+    img {
+      object-fit: cover !important;
+    }
+  }
+  .active {
+    opacity: 1 !important;
+  }
+  .ant-upload-list-picture-card .ant-upload-list-item-actions {
+    display: none !important;
+  }
+  .ant-upload-list-picture-card .ant-upload-list-item-info::before {
+    display: none !important;
+  }
+  .add__image-wrapper {
+    .add_image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .image__cont:hover {
+        .iamge__del-button {
+          display: flex;
+        }
+      }
+      .image__cont {
+        position: relative;
+        display: inline-block;
+        object-fit: contain;
+        .iamge__del-button {
+          position: absolute;
+          display: none;
+          cursor: pointer;
+          right: 9px;
+          bottom: 9px;
+          width: 27px;
+          height: 27px;
+          background: #ffffff;
+          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+          border-radius: 2px;
+          justify-content: center;
+          align-items: center;
+          img {
+            display: block;
+            object-fit: contain;
+          }
+        }
+      }
+
+      .empty_review-image {
+        width: 252px;
+        height: 252px;
+        border: 1px dashed rgb(44, 135, 255);
+        border-radius: 2px;
+        margin: 0 auto;
+      }
+      margin-bottom: 28px;
+    }
+
+    .image-show-list {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      > * {
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+      }
+
+      button {
+        color: #808080;
+        width: 40px;
+        height: 40px;
+      }
+
+      button:hover {
+        color: #40a9ff;
+      }
+    }
+
+    .upload_card {
+      text-align: center;
+    }
+  }
+  .btn-file {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      margin-right: 5px;
+      position: relative;
+    }
+  }
+
+  .ant-form-item-label {
+    padding: 0 !important;
+  }
+  .ant-form-item {
+    margin-bottom: 12px !important;
+  }
+}

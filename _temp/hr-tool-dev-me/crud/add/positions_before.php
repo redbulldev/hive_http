@@ -35,13 +35,52 @@ if(!empty($data->parent_id))
             throw new Exception('One of the requesters not found');
         }
     }
+
+
+    if(empty($data->see_cvs) ||!is_array($data->see_cvs) || count($data->see_cvs)==0)
+    {
+        throw new Exception('Requestor not found');
+    }
+
+    if(isset($data->see_cvs) && is_array($data->see_cvs) && count($data->see_cvs)>0)
+    {
+        if(count($data->see_cvs) != DB::table('users')->whereIn('username',$data->see_cvs)->where('isdelete',0)->count())
+        {
+            throw new Exception('One of the requesters not found');
+        }
+    }
 }else{
-    $data->parent_id =0;
+    $data->parent_id = 0;
+}
+
+
+if(empty($data->levels) ||!is_array($data->levels) || count($data->levels)==0)
+{
+    throw new Exception('Requestor not found');
+}
+
+
+if(isset($data->levels) && is_array($data->levels) && count($data->levels)>0)
+{
+    if(count($data->levels) != DB::table('level')->whereIn('title',$data->levels)->where('isdelete',0)->count())
+    {
+        throw new Exception('One of the requesters not found');
+    }
 }
 
 if(isset($data->description))
 {
     $data->description = substr($data->description,0,5000);
+}
+
+if(isset($data->key))
+{
+    $data->key = substr($data->key,0,50);
+}
+
+if(isset($data->rank))
+{
+    $data->rank = substr($data->rank,0,50);
 }
 
 if(isset($data->title))

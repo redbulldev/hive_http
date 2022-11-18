@@ -1,0 +1,339 @@
+$primary-color: #1890ff;
+$text-opacity: #607d8b;
+$shadow: 0 1px 10px 0px #ccc;
+$radius: 10px;
+
+.statistic {
+  background: #fff;
+  padding: 0 0 1.375rem 0;
+
+  &__header {
+    height: 76px;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.05);
+    align-items: center;
+    padding: 22px 24px;
+    .mobile-filter-btn {
+      display: none;
+    }
+  }
+
+  .summary {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 2rem;
+    column-gap: 2rem;
+    margin: 2rem 0;
+    .card {
+      flex: 1;
+    }
+  }
+
+  &__title {
+    font-size: 1.25rem;
+    margin-bottom: 0;
+    line-height: 1.25rem;
+  }
+  &__body {
+    padding: 24px;
+    .table-filter {
+      padding-left: 0 !important;
+      margin-bottom: 13px;
+    }
+  }
+  &__bar {
+    padding: 1.125rem;
+    margin-top: 1.25rem;
+    border-radius: $radius;
+    box-shadow: $shadow;
+    margin-bottom: 40px;
+    &--header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+  &__chart {
+    &--title {
+      font-size: 1rem;
+    }
+  }
+  .doughnut {
+    width: 234px !important;
+    height: 234px !important;
+    margin-left: 3rem;
+  }
+  &__sub-info {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+
+    .sub-info__item {
+      flex-grow: 1;
+      flex-basis: 25%;
+      padding: 30px 17px 23px;
+      box-shadow: $shadow;
+      border-radius: $radius;
+    }
+    .item {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      img {
+        width: 32px;
+        height: 4px;
+      }
+      .item__time {
+        font-size: 0.875rem;
+        color: $text-opacity;
+      }
+    }
+  }
+
+  .chart__bar--annotation {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    .annotation {
+      display: flex;
+      flex-direction: column;
+      margin-right: 1.25rem;
+      img {
+        width: 0.875rem;
+        height: 0.875rem;
+      }
+    }
+  }
+  .report {
+    padding: 0.8rem;
+    margin-top: 2rem;
+    box-shadow: $shadow;
+    border-radius: $radius;
+
+    .ant-table-row {
+      cursor: pointer;
+    }
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #fff;
+    }
+  }
+  .bar {
+    width: 100%;
+    height: 650px;
+    margin-top: 50px;
+  }
+  .row {
+    position: relative;
+  }
+  .card {
+    display: flex;
+    border-radius: 10px;
+    box-shadow: $shadow;
+
+    &__content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 0;
+      border-right: 1px solid #ccc;
+    }
+    &__number {
+      padding: 30px 0;
+      flex-basis: 7rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+  }
+  .ant-card-body {
+    padding: 0;
+    height: 100%;
+    display: flex;
+  }
+  h4 {
+    margin-bottom: 0;
+  }
+  .total {
+    font-size: 25px;
+    margin-bottom: 0;
+  }
+  p {
+    margin-bottom: 0;
+    margin-right: 10px;
+    font-size: 18px;
+  }
+  .radar {
+    width: 90%;
+    height: 90%;
+    margin: 0 auto;
+  }
+
+  .pie {
+    width: 70%;
+    height: 70%;
+    margin: 40px auto 0;
+  }
+  .ant-select-selector {
+    height: 40px;
+  }
+  .ant-btn {
+    height: 42px;
+  }
+  .ant-picker {
+    height: 40px;
+  }
+
+  .ant-table-tbody {
+    position: relative;
+  }
+  .table-fullscreen .ant-table-tbody tr:nth-last-child(1) {
+    font-size: 16px;
+    color: red;
+    font-weight: bold;
+  }
+
+  .bar__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .filter-fullscreen {
+    width: 900px;
+    padding-left: 20px;
+  }
+  .table-main {
+    padding: 0;
+  }
+  .fullscreen-enabled {
+    background-color: #fff !important;
+    .ant-table {
+      max-height: 80vh !important;
+      overflow-y: scroll;
+    }
+    .ant-table-wrapper {
+      padding: 1rem;
+    }
+    .table__shadow {
+      box-shadow: none;
+    }
+    .ant-pagination {
+      margin-top: 10px !important;
+    }
+    .ant-table-body {
+      overflow: visible !important;
+    }
+    .ant-table-header {
+      overflow: visible !important;
+    }
+    .ant-table-container::after {
+      box-shadow: none;
+    }
+  }
+}
+
+@media (max-width: $md) {
+  .statistic {
+    .mobile-filter-btn {
+      display: block;
+    }
+    &__body {
+      .filter-desktop {
+        display: none;
+      }
+    }
+    .summary .card {
+      flex-basis: 45%;
+    }
+  }
+
+  .filter-fullscreen-btn {
+    width: auto;
+    height: auto !important;
+    position: relative;
+    bottom: -4px;
+    right: 15px;
+  }
+
+  .filter-mobile {
+    .ant-row {
+      flex-flow: column wrap;
+      align-items: flex-start;
+      .ant-col {
+        width: 100%;
+        .ant-form-item-control {
+          width: 100%;
+        }
+      }
+
+      // Begin: fix just show one pannel in Rangepicker
+      .ant-picker-panel-container {
+        margin-left: 0px !important;
+      }
+      .ant-picker-panels > *:first-child button.ant-picker-header-next-btn {
+        visibility: visible !important;
+      }
+
+      .ant-picker-panels
+        > *:first-child
+        button.ant-picker-header-super-next-btn {
+        visibility: visible !important;
+      }
+
+      .ant-picker-panels > *:last-child {
+        display: none !important;
+      }
+
+      .ant-picker-panel-container,
+      .ant-picker-footer {
+        width: 280px !important;
+      }
+
+      .ant-picker-footer-extra > div {
+        flex-wrap: wrap !important;
+      }
+      // end: fix just show one pannel in Rangepicker
+    }
+  }
+}
+
+@media (max-width: $lg) {
+  .statistic {
+    &__header {
+      padding: 22px 16px;
+    }
+    &__body {
+      padding: 16px;
+      .filter-desktop {
+        .ant-col-lg-6 {
+          flex: 0 0 30%;
+          max-width: 30%;
+        }
+      }
+      .ant-card {
+        padding: 20px 11px;
+      }
+    }
+  }
+}
+
+@media (max-width: $sm) {
+  .statistic {
+    &__body {
+      padding: 16px;
+    }
+    .report {
+      padding: 0px;
+    }
+    .summary .card {
+      flex-basis: 100%;
+    }
+  }
+}

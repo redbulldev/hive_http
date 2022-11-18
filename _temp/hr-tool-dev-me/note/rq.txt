@@ -42,11 +42,11 @@
 ///////////
 *dự kiến thêm trường 
 - table postitions
-+ point(float)
-+ seen(người được xem)
-+ level_id (longText)
+//+ point(float)
++ see_cv(người được xem)
++ rank (longText)
 + key
-
++ point_status
 
 
 - view create positions

@@ -1,0 +1,99 @@
+// Fix giao diện chung
+.ant-form-item-required::before {
+  content: '' !important;
+  display: none !important;
+}
+
+.ant-drawer-close {
+  order: 1;
+  color: #000;
+}
+
+.ant-drawer-header {
+  box-shadow: 0px 2px 8px rgb(0 0 0 / 15%);
+  z-index: 10000;
+}
+
+.field--required {
+  span {
+    color: red;
+  }
+}
+
+.ant-message {
+  z-index: 2001;
+}
+
+.standard-form {
+  .ant-row.ant-form-item {
+    margin-bottom: 15px;
+    .ant-col.ant-form-item-label {
+      padding-bottom: 2px;
+    }
+  }
+  .ant-row.ant-form-item.submit-btn {
+    margin-bottom: 0;
+  }
+  .ant-row.ant-form-item.ant-form-item-has-error {
+    margin-bottom: 5px;
+  }
+}
+.focus-btn {
+  color: #40a9ff;
+  background-color: #e6f7ff;
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: 600;
+}
+
+.non-focus-btn {
+  color: inherit;
+}
+
+// Row color table
+.ant-table-tbody {
+  tr:nth-child(2n) td {
+    background: #f2f8fc;
+  }
+  tr:hover td {
+    background: #e5f1f9 !important;
+  }
+}
+
+// Badge
+.age-badge {
+  background: slategray;
+  color: white;
+  min-width: 67px;
+  display: flex;
+  justify-content: center;
+  padding: 2px 7px;
+  border-radius: 9px;
+  font-weight: 400;
+  width: fit-content;
+}
+.level-badge {
+  background: darkseagreen;
+  color: white;
+  padding: 1px 3px;
+  border-radius: 4px;
+  width: fit-content;
+}
+
+// Responsive breakpoints
+$xs: 480px;
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+$xl: 1200px;
+
+:export {
+  xs: $xs;
+  sm: $sm;
+  md: $md;
+  lg: $lg;
+  xl: $xl;
+}
+
+.white-space-nowrap {
+  white-space: nowrap;
+}

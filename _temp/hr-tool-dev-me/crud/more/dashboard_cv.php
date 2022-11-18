@@ -56,7 +56,7 @@ $obj->join('positions as parent', function ($join) {
 
 $obj->join('cv', function ($join) {
     $join->on('cv.position_id', '=', 'positions.id');
-    $join->where(['cv.isdelete'=>0])->whereIn('cv.step', [1,5,6]);
+    $join->where(['cv.isdelete'=>0])->where('cv.step', '>', 0);
     // $join->where(['positions.status'=>1, 'positions.isdelete'=>0]);
 }); 
 

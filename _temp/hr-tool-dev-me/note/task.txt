@@ -168,8 +168,18 @@ join: positions -> request -> cv --> count data
 
 
 
+////////////////////////////////////////////////
+
+/////////////////////////
+*tư vấn của anh nam
+-  bảng xếp hạng số lượng đã tuyển
+SELECT count(*) FROM `cv` WHERE step >5 group by position_id;
 
 
+- thêm 1 trường vào table positions_requester để quy định user nào được xem , user nào nào yêu cầu
+
+
+- table docs, docs_dynamic để định nghĩa swagger 
 
 
 

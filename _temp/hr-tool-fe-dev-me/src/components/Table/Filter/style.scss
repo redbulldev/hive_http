@@ -1,0 +1,46 @@
+.table-filter {
+  padding: 0 24px;
+  $height: 40px;
+  button[type='submit'] {
+    align-self: flex-end;
+    margin-left: 12px;
+    width: $height;
+    height: $height;
+  }
+  .field-row {
+    > .ant-col {
+      .ant-form-item {
+        margin-bottom: 0;
+        .ant-form-item-label {
+          padding-bottom: 0;
+        }
+        .ant-select-selector {
+          height: $height;
+        }
+        .ant-select-single .ant-select-selector .ant-select-selection-item,
+        .ant-select-single
+          .ant-select-selector
+          .ant-select-selection-placeholder {
+          line-height: $height !important;
+        }
+        input {
+          line-height: calc($height - 10px);
+        }
+      }
+    }
+    & > .ant-col + .ant-col {
+      // margin-left: 10px;
+    }
+    .cleaner {
+      width: 35px;
+      height: 35px;
+      border-radius: 30%;
+      border: 1px solid #ccc;
+      display: flex;
+      margin-left: 7px;
+      align-self: flex-end;
+      position: relative;
+      top: -3px;
+    }
+  }
+}

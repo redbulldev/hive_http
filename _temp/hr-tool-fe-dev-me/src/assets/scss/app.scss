@@ -1,0 +1,41 @@
+@import 'react-image-lightbox/style.css';
+@import './common';
+@import './header';
+@import './sidebar';
+@import './notfound';
+@import './language';
+@import 'detailCV';
+@import './layout';
+@import './login';
+@import './level';
+@import 'position';
+@import './statistic';
+@import './typework';
+@import './source';
+@import './plan';
+@import './request';
+@import './cv';
+@import './tointerview';
+@import './interview';
+@import './settings';
+@import './nopermission';
+@import './department';
+@import './message';
+@import './preOffer';
+@import './offer.scss';
+@import './addCvNew.scss';
+@import './inputTag';
+@import './fontEditor';
+.ant-page-header {
+  margin-bottom: 20px !important;
+  .ant-breadcrumb-link > a {
+    font-size: 20px;
+  }
+}
+.breadcrumb-header {
+  height: 76px;
+  margin-bottom: 20px !important;
+  button {
+    height: 32px !important;
+  }
+}

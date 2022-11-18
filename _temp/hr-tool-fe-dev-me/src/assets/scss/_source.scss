@@ -1,0 +1,117 @@
+.source-header {
+  padding: 22px 24px;
+  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.05);
+  h2 {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 0;
+  }
+  button {
+    margin-right: 12px;
+  }
+  display: flex;
+  justify-content: space-between;
+}
+.source {
+  padding: 0 24px 20px 24px;
+
+  & .search {
+    margin-bottom: 13px;
+    margin-top: 16px;
+    .keyword {
+      font-size: 14px;
+    }
+    .source-search {
+      margin-right: 12px;
+      height: 40px;
+    }
+
+    button {
+      height: 40px !important;
+      width: 40px !important;
+    }
+  }
+  &__table {
+    padding: 0 10px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
+    background-color: white;
+
+    .title-limit {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      word-break: break-word;
+    }
+
+    .ant-table-cell {
+      padding: 10px 16px !important;
+    }
+
+    &-utility {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      .action-all {
+        button {
+          font-size: 12px;
+          padding: 0 8px;
+          height: 24px;
+          span {
+            line-height: 22px;
+          }
+        }
+      }
+      .action-btn {
+        display: flex;
+        align-items: center;
+        gap: 17px;
+        font-size: 20px;
+        margin-right: 16px;
+        margin-bottom: 15px;
+        &-icon {
+          cursor: pointer;
+        }
+        .export-icon {
+          position: relative;
+          top: -2px;
+          cursor: pointer;
+        }
+      }
+    }
+    &-fullscreen {
+      background-color: white;
+      overflow: auto;
+    }
+    .action-icon {
+      cursor: pointer;
+      font-size: 22px;
+    }
+  }
+}
+
+// Other
+.overlayActionContent .ant-popover-inner-content {
+  padding: 0 !important;
+  .action-content {
+    display: flex;
+    flex-direction: column;
+    button {
+      padding: 20px 38px;
+      display: flex;
+      align-items: center;
+      border: none !important;
+      border: 1px solid transparent !important;
+      color: #000;
+      border-radius: 0 !important;
+    }
+    button:hover {
+      border: 1px solid #0077c8 !important;
+    }
+  }
+}
+
+// Common
+.d-flex {
+  display: flex;
+}

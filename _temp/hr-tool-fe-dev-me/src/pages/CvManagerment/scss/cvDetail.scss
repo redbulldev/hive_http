@@ -1,0 +1,226 @@
+.cv-detail-temp {
+  .header-list {
+    margin-bottom: 0;
+  }
+}
+
+.cv-detail {
+  /* Scroll bar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgb(185, 185, 185);
+    border-radius: 8px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(139, 138, 138);
+  }
+
+  &-box + &-box {
+    margin-top: 20px;
+  }
+  .step-flow {
+    text-align: center;
+    padding: 18px 0 0;
+    h3 {
+      font-size: 16px;
+      line-height: 24px;
+      margin-bottom: 0;
+    }
+    .flow {
+      padding: 0 4px;
+      margin-top: 25px;
+      .steps {
+        overflow-x: auto;
+        user-select: none;
+        text-transform: uppercase;
+        .ant-steps-item-active {
+          cursor: pointer;
+          .ant-steps-item-title {
+            font-weight: 700;
+          }
+        }
+        .failed .ant-steps-item-title {
+          color: #ff4d4f;
+        }
+        .step-circle {
+          $size: 24px;
+          background: #1890ff;
+          color: white;
+          width: $size;
+          height: $size;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          font-size: 12px;
+        }
+        .step-circle.disabled {
+          background: #bfbfbf;
+        }
+        .active-show {
+          .ant-steps-item-title {
+            color: #1890ff;
+          }
+        }
+
+        // color for tail
+        .ant-steps-item-process .ant-steps-item-tail::after,
+        .ant-steps-item-wait .ant-steps-item-tail::after {
+          background: #dfdfdf;
+        }
+      }
+    }
+    .step-main {
+      margin-top: 34px;
+      padding: 0 25px;
+      text-align: left;
+      .step-frame {
+        .step-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background: #f2f2f2;
+          padding: 10px;
+          h4 {
+            margin-bottom: 0;
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 16px;
+          }
+          button {
+            text-transform: uppercase;
+          }
+        }
+        .step-content {
+          margin-top: 8px;
+          margin-bottom: 14px;
+        }
+      }
+    }
+
+    .toggle {
+      width: fit-content;
+      cursor: pointer;
+      padding: 24px 24px 26px;
+      margin: auto;
+    }
+  }
+
+  .cv-information {
+    .page-box-shadow {
+      padding: 20px 44px 66px;
+      .cv-left-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .cv-left {
+          text-align: center;
+          .cv-avatar {
+            .avatar-show {
+              padding: 0;
+              box-shadow: none;
+              .list > * {
+                $size: 14%;
+                width: $size;
+                height: $size;
+              }
+            }
+          }
+          .cv-avatar-step {
+            margin-top: 16px;
+            background-color: #fff;
+            .avatar-step-wrapper {
+              display: flex;
+              align-items: center;
+              height: 100%;
+              .divider {
+                margin: 0 3px;
+              }
+              .email-icon {
+                margin-left: 8px;
+                display: flex;
+                align-items: center;
+                .anticon {
+                  font-size: 18px;
+                  color: #808080;
+                }
+              }
+            }
+          }
+        }
+      }
+      .cv-right {
+        position: relative;
+        .cv-info-line {
+          display: flex;
+          > p {
+            width: 160px;
+          }
+          > div {
+            flex: 1;
+            word-break: break-word;
+          }
+          .cv-basic-info {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            .cv-line-gender {
+              display: flex;
+              min-width: 55px;
+              justify-content: center;
+            }
+          }
+          .ant-breadcrumb {
+            display: flex;
+            > span {
+              display: flex;
+            }
+            .ant-breadcrumb-link {
+              display: flex;
+              align-items: center;
+              > span {
+                position: relative;
+                top: 1px;
+              }
+            }
+            img {
+              height: 12px;
+              margin-right: 2px;
+            }
+          }
+        }
+        // Edit button
+        .btn-edit {
+          position: absolute;
+          right: -16px;
+          top: 2px;
+        }
+      }
+    }
+  }
+
+  .cv-history {
+    .table-main {
+      margin-top: 0;
+      padding: 0;
+    }
+    .box-shadow {
+      padding: 0;
+    }
+    .ant-table-pagination {
+      padding-right: 15px;
+    }
+  }
+}

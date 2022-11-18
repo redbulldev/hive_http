@@ -1,0 +1,10 @@
+.small-table {
+  margin-top: 1rem;
+  .ant-table-thead .ant-table-cell::first-letter {
+    text-transform: uppercase;
+  }
+  .ant-table-cell-scrollbar {
+    width: 0;
+    padding: 8px;
+  }
+}

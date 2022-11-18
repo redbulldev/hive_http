@@ -1,0 +1,158 @@
+.interview {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .interview-content {
+    padding: 17px 22px 20px 22px;
+    flex: 1;
+    // HR-interview
+    .hr-review {
+      height: 100%;
+      &__form {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .wrapper--horizontal {
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          .ant-form-item:not(:last-child) {
+            // min-width: 220px;
+          }
+          .ant-form-item:last-child {
+            $width: 180px;
+            width: $width;
+            .ant-picker {
+              width: $width;
+            }
+          }
+        }
+        &-btn {
+          margin-bottom: 0 !important;
+          button {
+            float: right;
+          }
+        }
+        &-rate {
+          .ant-form-item-label {
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 10px;
+          }
+        }
+        .ant-form-item-label {
+          padding: 0px !important;
+        }
+        .ant-form-item:not(:last-child) {
+          margin-bottom: 12px !important;
+        }
+      }
+    }
+    // Tech-interview
+    .tech-review {
+      height: 100%;
+      .ant-form {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        .wrapper--horizontal {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 12px;
+          input {
+            padding: 4px 0 !important;
+            text-align: center;
+          }
+          label {
+            color: rgba(0, 0, 0, 0.5);
+          }
+          .ant-row.ant-form-item {
+            margin-bottom: 0 !important;
+            flex-direction: row;
+            .ant-form-item-label {
+              display: flex;
+              align-items: center;
+              margin-right: 33px;
+            }
+            .ant-input {
+              width: 34px;
+            }
+          }
+        }
+
+        .tech-interview-submit {
+          margin-bottom: 0;
+          float: right;
+          .ant-form-item-control-input-content {
+            button {
+              float: right;
+            }
+          }
+        }
+
+        .ant-form-item-label {
+          padding: 0px !important;
+        }
+        .ant-form-item:not(:last-child) {
+          margin-bottom: 12px !important;
+        }
+
+        // disable number input spin box
+        /* For Firefox */
+
+        input[type='number'] {
+          -moz-appearance: textfield;
+        }
+
+        /* Webkit browsers like Safari and Chrome */
+
+        input[type='number']::-webkit-inner-spin-button,
+        input[type='number']::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  &__sticky {
+    position: sticky;
+    left: 0;
+    top: 0;
+    background: white;
+    z-index: 1000;
+    padding: 0 22px;
+    .ant-menu-overflow {
+      line-height: 50px !important;
+      display: flex;
+
+      .ant-menu-overflow-item {
+        padding: 0 !important;
+      }
+
+      .ant-menu-overflow-item + .ant-menu-overflow-item {
+        margin-left: 32px;
+      }
+      .ant-menu-overflow-item::after {
+        left: 0 !important;
+        right: 0 !important;
+      }
+    }
+  }
+}
+
+@media (max-width: $sm) {
+  .interview {
+    .wrapper--horizontal {
+      flex-direction: column;
+      .ant-row {
+        width: 100% !important;
+        .ant-picker {
+          width: 100% !important;
+        }
+      }
+    }
+  }
+}

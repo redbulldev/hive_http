@@ -1,0 +1,67 @@
+.update-form-box {
+  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  padding: 10px 11px 10px 30px;
+  .avatar-row {
+    height: 100%;
+    .ant-col {
+      display: flex;
+      align-items: center;
+    }
+  }
+  .update-form {
+    .ant-select-selection-item {
+      width: 100px;
+    }
+    flex: 1;
+    .cv-field {
+      .ant-form-item-control-input-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        > span {
+          display: flex;
+          align-items: center;
+          .ant-upload-list-item {
+            margin-top: 0;
+          }
+        }
+      }
+      .ant-upload-list-item-name {
+        width: 300px;
+      }
+    }
+    .ant-form-item {
+      margin-bottom: 4px;
+      .ant-form-item-label {
+        width: 120px;
+        display: flex;
+        justify-content: flex-start;
+        label::after {
+          display: none;
+        }
+      }
+    }
+    .action-btn {
+      display: flex;
+      margin-top: 11px;
+      gap: 11px;
+      justify-content: flex-end;
+    }
+
+    // disable number input spin box
+    /* For Firefox */
+
+    input[type='number'] {
+      -moz-appearance: textfield;
+    }
+
+    /* Webkit browsers like Safari and Chrome */
+
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+}

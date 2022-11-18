@@ -35,9 +35,9 @@ foreach($positionId as $key => $k)
 {
     $obj1 = clone  $obj; //request
 
-    $res = $obj1->where('request.position_id',$k)->selectRaw('count(cv.step) AS total_cv')->where('cv.step', 6)->first();
+    // $res = $obj1->where('request.position_id',$k)->selectRaw('count(cv.step) AS total_cv')->where('cv.step', '>', 5)->first();
+    $res = $obj1->where('request.position_id',$k)->where('cv.step', '>', 7)->groupBy('cv.position_id')->first();
 // die($response->withJson($res));
-
 
     $department['values'][$k] = $res->total_cv; //yêu cầu (số lượng)
 }
@@ -76,6 +76,7 @@ foreach ($all_level_positions as $key => $value) {
 // $test = $obj->where('step', 5)->get();
 // die($test);
 $obj->selectRaw('
+    cv.step as step 
     SUM(target) AS target, 
     SUM(total_cv) AS total_cv, 
     SUM(interview_cv) AS interview_cv, 
@@ -85,6 +86,7 @@ $obj->selectRaw('
     SUM(onboard_cv) AS onboard_cv, 
     SUM(fail_job) AS fail_job,
     GROUP_CONCAT(target) as list_target, 
+    GROUP_CONCAT(pass_cv) as list_pass, 
     GROUP_CONCAT(total_cv) as list_total, 
     GROUP_CONCAT(onboard_cv) as list_onboard,
     GROUP_CONCAT(positions.title,\'\') as labels
@@ -100,6 +102,8 @@ $summary=$obj->first();
 
 $list_target = explode(',',$summary->list_target);
 
+$list_pass = explode(',',$summary->list_pass);
+
 $list_total = explode(',',$summary->list_total);
 
 $list_onboard = explode(',',$summary->list_onboard);
@@ -109,6 +113,8 @@ $labels = explode(',',$summary->labels);
 $newlabel=[];
 
 $newlist_target=[];
+
+$newlist_pass=[];
 
 $newlist_total=[];
 
@@ -122,6 +128,13 @@ foreach($labels as $key=>$label)
 
         $newlist_target[$label]= (!empty($newlist_target[$label])?$newlist_target[$label]:0) + $list_target[$key];
 
+        if($summary->step > 5)
+        {
+            $newlist_pass[$label]= (!empty($newlist_pass[$label])?$newlist_pass[$label]:0) + $list_pass[$key];
+        } else {
+            $newlist_pass[$label]= 0;         
+        }
+
         $newlist_total[$label]= (!empty($newlist_total[$label])?$newlist_total[$label]:0) + $list_total[$key];
 
         $newlist_onboard[$label]= (!empty($newlist_onboard[$label])?$newlist_onboard[$label]:0) + $list_onboard[$key];
@@ -131,6 +144,8 @@ foreach($labels as $key=>$label)
 $summary->labels = implode(',',array_keys($newlabel));
 
 $summary->list_target =  implode(',',array_values($newlist_target));
+
+$summary->list_pass =  implode(',',array_values($newlist_pass));
 
 $summary->list_total =  implode(',',array_values($newlist_total));
 

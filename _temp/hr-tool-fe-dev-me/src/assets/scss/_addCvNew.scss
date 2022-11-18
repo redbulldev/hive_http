@@ -1,0 +1,37 @@
+.addCv {
+  .show {
+    display: flex;
+    .avatar-show {
+      margin: auto;
+    }
+  }
+  .left {
+    margin-left: 7%;
+    margin-right: 5.5%;
+  }
+
+  //Begin: Custom upload Cv
+  // .upload-file {
+  //   position: relative;
+  //   padding-top: 2px;
+
+  //   > span {
+  //     display: flex;
+  //   }
+  //   .ant-upload-list-item-card-actions {
+  //     max-width: 41%;
+  //   }
+  //   .anticon.anticon-cloud-upload {
+  //     bottom: -1px;
+  //   }
+  //   .ant-upload-list-item-info {
+  //     padding: 0 0 0 10px;
+  //     .ant-upload-list-item-name {
+  //       max-width: 41%;
+  //       text-overflow: ellipsis;
+  //       overflow: hidden;
+  //     }
+  //   }
+  // }
+  //End: Custom upload Cv
+}

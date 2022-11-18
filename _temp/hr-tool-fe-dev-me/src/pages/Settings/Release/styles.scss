@@ -1,0 +1,24 @@
+.release-config {
+  .box-list {
+    padding: 0;
+  }
+}
+
+.release-view {
+  width: 50%;
+  min-height: 50vh;
+  border: 1px dashed rgb(207, 207, 207);
+  border-radius: 10px;
+  margin: auto;
+  margin-top: 50px;
+  padding: 30px;
+  .number {
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .release-date {
+    margin-left: 12px;
+    font-size: 13px;
+    color: #9d9d9d;
+  }
+}
