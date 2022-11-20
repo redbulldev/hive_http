@@ -36,7 +36,7 @@ foreach($positionId as $key => $k)
     $obj1 = clone  $obj; //request
 
     // $res = $obj1->where('request.position_id',$k)->selectRaw('count(cv.step) AS total_cv')->where('cv.step', '>', 5)->first();
-    $res = $obj1->where('request.position_id',$k)->where('cv.step', '>', 7)->groupBy('cv.position_id')->first();
+    $res = $obj1->where('cv.position_id',$k)->selectRaw('count(cv.step) AS total_cv')->where('cv.step', '>', 7)->first();//->groupBy('cv.position_id')
 // die($response->withJson($res));
 
     $department['values'][$k] = $res->total_cv; //yêu cầu (số lượng)
@@ -75,8 +75,7 @@ foreach ($all_level_positions as $key => $value) {
 // data summary
 // $test = $obj->where('step', 5)->get();
 // die($test);
-$obj->selectRaw('
-    cv.step as step 
+$obj->selectRaw(' 
     SUM(target) AS target, 
     SUM(total_cv) AS total_cv, 
     SUM(interview_cv) AS interview_cv, 
@@ -90,13 +89,10 @@ $obj->selectRaw('
     GROUP_CONCAT(total_cv) as list_total, 
     GROUP_CONCAT(onboard_cv) as list_onboard,
     GROUP_CONCAT(positions.title,\'\') as labels
-');//->where('cv.step', [1,5]);
+');//->where('cv.step', '>', 5);
 
 // $c = $obj->where('request.status', 1)->count();
 // die($c);
-
-
-
 
 $summary=$obj->first();
 
@@ -128,12 +124,12 @@ foreach($labels as $key=>$label)
 
         $newlist_target[$label]= (!empty($newlist_target[$label])?$newlist_target[$label]:0) + $list_target[$key];
 
-        if($summary->step > 5)
-        {
+        // if($summary->step > 5)
+        // {
             $newlist_pass[$label]= (!empty($newlist_pass[$label])?$newlist_pass[$label]:0) + $list_pass[$key];
-        } else {
-            $newlist_pass[$label]= 0;         
-        }
+        // } else {
+        //     $newlist_pass[$label]= 0;         
+        // }
 
         $newlist_total[$label]= (!empty($newlist_total[$label])?$newlist_total[$label]:0) + $list_total[$key];
 
@@ -214,6 +210,7 @@ $summary->list_onboard =  implode(',',array_values($newlist_onboard));
 
 $results = [
     'status' => 'success',
+    'point' => $count_point,
     'summary' => $summary,
     'department' => $department,
     'data' => $ketqua ? $ketqua->all() : null,
