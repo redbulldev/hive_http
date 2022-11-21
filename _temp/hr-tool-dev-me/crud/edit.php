@@ -16,7 +16,6 @@ if (in_array($name, $conf['block'])) {
         $id = $args['id'];
          if (!$ignoreUrl)checkRole($permission, $name, 'edit', [$id], $username);
         try {
-
             $data = json_decode($request->getBody());
             if ($data && is_object($data)) {
                 $data->datemodified = time();
@@ -34,6 +33,7 @@ if (in_array($name, $conf['block'])) {
             if (isset($results)) return $results;
             if (file_exists(__DIR__ . '/edit/' . $name . '.php')) require(__DIR__ . '/edit/' . $name . '.php');
             else {
+                // die('testx');
                 $newdata = removecolumn($name, $data);
                 if (count($newdata) > 0) {
                     DB::table($name)->where($columnpri, $id)->update($newdata);
@@ -42,12 +42,17 @@ if (in_array($name, $conf['block'])) {
                     $results = ['status' => 'error', 'message' => 'no data update', 'code' => 'nodataupdate'];
             }
             if ($results['status'] == 'success'){
+                // die('testx1');
+
                  if(!empty($loginid)) $idlog = historySave($login_id, 'update', $name, $id, $olddata);
             }
             else {
                 $httpStatus = 201;
             }
-            if (file_exists(__DIR__ . '/edit/' . $name . '_after.php')) require(__DIR__ . '/edit/' . $name . '_after.php');
+            if (file_exists(__DIR__ . '/edit/' . $name . '_after.php')){
+                // print_r($id);die();
+                 require(__DIR__ . '/edit/' . $name . '_after.php');
+            }
             if(!empty($alertmore)) $results['more'] = $alertmore;
         } catch (QueryException $e) {
             throw new Exception(json_encode([

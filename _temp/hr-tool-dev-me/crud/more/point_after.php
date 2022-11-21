@@ -12,8 +12,9 @@ $levels = [];
 
 $get_positions = $obj->get(); 
 
-function checkPosition($value){
-	$check = DB::table('positions')->where('id', $value)->where(['status' => 1, 'isdelete' => 0])->first();
+function checkPosition($value)
+{
+	$check = DB::table('positions')->where('id', $value)->where(['status' => 1, 'isdelete' => 0])->where('parent_id', '!=', 0)->first();
 
 	if (!empty($check))
 	{
@@ -23,8 +24,9 @@ function checkPosition($value){
 	return false;
 }
 
-function getPosition($value){
-	$position = DB::table('positions')->where('id', $value)->where(['status' => 1, 'isdelete' => 0])->first();
+function getPosition($value)
+{
+	$position = DB::table('positions')->where('id', $value)->where(['status' => 1, 'isdelete' => 0])->where('parent_id', '!=', 0)->first();
 
 	if (!empty($position))
 	{
@@ -34,7 +36,8 @@ function getPosition($value){
 	return false;
 }
 
-function checkLevel($value){
+function checkLevel($value)
+{
 	$check = DB::table('level')->where('id', $value)->where(['status' => 1, 'isdelete' => 0])->first();
 
 	if (!empty($check)){
@@ -99,6 +102,7 @@ foreach($lables as $key => $lable)
 			}
 		}
 	}
+	
 	if(!empty($point_positions[$lable]))
 	{
 		foreach($levels as $index => $level){
