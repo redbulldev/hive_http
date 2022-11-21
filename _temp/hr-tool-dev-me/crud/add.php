@@ -29,6 +29,7 @@ if (in_array($name,$conf['block'])) {
                     if ($data) $newdata = removecolumn($name, $data);
                     else $newdata = [];
                     if (count($newdata) > 0) {
+                        // die('kk');
                         $id = DB::table($name)->insertGetId($newdata);
                         if (isset($newdata['alias'])) {
                             $check = DB::table($name)->where(['alias' => $newdata['alias']])->where('id', '!=', $id)->first();
@@ -46,14 +47,17 @@ if (in_array($name,$conf['block'])) {
             }
 
             if(is_array($datas)) {
+
                 if (file_exists(__DIR__ . '/add/' . $name . '_before_all.php')) require(__DIR__ . '/add/' . $name . '_before_all.php');
                 if(isset($results)) return $results;
                 foreach($datas as $data) {
+                    echo 'add';die($data->id);
                     if(isset($data->id))unset($data->id);
                     $id=itemsAdd($request,$container,$name,$data,$id,$user, $conf);
                 }
                 $results = ['status' => 'success','time' => time()];
             }else{
+                    // echo $id;die($id);
                 $results = itemsAdd($request,$container,$name,$datas,$id,$user, $conf);
             }
         }catch (QueryException $e) {

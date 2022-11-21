@@ -3,128 +3,106 @@ use Illuminate\Database\Capsule\Manager as DB;
 use Respect\Validation\Validator as v;
 // print_r($data->id);
 // die($data->id);
-// throwError($container,$request, [
-//     'title' => v::length(3, 200)->notEmpty(),
-//     'key' => v::length(2, 50)->notEmpty(),
-//     'rank' => v::length(1, 4)->notEmpty(),
-// ]);
 
-// if(!empty($data->parent_id))
-// {
-//     if(!DB::table($name)->where(['id'=>trim($data->parent_id),'parent_id'=>0])->where('isdelete',0)->count())
-//     {
-//         throw new Exception('Department not exist');
-//     }
-//     if(empty($data->manager_id))
-//     {
-//         throw new Exception('Manager not found');
-//     }else{
-//         if(!DB::table('users')->where('username',$data->manager_id)->where('isdelete',0)->count())
-//         {
-//             throw new Exception('Manager not exist');
-//         }
-//     }
+throwError($container,$request, [
+    'title' => v::length(3, 200)->notEmpty(),
+    'key' => v::length(2, 50)->notEmpty(),
+    'rank' => v::length(1, 4)->notEmpty(),
+]);
 
-//     if(empty($data->requestor) ||!is_array($data->requestor) || count($data->requestor)==0)
-//     {
-//         throw new Exception('Requestor not found');
-//     }
+if(!empty($data->parent_id))
+{
+    if(!DB::table($name)->where(['id'=>trim($data->parent_id),'parent_id'=>0])->where('isdelete',0)->count())
+    {
+        throw new Exception('Department not exist');
+    }
 
-//     if(isset($data->requestor) && is_array($data->requestor) && count($data->requestor)>0)
-//     {
-//         if(count($data->requestor) != DB::table('users')->whereIn('username',$data->requestor)->where('isdelete',0)->count())
-//         {
-//             throw new Exception('One of the requesters not found');
-//         }
-//     }
+    if(empty($data->manager_id))
+    {
+        throw new Exception('Manager not found');
+    } else {
+        if(!DB::table('users')->where('username',$data->manager_id)->where('isdelete',0)->count())
+        {
+            throw new Exception('Manager not exist');
+        }
+    }
 
-//     if(empty($data->see_cvs) ||!is_array($data->see_cvs) || count($data->see_cvs)==0)
-//     {
-//         throw new Exception('Requestor not found');
-//     }
+    if(empty($data->requestor) ||!is_array($data->requestor) || count($data->requestor)==0)
+    {
+        throw new Exception('Requestor not found');
+    }
 
-//     if(isset($data->see_cvs) && is_array($data->see_cvs) && count($data->see_cvs)>0)
-//     {
-//         if(count($data->see_cvs) != DB::table('users')->whereIn('username',$data->see_cvs)->where('isdelete',0)->count())
-//         {
-//             throw new Exception('One of the CV not found');
-//         }
-//     }
-// }else{
-//     $data->parent_id = 0;
-// }
+    if(isset($data->requestor) && is_array($data->requestor) && count($data->requestor)>0)
+    {
+        if(count($data->requestor) != DB::table('users')->whereIn('username',$data->requestor)->where('isdelete',0)->count())
+        {
+            throw new Exception('One of the requesters not found');
+        }
+    }
 
-// if(empty($data->levels) ||!is_array($data->levels) || count($data->levels)==0)
-// {
-//     throw new Exception('Levels not found');
-// }
+    if(empty($data->user_cvs) || !is_array($data->user_cvs) || count($data->user_cvs)==0)
+    {
+        throw new Exception('Requestor not found');
+    }
 
-// if(isset($data->levels) && is_array($data->levels) && count($data->levels)>0)
-// {
-//     if(count($data->levels) != DB::table('level')->whereIn('id',$data->levels)->where('isdelete',0)->count())
-//     {
-//         throw new Exception('One of the requesters not found');
-//     }
-// }
+    if(isset($data->user_cvs) && is_array($data->user_cvs) && count($data->user_cvs)>0)
+    {
+        if(count($data->user_cvs) != DB::table('users')->whereIn('username',$data->user_cvs)->where('isdelete',0)->count())
+        {
+            throw new Exception('One of the CV not found');
+        }
+    }
+} else {
+    $data->parent_id = 0;
+}
 
-// if(isset($data->description))
-// {
-//     $data->description = substr($data->description,0,5000);
-// }
+if(empty($data->levels) ||!is_array($data->levels) || count($data->levels)==0)
+{
+    throw new Exception('Levels not found');
+}
 
-// if(isset($data->key))
-// {
-//     if(!empty($data->parent_id))
-//     {
-//         if(DB::table($name)->where(['key'=>trim($data->key),'parent_id'=>$data->parent_id])->where('isdelete',0)->count())
-//         {
-//             throw new Exception('Key already exists');
-//         }
-//     }else{
-//         if(DB::table($name)->where(['key'=>trim($data->key),'parent_id'=>0])->where('isdelete',0)->count())
-//         {
-//             throw new Exception('Key already exists');
-//         }
-//     }
-// }
+if(isset($data->levels) && is_array($data->levels) && count($data->levels)>0)
+{
+    if(count($data->levels) != DB::table('level')->whereIn('id',$data->levels)->where('isdelete',0)->count())
+    {
+        throw new Exception('One of the levels not found');
+    }
+}
 
-// if(isset($data->title))
-// {
-//     if(!empty($data->parent_id))
-//     {
-//         if(DB::table($name)->where(['title'=>trim($data->title),'parent_id'=>$data->parent_id])->where('isdelete',0)->count())
-//         {
-//             throw new Exception('Title already exists');
-//         }
-//     }else{
-//         if(DB::table($name)->where(['title'=>trim($data->title),'parent_id'=>0])->where('isdelete',0)->count())
-//         {
-//             throw new Exception('Title already exists');
-//         }
-//     }
-// }
+if(isset($data->description))
+{
+    $data->description = substr($data->description,0,5000);
+}
 
-// die('end');
+if(isset($data->key))
+{
+    if(!empty($data->parent_id))
+    {
+        if(DB::table($name)->where(['key'=>trim($data->key),'parent_id'=>$data->parent_id])->where('isdelete',0)->count())
+        {
+            throw new Exception('Key already exists');
+        }
+    } else {
+        if(DB::table($name)->where(['key'=>trim($data->key),'parent_id'=>0])->where('isdelete',0)->count())
+        {
+            throw new Exception('Key already exists');
+        }
+    }
+}
 
-// ID vị trí/Phòng ban;21
-// parent_id
-// ID phòng ban;4
-// title
-// Tên vị trí/Phòng ban;Sales
-// author_id
-// ID người tạo;namng
-// manager_id
-// ID người quản lý;dungptp
-// requestor
-// Danh sách ID requestor;["chaupt","trangpm"]
-// description
-// Mô tả;Lorem ipsum dolor sit amet...
-// datecreate
-// Ngày tạo;1622504033
-// datemodified
-// Ngày sửa cuối;1622505033
-// status
-// Trạng thái:1 Hoạt động,0 khoá;1
-// point_status
-// Tính điểm quy đổi;0;1
-// isdelete
+if(isset($data->title))
+{
+    if(!empty($data->parent_id))
+    {
+        if(DB::table($name)->where(['title'=>trim($data->title),'parent_id'=>$data->parent_id])->where('isdelete',0)->count())
+        {
+            throw new Exception('Title already exists');
+        }
+    } else {
+        if(DB::table($name)->where(['title'=>trim($data->title),'parent_id'=>0])->where('isdelete',0)->count())
+        {
+            throw new Exception('Title already exists');
+        }
+    }
+}
+

@@ -28,8 +28,8 @@ foreach($dataPositionId as $key => $value) {
     }
 }
 
-// die($response->withJson($department));
-// $allCvs = DB::table('cv')->where(['isdelete'=>0, 'step'=> 5])->get(); 
+// $allCvs = DB::table('cv')->select(DB::raw('count(*), position_id'))->where('isdelete', 0)->groupBy('position_id')->get();
+// die($response->withJson($allCvs));
 
 foreach($positionId as $key => $k)
 {

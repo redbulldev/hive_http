@@ -1,0 +1,753 @@
+   "\/v1\/dashboard": {
+            "get": {
+                "operationId": "request",
+                "tags": [
+                    "Dashboard"
+                ],
+                "security": {
+                    "bearerAuth": []
+                },
+                "parameters": [
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "type": "string",
+                        "example": "namng",
+                        "description": "Từ khóa tìm kiếm"
+                    },
+                    {
+                        "name": "orderby",
+                        "in": "query",
+                        "type": "string",
+                        "example": "parent_id-ASC__author_id-DESC",
+                        "description": "Sắp xếp dữ liệu"
+                    },
+                    {
+                        "name": "[column]",
+                        "in": "query",
+                        "type": "string",
+                        "example": "1-2",
+                        "description": "Filter data: [column] là tên cột\/key dữ liệu muốn filter "
+                    }
+                ],
+                "description": "Lấy tất cả thông tin Dashboard có phân trang",
+                "responses": {
+                    "201": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "description": "Trạng thái lỗi",
+                                    "example": "error"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "description": "Nội dung thông báo lỗi",
+                                    "example": "Error connection"
+                                },
+                                "code": {
+                                    "type": "string",
+                                    "description": "Mã lỗi",
+                                    "example": "dberror"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "description": "Trạng thái lỗi",
+                                    "example": "error"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "description": "Nội dung thông báo lỗi",
+                                    "example": "You have not logged into your account"
+                                },
+                                "code": {
+                                    "type": "string",
+                                    "description": "Mã lỗi",
+                                    "example": "auth"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "description": "Trạng thái thành công",
+                                    "example": "success"
+                                },
+                                "data": {
+                                    "type": "array",
+                                    "description": "Danh sách Dashboard",
+                                    "items": {
+                                        "$ref": "#\/definitions\/DashboardModel"
+                                    },
+                                    "examples": [
+                                        {
+                                            "$ref": "#\/examples\/DashboardItem"
+                                        }
+                                    ]
+                                },
+                                "total": {
+                                    "type": "number",
+                                    "description": "Tổng số dữ liệu đang có",
+                                    "example": 2000
+                                },
+                                "summary": {
+                                    "$ref": "#\/definitions\/MrSummaryModel",
+                                    "examples": [
+                                        {
+                                            "$ref": "#\/examples\/MrSummaryItem"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+
+
+
+
+
+
+
+
+
+
+11078
+"DashboardCvModel": {
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "number",
+            "description": "ID level",
+            "require": true,
+            "example": 21
+        },
+        "author_id": {
+            "type": "string",
+            "description": "ID người tạo",
+            "require": true,
+            "example": "namng"
+        },
+        "requestor_id": {
+            "type": "string",
+            "description": "Người yêu cầu",
+            "require": true,
+            "example": "huynhnv"
+        },
+        "decision_id": {
+            "type": "string",
+            "description": "Người quyết định",
+            "require": false,
+            "example": "thangpm"
+        },
+        "position_id": {
+            "type": "number",
+            "description": "ID vị trí",
+            "require": false,
+            "example": 123
+        },
+        "typework_id": {
+            "type": "number",
+            "description": "ID hình thức làm việc",
+            "require": false,
+            "example": 12
+        },
+        "assignee_id": {
+            "type": "string",
+            "description": "Người xử lý",
+            "require": false,
+            "example": "thanglv"
+        },
+        "levels": {
+            "type": "object",
+            "description": "Danh sách Level",
+            "require": false,
+            "example": [
+                {
+                    "id": 1,
+                    "title": "Fresher"
+                }
+            ]
+        },
+        "assessment": {
+            "type": "number",
+            "description": "Đánh giá: 0 Easy, 1Medium,2 Hard , 3Very Hard",
+            "require": false,
+            "example": 2
+        },
+        "target": {
+            "type": "number",
+            "description": "Số lượng",
+            "require": true,
+            "example": 5
+        },
+        "languages": {
+            "type": "object",
+            "description": "Ngoại ngữ",
+            "require": false,
+            "example": [
+                "English",
+                "Japanese"
+            ]
+        },
+        "priority": {
+            "type": "number",
+            "description": "Độ ưu tiên",
+            "require": false,
+            "example": 2
+        },
+        "day": {
+            "type": "number",
+            "description": "Ngày",
+            "require": true,
+            "example": 24
+        },
+        "month": {
+            "type": "number",
+            "description": "Tháng",
+            "require": true,
+            "example": 3
+        },
+        "year": {
+            "type": "number",
+            "description": "Năm",
+            "require": true,
+            "example": 2022
+        },
+        "date": {
+            "type": "string",
+            "description": "Ngày kế hoạch",
+            "require": false,
+            "example": "2022-04-30"
+        },
+        "deadline": {
+            "type": "string",
+            "description": "Ngày hết hạn",
+            "require": false,
+            "example": "2022-04-30"
+        },
+        "total_cv": {
+            "type": "number",
+            "description": "Tổng số lượng CV",
+            "require": false,
+            "example": 234
+        },
+        "interview_cv": {
+            "type": "number",
+            "description": "CV được tham gia phỏng vấn",
+            "require": false,
+            "example": 120
+        },
+        "pass_cv": {
+            "type": "number",
+            "description": "Số lượng CV pass phỏng vấn",
+            "require": false,
+            "example": 40
+        },
+        "offer_cv": {
+            "type": "number",
+            "description": "Số lượng CV tham gia offer",
+            "require": false,
+            "example": 30
+        },
+        "offer_success": {
+            "type": "number",
+            "description": "Số lượng CV offer thành công",
+            "require": false,
+            "example": 20
+        },
+        "onboard_cv": {
+            "type": "number",
+            "description": "Số lượng CV đi làm",
+            "require": false,
+            "example": 15
+        },
+        "fail_job": {
+            "type": "number",
+            "description": "Số lượng Fail thử việc",
+            "require": false,
+            "example": 10
+        },
+        "employees": {
+            "type": "object",
+            "description": "Danh sách nhân sự đi làm",
+            "require": false,
+            "example": [
+                "Nguyễn Văn A",
+                "Hoàng Thị B"
+            ]
+        },
+        "sources": {
+            "type": "object",
+            "description": "Danh sách Nguồn",
+            "require": false,
+            "example": [
+                "TopCV",
+                "ViecIT"
+            ]
+        },
+        "description": {
+            "type": "string",
+            "description": "Mô tả",
+            "require": false,
+            "example": "Lorem ipsum dolor sit amet..."
+        },
+        "jd": {
+            "type": "string",
+            "description": "JS",
+            "require": false,
+            "example": "Lorem ipsum dolor sit amet..."
+        },
+        "datecreate": {
+            "type": "number",
+            "description": "Ngày tạo",
+            "require": true,
+            "example": 1622504033
+        },
+        "datemodified": {
+            "type": "number",
+            "description": "Ngày sửa cuối",
+            "require": true,
+            "example": 1622505033
+        },
+        "status": {
+            "type": "number",
+            "description": "Trạng thái:1 mới,0: từ chối, 2: Đồng ý",
+            "require": true,
+            "example": 1
+        },
+        "isauto": {
+            "type": "number",
+            "description": "Request tự động hàng tháng",
+            "require": true,
+            "example": 1
+        },
+        "positions_title": {
+            "type": "string",
+            "description": "Tên vị trí",
+            "require": false,
+            "example": "FE"
+        },
+        "level_title": {
+            "type": "string",
+            "description": "Tên level",
+            "require": false,
+            "example": "Junior"
+        },
+        "step": {
+            "type": "number",
+            "description": "Các buocws xét duyệt CV",
+            "require": false,
+            "example": 5
+        }
+    }
+},
+
+
+13344
+"DashboardCvItem": {
+    "id": 21,
+    "author_id": "namng",
+    "requestor_id": "huynhnv",
+    "decision_id": "thangpm",
+    "position_id": 123,
+    "typework_id": 12,
+    "assignee_id": "thanglv",
+    "levels": [
+        {
+            "id": 1,
+            "title": "Fresher"
+        }
+    ],
+    "assessment": 2,
+    "target": 5,
+    "languages": [
+        "English",
+        "Japanese"
+    ],
+    "priority": 2,
+    "day": 24,
+    "month": 3,
+    "year": 2022,
+    "date": "2022-04-30",
+    "deadline": "2022-04-30",
+    "total_cv": 234,
+    "interview_cv": 120,
+    "pass_cv": 40,
+    "offer_cv": 30,
+    "offer_success": 20,
+    "onboard_cv": 15,
+    "fail_job": 10,
+    "employees": [
+        "Nguyễn Văn A",
+        "Hoàng Thị B"
+    ],
+    "sources": [
+        "TopCV",
+        "ViecIT"
+    ],
+    "description": "Lorem ipsum dolor sit amet...",
+    "jd": "Lorem ipsum dolor sit amet...",
+    "datecreate": 1622504033,
+    "datemodified": 1622505033,
+    "status": 1,
+    "isauto": 1,
+    "positions_title": "FE",
+    "level_title": "Junior"
+},
+
+
+11007
+"MrSummaryCvModel": {
+    "type": "object",
+    "properties": {
+        "target": {
+            "type": "number",
+            "description": "Tổng số Request",
+            "require": false,
+            "example": "99"
+        },
+        "total_cv": {
+            "type": "number",
+            "description": "Tổng số lượng CV",
+            "require": false,
+            "example": "234"
+        },
+        "interview_cv": {
+            "type": "number",
+            "description": "CV được tham gia phỏng vấn",
+            "require": false,
+            "example": "120"
+        },
+        "pass_cv": {
+            "type": "number",
+            "description": "Số lượng CV pass phỏng vấn",
+            "require": false,
+            "example": "40"
+        },
+        "offer_cv": {
+            "type": "number",
+            "description": "Số lượng CV tham gia offer",
+            "require": false,
+            "example": "30"
+        },
+        "offer_success": {
+            "type": "number",
+            "description": "Số lượng CV offer thành công",
+            "require": false,
+            "example": "21"
+        },
+        "onboard_cv": {
+            "type": "number",
+            "description": "Số lượng CV đi làm",
+            "require": false,
+            "example": "15"
+        },
+        "fail_job": {
+            "type": "number",
+            "description": "Số lượng Fail thử việc",
+            "require": false,
+            "example": "4"
+        },
+        "list_target": {
+            "type": "string",
+            "description": "Danh sách số lượng yêu cầu theo cv",
+            "require": false,
+            "example": "2,3,2,5,3,5,2,..."
+        },
+        "list_pass": {
+            "type": "string",
+            "description": "Danh sách số lượng qua phỏng vấn yêu cầu theo cv",
+            "require": false,
+            "example": "2,3,2,5,3,5,2,..."
+        },
+        "list_total": {
+            "type": "string",
+            "description": "Danh sách số lượng CV theo cv",
+            "require": false,
+            "example": "10,30,15,25,13,30,..."
+        },
+        "list_onboard": {
+            "type": "string",
+            "description": "Danh sách tên vị trí và level theo cv",
+            "require": false,
+            "example": "HR - Senior-,HR - Middle+,Marketing - Junior-,Marketing - Middle,Designer - Junior-,Designer - Fresher,FE,..."
+        }
+    }
+},
+
+13331
+"MrSummaryCvItem": {
+    "target": "99",
+    "total_cv": "234",
+    "interview_cv": "120",
+    "pass_cv": "40",
+    "offer_cv": "30",
+    "offer_success": "21",
+    "onboard_cv": "15",
+    "fail_job": "4",
+    "list_target": "2,3,2,5,3,5,2,...",
+    "list_pass": "2,0,3,1,4,...",
+    "list_total": "10,30,15,25,13,30,...",
+    "list_onboard": "0,1,0,0,0,0,0,1,0,0",
+    "labels": "HR - Senior-,HR - Middle+,Marketing - Junior-,Marketing - Middle,Designer - Junior-,Designer - Fresher,FE,..."
+},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"\/v1\/dashboard_cv": {
+    "get": {
+        "operationId": "request-cv",
+        "tags": [
+            "Thống kê theo cv"
+        ],
+        "security": {
+            "bearerAuth": []
+        },
+        "parameters": [
+            {
+                "name": "keyword",
+                "in": "query",
+                "type": "string",
+                "example": "namng",
+                "description": "Từ khóa tìm kiếm"
+            },
+            {
+                "name": "orderby",
+                "in": "query",
+                "type": "string",
+                "example": "parent_id-ASC__author_id-DESC",
+                "description": "Sắp xếp dữ liệu"
+            },
+            {
+                "name": "[column]",
+                "in": "query",
+                "type": "string",
+                "example": "1-2",
+                "description": "Filter data: [column] là tên cột\/key dữ liệu muốn filter "
+            }
+        ],
+        "description": "Lấy tất cả thông tin Dashboard có phân trang",
+        "responses": {
+            "201": {
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "status": {
+                            "type": "string",
+                            "description": "Trạng thái lỗi",
+                            "example": "error"
+                        },
+                        "message": {
+                            "type": "string",
+                            "description": "Nội dung thông báo lỗi",
+                            "example": "Error connection"
+                        },
+                        "code": {
+                            "type": "string",
+                            "description": "Mã lỗi",
+                            "example": "dberror"
+                        }
+                    }
+                }
+            },
+            "401": {
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "status": {
+                            "type": "string",
+                            "description": "Trạng thái lỗi",
+                            "example": "error"
+                        },
+                        "message": {
+                            "type": "string",
+                            "description": "Nội dung thông báo lỗi",
+                            "example": "You have not logged into your account"
+                        },
+                        "code": {
+                            "type": "string",
+                            "description": "Mã lỗi",
+                            "example": "auth"
+                        }
+                    }
+                }
+            },
+            "200": {
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "status": {
+                            "type": "string",
+                            "description": "Trạng thái thành công",
+                            "example": "success"
+                        },
+                        "data": {
+                            "type": "array",
+                            "description": "Danh sách Dashboard Cv",
+                            "items": {
+                                "$ref": "#\/definitions\/DashboardCvModel"
+                            },
+                            "examples": [
+                                {
+                                    "$ref": "#\/examples\/DashboardCvItem"
+                                }
+                            ]
+                        },
+                        "total": {
+                            "type": "number",
+                            "description": "Tổng số dữ liệu đang có",
+                            "example": 2000
+                        },
+                        "summary": {
+                            "$ref": "#\/definitions\/MrSummaryCvModel",
+                            "examples": [
+                                {
+                                    "$ref": "#\/examples\/MrSummaryCvItem"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+   }
+},

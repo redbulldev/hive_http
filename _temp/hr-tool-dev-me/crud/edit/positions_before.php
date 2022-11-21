@@ -4,7 +4,9 @@ use Illuminate\Database\Capsule\Manager as DB;
 use Respect\Validation\Validator as v;
 
 throwError($container, $request, [
-    'title' => v::length(3, 200)->notEmpty()
+    'title' => v::length(3, 200)->notEmpty(),
+    'key' => v::length(2, 50)->notEmpty(),
+    'rank' => v::length(1, 4)->notEmpty(),
 ]);
 
 if (isset($data->title)) {
@@ -18,7 +20,6 @@ if (isset($data->title)) {
         }
     }
 }
-
 
 if (isset($data->parent_id) && $data->parent_id > 0) {
     if (!DB::table($name)->where(['id' => trim($data->parent_id), 'parent_id' => 0])->where('isdelete', 0)->count()) {
@@ -42,11 +43,85 @@ if (isset($data->parent_id) && $data->parent_id > 0) {
             throw new Exception('One of the requesters not found');
         }
     }
+
+    if(empty($data->user_cvs) ||!is_array($data->user_cvs) || count($data->user_cvs)==0)
+    {
+        throw new Exception('Requestor cv not found');
+    }
+
+    if(isset($data->user_cvs) && is_array($data->user_cvs) && count($data->user_cvs) > 0)
+    {
+        if(count($data->user_cvs) != DB::table('users')->whereIn('username',$data->user_cvs)->where('isdelete',0)->count())
+        {
+            throw new Exception('One of the CV not found');
+        }
+    }
 } else {
     unset($data->parent_id);
 }
 
+if(empty($data->levels) ||!is_array($data->levels) || count($data->levels)==0)
+{
+    throw new Exception('Levels not found');
+}
+
+if(isset($data->levels) && is_array($data->levels) && count($data->levels)>0)
+{
+    if(count($data->levels) != DB::table('level')->whereIn('id',$data->levels)->where('isdelete',0)->count())
+    {
+        throw new Exception('One of the levels not found');
+    }
+}
 
 if (isset($data->description)) {
     $data->description = substr($data->description, 0, 5000);
 }
+
+if(isset($data->key))
+{
+    if(!empty($data->parent_id))
+    {
+        if(DB::table($name)->where(['key'=>trim($data->key),'parent_id'=>$data->parent_id])->where('id', '!=', trim($id))->where('isdelete',0)->count())
+        {
+            throw new Exception('Key already exists');
+        }
+    }else{
+        if(DB::table($name)->where(['key'=>trim($data->key),'parent_id'=>0])->where('isdelete',0)->count())
+        {
+            throw new Exception('Key already exists');
+        }
+    }
+}
+
+
+
+// die($response->withJson($obj->get()));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
