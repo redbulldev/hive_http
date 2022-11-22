@@ -4,7 +4,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 use Respect\Validation\Validator as v;
 
 throwError($container, $request, [
-    'title' => v::length(3, 200)->notEmpty(),
+    'title' => v::length(3, 50)->notEmpty(),
     'key' => v::length(2, 5)->notEmpty(),
     'rank' => v::length(1, 4)->notEmpty(),
 ]);
@@ -18,7 +18,8 @@ if (isset($data->title))
             throw new Exception('Title already exists');
         }
     } else {
-        if (DB::table($name)->where(['title' => trim($data->title), 'parent_id' => 0])->where('id', '!=', trim($id))->where('isdelete', 0)->count()) {
+        if (DB::table($name)->where(['title' => trim($data->title), 'parent_id' => 0])->where('id', '!=', trim($id))->where('isdelete', 0)->count()) 
+        {
             throw new Exception('Title already exists');
         }
     }

@@ -12,15 +12,18 @@ $name='level_positions';
 //     'point' => v::length(1, 6)->notEmpty()->noWhitespace()
 // ]);
 
+if(!empty($data->point)){
+    $data->point = trim($data->point);
+}
 
 if (!empty($data->point)) {
-    if (preg_match("^(\d)*(\.)?([0-9]{1})?$", $data->point, $matches)) {
+    if (!preg_match("^(\d)*(\.)?([0-9]{1})?$", $data->point, $matches)) {
     	print_r($matches);
         throw new Exception('Enter only numbers and periods (.)');
     }
 }
 
-print_r($data->point);die();
+print_r($data->point);die('ok');
 
 
 

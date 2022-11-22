@@ -40,7 +40,8 @@ function checkLevel($value)
 {
 	$check = DB::table('level')->where('id', $value)->where(['status' => 1, 'isdelete' => 0])->first();
 
-	if (!empty($check)){
+	if (!empty($check))
+	{
 		return $check->id;
 	}
 
@@ -93,7 +94,7 @@ for($i=0;$i<count($level_positions);$i++)
 
 foreach($lables as $key => $lable)
 {
-	if(empty($point_positions[$lable]))
+	if(empty($point_positions[$lable]) )
 	{
 		foreach($levels as $index => $level){
 			if(empty($point_positions[$lable][$level]))
@@ -114,7 +115,11 @@ foreach($lables as $key => $lable)
 	}
 }
 
-// die($response->withJson($point_positions));
+unset($point_positions[0]);
+
+
+// die($response->withJson($point_positions['Test']));
+// die($response->withJson($levels));
 
 
 $results = [
@@ -123,8 +128,5 @@ $results = [
     'total' => $point_positions ? count($point_positions) : null,
     'time' => time(),
 ];
-
-
-
 
 

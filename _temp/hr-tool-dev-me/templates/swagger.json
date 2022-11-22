@@ -7034,6 +7034,84 @@
                 }
             }
         },
+        "\/v1\/position_point\/1": {
+            "get": {
+                "operationId": "position-point",
+                "tags": [
+                    "Bảng điểm quy đổi"
+                ],
+                "description": "Tính điểm các position được bật điểm quy đổi",
+                "responses": {
+                    "201": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "description": "Trạng thái lỗi",
+                                    "example": "error"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "description": "Nội dung thông báo lỗi",
+                                    "example": "Error connection"
+                                },
+                                "code": {
+                                    "type": "string",
+                                    "description": "Mã lỗi",
+                                    "example": "dberror"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "description": "Trạng thái lỗi",
+                                    "example": "error"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "description": "Nội dung thông báo lỗi",
+                                    "example": "You have not logged into your account"
+                                },
+                                "code": {
+                                    "type": "string",
+                                    "description": "Mã lỗi",
+                                    "example": "auth"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "description": "Trạng thái API",
+                                    "example": "success"
+                                },
+                                "data": {
+                                    "$ref": "#\/definitions\/PositionPointModel",
+                                    "example": {
+                                        "$ref": "#\/examples\/PositionPointItem"
+                                    }
+                                },
+                                "total": {
+                                    "type": "number",
+                                    "description": "Tổng số dữ liệu đang có",
+                                    "example": 43
+                                },
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "\/v1\/login": {
             "post": {
                 "operationId": "post-4",
@@ -10203,7 +10281,7 @@
                 },
                 "levels": {
                     "type": "object",
-                    "description": "Danh sách trình độ",
+                    "description": "Danh sách ID trình độ",
                     "require": false,
                     "example": [
                         3,
@@ -10291,7 +10369,7 @@
                     ]
                 },
                 "user_cvs": {
-                    "type": number,
+                    "type": "number",
                     "description": "Danh sách ID user được xem",
                     "require": true,
                     "example": [
@@ -12044,6 +12122,29 @@
                     "description": "",
                     "require": false,
                     "example": "string"
+                }
+            }
+        },
+        "PositionPointModel": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "description": "",
+                    "require": true,
+                    "example": "string"
+                },
+                "lable": {
+                    "type": "string",
+                    "description": "",
+                    "require": true,
+                    "example": "string"
+                },
+                "value": {
+                    "type": "number",
+                    "description": "",
+                    "require": true,
+                    "example": 3.1
                 }
             }
         },
@@ -13932,6 +14033,21 @@
             "mail_smtpsecure": "string",
             "mail_username": "string",
             "mail_password": "string"
+        },
+        "PositionPointItem": {
+            "test": {
+                "Intern": 2,
+                "Bresher-": 1,
+                "Fresher": 3.2,
+                "Fresher+": 1,
+                "Junior-": 2.3,
+                "Junior": 1,
+                "Junior+": 1.1,
+                "Middle-": 4,
+                "Senior+": 1,
+                "Tech lead": 5,
+                "Test": 1
+            }
         },
         "LoginResItem": {
             "username": "namng",

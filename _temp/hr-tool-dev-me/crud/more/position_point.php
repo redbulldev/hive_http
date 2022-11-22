@@ -69,3 +69,5 @@ $obj->where(['point_status' => 1, 'isdelete' => 0, 'status' => 1])->where('paren
 // - diem get tu level_positions
 // kiem tra
 
+
+

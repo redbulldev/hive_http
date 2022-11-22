@@ -28,4 +28,4 @@ if(empty($permission->positions->all))
     $obj->whereIn('positions_requester.user_id',$requestor);
 }
 
-$moreselect = ['parent.title AS parent_title';  //, 'level.title as level_title']
+$moreselect = ['parent.title AS parent_title'];  //, 'level.title as level_title']

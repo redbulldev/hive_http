@@ -1,0 +1,34 @@
+version: '3.8'
+
+networks:
+  hr_tool_dev:
+
+services:
+  mysql_hr_tool:
+    image: mysql:5.7.39 
+    container_name: mysql_hr_tool
+    restart: unless-stopped
+    tty: true 
+    ports:
+      - "4306:3306"
+    environment:
+      MYSQL_DATABASE: mysql_hr_tool
+      MYSQL_USER: root_
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./docker/mysql:/var/lib/mysql/
+    networks:
+      - hr_tool_dev
+
+  # Optional GUI for mariadb
+  adminer_hr_tool:
+    image: adminer
+    container_name: adminer_hr_tool
+    restart: unless-stopped
+    ports:
+      - 8091:8080
+    networks:
+      - hr_tool_dev

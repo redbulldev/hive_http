@@ -14,7 +14,7 @@ if (in_array($name,$conf['block'])) {
 } else {
     try {
         require('./shared/getToken.php');
-        if (!$ignoreUrl)checkRole($permission, $name, 'view'); //
+        if (!$ignoreUrl)checkRole($permission, $name, 'view');
         function filterparam($table, $params)
         {
             $allcolumn = DB::select('SHOW FULL COLUMNS FROM ' . $table);
