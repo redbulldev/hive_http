@@ -104,4 +104,3 @@ if (isset($data->key)) {
     }
 }
 
-// die($response->withJson($obj->get()));

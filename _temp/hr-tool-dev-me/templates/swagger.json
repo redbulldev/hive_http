@@ -7034,9 +7034,9 @@
                 }
             }
         },
-        "\/v1\/position_point\/1": {
+        "\/v1\/position_point": {
             "get": {
-                "operationId": "position-point",
+                "operationId": "position-point-get",
                 "tags": [
                     "Bảng điểm quy đổi"
                 ],
@@ -7109,6 +7109,87 @@
                             }
                         }
                     }
+                },
+                "security": {
+                    "bearerAuth": []
+                }
+            },
+            "post": {
+                "operationId": "position-point-post",
+                "tags": [
+                    "Bảng điểm quy đổi"
+                ],
+                "parameters": [
+                    {
+                        "name": "Thông tin điểm quy đổi",
+                        "in": "body",
+                        "type": "object",
+                        "schema": {
+                            "$ref": "#\/definitions\/PositionPointBodyModel"
+                        }
+                    }
+                ],
+                "description": "Thêm hoặc sửa thông tin điểm quy đổi",
+                "responses": {
+                    "201": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "description": "Trạng thái lỗi",
+                                    "example": "error"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "description": "Nội dung thông báo lỗi",
+                                    "example": "Error connection"
+                                },
+                                "code": {
+                                    "type": "string",
+                                    "description": "Mã lỗi",
+                                    "example": "dberror"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "description": "Trạng thái lỗi",
+                                    "example": "error"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "description": "Nội dung thông báo lỗi",
+                                    "example": "You have not logged into your account"
+                                },
+                                "code": {
+                                    "type": "string",
+                                    "description": "Mã lỗi",
+                                    "example": "auth"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "description": "Trạng thái API",
+                                    "example": "success"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": {
+                    "bearerAuth": []
                 }
             }
         },
@@ -12591,6 +12672,29 @@
                     "description": "Trạng thái",
                     "require": false,
                     "example": 0
+                }
+            }
+        },
+        "PositionPointBodyModel": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "description": "",
+                    "require": false,
+                    "example": "string"
+                },
+                "lable": {
+                    "type": "string",
+                    "description": "",
+                    "require": false,
+                    "example": "string"
+                },
+                "value": {
+                    "type": "number",
+                    "description": "",
+                    "require": true,
+                    "example": 3.1
                 }
             }
         },

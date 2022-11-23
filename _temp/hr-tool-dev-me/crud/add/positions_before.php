@@ -4,11 +4,48 @@ use Respect\Validation\Validator as v;
 // print_r($data->id);
 // die($data->id);
 
+// $t = 021;
+// echo strlen($t);die();
+// do
+//   {
+//     $max = $temp % 10;
+//   }while($temp /= 10);
+
+
+// if(!preg_match('^(0{1}|[1-9]\d*)([.]\d\d)?$', 0233)) {
+// die('ok');
+//     } else{
+// die('not');
+//     }
+// echo $result ;die();
+// $data->rank = 0123;
+// $var = (int)$data->rank;
+
+// echo $var;die();
+
+// $zero = strpos($data->rank, 0);
+
+// if($zero === 0) {
+// die('test');
+// }
+
+// if (empty($zero)) {
+//     throw new Exception('Do not enter leading zeros!');
+// }
+// echo $zero ;die();
+// echo $data->rank ;die();
+
+if (is_string($data->rank)) {
+    throw new Exception('Data must be numeric!');
+}
+
 throwError($container, $request, [
     'title' => v::length(3, 50)->notEmpty(),
     'key' => v::length(2, 5)->notEmpty(),
     'rank' => v::length(1, 4)->notEmpty(),
 ]);
+
+// die('die');
 
 if (!empty($data->parent_id)) 
 {
@@ -104,3 +141,14 @@ if (isset($data->title))
         }
     }
 }
+
+die('end');
+
+// $t = $request->getBody();
+// die($t);
+// die($response->withJson($obj->get()));
+// print_r($request->getBody());
+// die($request->getBody());
+//             $datas = $request->getBody();
+// die($datas);
+// die($response->withJson($request->getBody());

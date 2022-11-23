@@ -88,7 +88,27 @@ for($i=0;$i<count($level_positions);$i++)
 {
 	if ($level_positions[$i]->level_id == checkLevel($level_positions[$i]->level_id) && $level_positions[$i]->position_id == checkPosition($level_positions[$i]->position_id)) 
 	{
-		$point_positions[getPosition($level_positions[$i]->position_id)][getLevel($level_positions[$i]->level_id)] = $level_positions[$i]->point;
+		// foreach ($get_positions as $key => $value) 
+		// {
+		// 	foreach ($get_levels as $index => $v) 
+		// 	{
+		// 		if (!$point_positions[$value->title][$level_positions[$i]->id.'.'.$v->title] && !$point_positions[$value->title]['0.'.$v->title]) {
+		// 			$point_positions[getPosition($level_positions[$i]->position_id)][$level_positions[$i]->id.'.'.getLevel($level_positions[$i]->level_id)] = $level_positions[$i]->point;
+
+		// 			// $point_positions[$value->title][$level_positions[$i]->id.'.'.$v->title] = $level_positions[$i]->point;
+		// 		}
+		// 	}
+		// }
+
+		// $one_level = substr($level, strpos($level, '.')+1);
+		// $two_level = substr($level, strpos($level, '.')+1);
+
+		// if ($level_positions[$i]->level_id != checkLevel($level_positions[$i]->level_id))
+		// 	$point_positions[getPosition($level_positions[$i]->position_id)][$level_positions[$i]->id.'.'.getLevel($level_positions[$i]->level_id)] = $level_positions[$i]->point;
+		// }
+
+		$point_positions[getPosition($level_positions[$i]->position_id)][$level_positions[$i]->id.'.'.getLevel($level_positions[$i]->level_id)] = $level_positions[$i]->point;
+
 	}
 }
 
@@ -97,9 +117,11 @@ foreach($lables as $key => $lable)
 	if(empty($point_positions[$lable]) )
 	{
 		foreach($levels as $index => $level){
+			// $format_level = substr($level, strpos($level, '.')+1);
+
 			if(empty($point_positions[$lable][$level]))
 			{
-				$point_positions[$lable][$level]= 1;
+				$point_positions[$lable]['0.'.$level]= 1;
 			}
 		}
 	}
@@ -107,19 +129,46 @@ foreach($lables as $key => $lable)
 	if(!empty($point_positions[$lable]))
 	{
 		foreach($levels as $index => $level){
+			// $format_level = substr($level, strpos($level, '.')+1);
+
 			if(empty($point_positions[$lable][$level]))
 			{
-				$point_positions[$lable][$level] = 1;						
+				$point_positions[$lable]['0.'.$level] = 1;		
+				// unset($point_positions[$lable]['0.'.$level]));
 			}
 		}
 	}
 }
 
-unset($point_positions[0]);
+$datas = [];
+$count =0;
+foreach ($point_positions as $key => $title) 
+{
+	// print_r($point_positions[$key]); die();
+	foreach ($title as $index => $lable) 
+	{
+		// print_r($index);
+		die($response->withJson($point_positions['test 7']));die();
 
+		// $data[$index] = $index;
+		// $count++;
+		// echo $count;
+		// die();
+		// for($i=0;$i<count($point_positions);$i++) 
+		// {
+		// 	if () {
 
-// die($response->withJson($point_positions['Test']));
-// die($response->withJson($levels));
+		// 	}
+		// }
+		
+	}
+}
+// print_r($datas);die('ok');
+// unset($point_positions['test 7']['25.Intern']);
+
+die();
+// die($response->withJson($point_positions));
+die($response->withJson($datas));
 
 
 $results = [

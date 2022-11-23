@@ -4,6 +4,8 @@ use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\QueryException;
 $httpStatus= 200;
 $name = str_replace('-', '_', $args['name']);
+$exception_feature = false;
+// die($name);
 if (in_array($name,$conf['block'])) {
     $httpStatus= 201;
     $results = ['status' => 'error', 'message' => 'API is Block', 'code' => 'block'];
@@ -14,6 +16,7 @@ if (in_array($name,$conf['block'])) {
         try {
             $id = 0;
             $datas = json_decode($request->getBody());
+            // print_r($datas);die();
             function itemsAdd($request,$container,$name,$data,$id,$user, $conf){
                 if ($data) {
                     $data->datecreate = time();
@@ -29,15 +32,20 @@ if (in_array($name,$conf['block'])) {
                     if ($data) $newdata = removecolumn($name, $data);
                     else $newdata = [];
                     if (count($newdata) > 0) {
-                        // die('kk');
-                        $id = DB::table($name)->insertGetId($newdata);
-                        if (isset($newdata['alias'])) {
-                            $check = DB::table($name)->where(['alias' => $newdata['alias']])->where('id', '!=', $id)->first();
-                            if ($check)  DB::table($name)->where('id', $id)->update(['alias' => $newdata['alias'] . '-' . $id]);
+                          if ($exception_feature == false) {
+                            $id = DB::table($name)->insertGetId($newdata);
+                            if (isset($newdata['alias'])) {
+                                $check = DB::table($name)->where(['alias' => $newdata['alias']])->where('id', '!=', $id)->first();
+                                if ($check)  DB::table($name)->where('id', $id)->update(['alias' => $newdata['alias'] . '-' . $id]);
+                            }
+                            if($name==='users' && !empty($newdata['username']))$id=$newdata['username'];
+                            $results = ['status' => 'success', 'id' => $id, 'time' => time()];
+                           if(!empty($loginid)) $idlog =historySave($login_id, 'insert', $name, $id);
+
+                        } else {
+                            $results = ['status' => 'success','time' => time()];             
                         }
-                        if($name==='users' && !empty($newdata['username']))$id=$newdata['username'];
-                        $results = ['status' => 'success', 'id' => $id, 'time' => time()];
-                       if(!empty($loginid)) $idlog =historySave($login_id, 'insert', $name, $id);
+
                     } else $results = ['status' => 'error', 'message' => 'Data not found', 'code' => 'datanotfound', 'class' => 'add'];
                 }
                 if (file_exists(__DIR__ . '/add/' . $name . '_after.php')) require(__DIR__ . '/add/' . $name . '_after.php');
@@ -45,6 +53,9 @@ if (in_array($name,$conf['block'])) {
                 if(!empty($alertmore)) $results['more'] = $alertmore;
                 return $results;
             }
+
+          
+            // die('bhsdb');
 
             if(is_array($datas)) {
 
@@ -60,6 +71,7 @@ if (in_array($name,$conf['block'])) {
                     // echo $id;die($id);
                 $results = itemsAdd($request,$container,$name,$datas,$id,$user, $conf);
             }
+            
         }catch (QueryException $e) {
             throw new Exception(json_encode([
                 "message"=>'Insert error',

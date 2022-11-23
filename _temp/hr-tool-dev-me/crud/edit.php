@@ -14,7 +14,7 @@ if (in_array($name, $conf['block'])) {
         else $columnpri = 'id';
         require('./shared/getToken.php');
         $id = $args['id'];
-         if (!$ignoreUrl)checkRole($permission, $name, 'edit', [$id], $username);
+         // if (!$ignoreUrl)checkRole($permission, $name, 'edit', [$id], $username);
         try {
             $data = json_decode($request->getBody());
             if ($data && is_object($data)) {
@@ -27,6 +27,7 @@ if (in_array($name, $conf['block'])) {
                 unset($data->isdelete);
             }
             $olddata = $objold->first();
+            die('sdfc');
             if (!$olddata) {
                 throw new Exception('Data not found');
             }
@@ -41,7 +42,7 @@ if (in_array($name, $conf['block'])) {
                 } else
                     $results = ['status' => 'error', 'message' => 'no data update', 'code' => 'nodataupdate'];
             }
-            if ($results['status'] == 'success'){
+            if ($results['status'] == 'success' ){
                 // die('testx1');
 
                  if(!empty($loginid)) $idlog = historySave($login_id, 'update', $name, $id, $olddata);
