@@ -1,3 +1,7 @@
+
+
+//crud\add\position_point_before.php
+---------------------------------
 <?php
 
 use Illuminate\Database\Capsule\Manager as DB;
@@ -6,6 +10,72 @@ use Respect\Validation\Validator as v;
 $name = 'level_positions';
 
 $exception_feature = true;
+
+// $exception_feature = true;
+
+// // echo 'ok';
+
+// // throwError($container, $request, [
+// //     'point' => v::length(1, 6)->notEmpty()->noWhitespace()
+// // ]);
+
+// if(!empty($data->point)){
+//     $data->point = trim($data->point);
+// }
+
+// if (!empty($data->point)) {
+//     if (!preg_match("^(\d)*(\.)?([0-9]{1})?$", $data->point, $matches)) {
+//         print_r($matches);
+//         throw new Exception('Enter only numbers and periods (.)');
+//     }
+// }
+
+// print_r($data->point);die('ok');
+
+// // update point in table level_positions - các trường hợp sảy ra
+// // 1. point đã tồn tại -> update theo id table level_positions
+// // 2. point không tồn tại và thay đổi default(1) thành giá trị khác -> thêm mới point theo level_id và position_id tương ứng
+// // 3. point không tồn tại default(1) và giũa nguyên giá trị -> thêm mới point theo level_id và position_id tương ứng
+
+// //
+// // 1. point đã tồn tại -> update theo id table level_positions
+// // $check_point =  DB::table('level_positions as lp')->where('id', $id)->where('isdelete', 0)->first();
+
+// if (!empty($data->arrayid)) {
+//     foreach($arrayid as $key =>$value){
+//         $update_level_position = DB::table('level_positions')->where('id', $value)->update([
+//             'point' => $data->point
+//         ]);
+//     }
+
+//     // đề xuất:  $data->point
+//     // $data_point_exist = ['level'=>[],'position'=>[],'point'=>[]]
+// }
+
+// // 2. point không tồn tại và thay đổi default(1) thành giá trị khác -> thêm mới point theo level_id và position_id tương ứng
+// if (empty($check_point->id)) {
+//     // $level_positions = DB::table('level_positions as lp')->where(['level_id' => $data->level_id, 'position_id' => $data->position_id])->update([
+//     //     'point' => $data->point
+//     // ]);
+
+//     foreach($data->levelids as $key =>$levelid){
+//         foreach($data->positionids as $index =>$positionid){
+
+//             $check = DB::table('level_positions')->where(['level_id' => $levelid, 'position_id' => $positionid])->first();
+
+//             if (!empty($check)) {
+//                 $create_level_position = DB::table('level_positions')->insert([
+//                     'level_id' => $data->level_id,
+//                     'position_id' => $data->position_id,
+//                     'point' => $data->point
+//                 ]);
+//             }
+//         }
+
+//     }
+//    // đề xuất:  $data->point
+//     // $data_point_not_exist = ['level'=>[],'position'=>[],'point'=>[]]
+// }
 
 // Giá trị mặc định bằng 1
 // Hệ thống hiển thị input box để chỉnh sửa
@@ -144,8 +214,34 @@ foreach ($get_levels as $index => $v) {
     $levels[$v->id] = $v->title;
 }
 
+// $datas = json_decode($request->getBody());
+
+// foreach ($datas as $item => $data) {
+//     // print_r($item); //status data end
+//     foreach ($data as $key => $title) {
+//         // print_r($key); //test 7x
+//         foreach ($title as $index => $lable) {
+//             print_r($lable); //2 1 1 1..
+//         }
+//     }
+// }
+
+// die($response->withJson($datas['data']));
+// die('end');
+
+// // *** update - quy đổi điểm
+// // 1. check position
+// // 2. check level
+// // 3. -> true ===> inserOrUpdate
+// // note: $data_point_positions là data trả về từ frontend
 // $data_point_positions = json_decode($request->getBody());
 $data_point_positions = json_decode($request->getBody(), true);
+// die($data_point_positions);
+
+// $file = 'filename.txt';
+// // $s= substr($file, 0, strpos($file, '.')); //filename
+// $s = substr($file, strpos($file, '.')+1); //txt
+// die($s);
 
 foreach ($data_point_positions as $key => $title) {
     if ($key == getPosition($key)) {
@@ -154,7 +250,7 @@ foreach ($data_point_positions as $key => $title) {
         foreach ($title as $index => $lable) {
             $format_level = substr($index, strpos($index, '.') + 1);
 
-            $level_not_exist = substr($index, 0, strpos($index, '.')); 
+            $level_not_exist = substr($index, 0, strpos($index, '.')); //filename
 
             if ($format_level == getLevel($format_level) && $key == getPosition($key)) {
                 $status = DB::table('level_positions')->where('id', substr($index, 0, strpos($index, '.')))->update([
@@ -165,9 +261,32 @@ foreach ($data_point_positions as $key => $title) {
             if ($level_not_exist == 0) {
                 $level_id = checkLevel($format_level);
 
+//                 $test = DB::table('level_positions')->where('level_id', '!=', $level_id)->where('position_id', '!=', $position_id)->first();
+// print_r($test);die();
+
+                // $columns = [
+                //     'level_id',
+                //     'position_id'
+                // ];
+
+                // $values = [
+                //     $level_id,
+                //     $position_id
+                // ];
+
+                // https://github.com/laravel/ideas/issues/1021
                 $check_exist = DB::table('level_positions')
-                    ->whereIn('level_id',  [$level_id])->whereIn('position_id',  [$position_id])
-                    ->first();
+                // ->whereRaw(
+                //     '('.'level_id'.','.'position_id'.') in ('.$level_id.','.$position_id.')'
+                // )
+                // ->select( 'level_id','position_id', DB::raw( '('.implode(',', $columns).') in ('.implode(',', $values).')' ))
+                // ->whereRaw(
+                //     '('.implode(',', $columns).') in ('.implode(',', $values).')'
+                // )
+                ->whereIn('level_id',  [$level_id])->whereIn('position_id',  [$position_id])
+                ->first();
+// print_r($orders);die();
+
 
                 if (empty($check_exist)) {
                       DB::table('level_positions')->updateOrInsert([
@@ -184,3 +303,10 @@ foreach ($data_point_positions as $key => $title) {
 // print_r($test);
 
 // die('end');
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+

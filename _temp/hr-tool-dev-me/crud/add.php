@@ -31,30 +31,27 @@ if (in_array($name,$conf['block'])) {
                 else {
                     if ($data) $newdata = removecolumn($name, $data);
                     else $newdata = [];
-                    if (count($newdata) > 0) {
-                          if ($exception_feature == false) {
-                            $id = DB::table($name)->insertGetId($newdata);
-                            if (isset($newdata['alias'])) {
-                                $check = DB::table($name)->where(['alias' => $newdata['alias']])->where('id', '!=', $id)->first();
-                                if ($check)  DB::table($name)->where('id', $id)->update(['alias' => $newdata['alias'] . '-' . $id]);
-                            }
-                            if($name==='users' && !empty($newdata['username']))$id=$newdata['username'];
-                            $results = ['status' => 'success', 'id' => $id, 'time' => time()];
-                           if(!empty($loginid)) $idlog =historySave($login_id, 'insert', $name, $id);
 
-                        } else {
-                            $results = ['status' => 'success','time' => time()];             
-                        }
-
-                    } else $results = ['status' => 'error', 'message' => 'Data not found', 'code' => 'datanotfound', 'class' => 'add'];
+                    if ($exception_feature == false) {
+                        if (count($newdata) > 0) {                          
+                                $id = DB::table($name)->insertGetId($newdata);
+                                if (isset($newdata['alias'])) {
+                                    $check = DB::table($name)->where(['alias' => $newdata['alias']])->where('id', '!=', $id)->first();
+                                    if ($check)  DB::table($name)->where('id', $id)->update(['alias' => $newdata['alias'] . '-' . $id]);
+                                }
+                                if($name==='users' && !empty($newdata['username']))$id=$newdata['username'];
+                                $results = ['status' => 'success', 'id' => $id, 'time' => time()];
+                            if(!empty($loginid)) $idlog =historySave($login_id, 'insert', $name, $id);                       
+                        } else $results = ['status' => 'error', 'message' => 'Data not found', 'code' => 'datanotfound', 'class' => 'add'];
+                    } else {
+                        $results = ['status' => 'success','time' => time()];             
+                    }
                 }
                 if (file_exists(__DIR__ . '/add/' . $name . '_after.php')) require(__DIR__ . '/add/' . $name . '_after.php');
                 if(!isset($results)) $results = ['status' => 'success', 'time' => time()];
                 if(!empty($alertmore)) $results['more'] = $alertmore;
                 return $results;
-            }
-
-          
+            }          
             // die('bhsdb');
 
             if(is_array($datas)) {
