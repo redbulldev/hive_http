@@ -3,71 +3,111 @@
 use Illuminate\Database\Capsule\Manager as DB;
 
 $obj->where(['point_status' => 1, 'isdelete' => 0, 'status' => 1])->where('parent_id', '!=', 0);
-// die($response->withJson($obj->get()));
 
-// die('ok1');
-// $levels = DB::table('level')->where(['status' => 1, 'isdelete' => 0]);
+$get_levels = DB::table('level')->where(['status' => 1, 'isdelete' => 0])->get();
 
-// $results = [
-//     'status' => 'success',
-//     'summary' => $levels->get(),
-//     // 'department' => $department,
-//     'data' => $ketqua ? $ketqua->all() : null,
-//     'total' => $ketqua ? $ketqua->count() : null,
-//     'time' => time(),
-// ];
+$level_positions = DB::table('level_positions as lp')->where(['isdelete' => 0])->where('position_id', '!=', 0)->get();
 
+$lables = [];
 
+$levels = [];
 
-// $obj->join('positions', function ($join) {
-//     $join->on('positions.id', '=', 'request.position_id');
-//     $join->where(['positions.status'=>1, 'positions.isdelete'=>0]);
-// });
+$get_positions = $obj->get();
 
-// $obj->join('level_positions', function ($join) {
-//     $join->on('positions.id', '=', 'level_positions.position_id');
-//     $join->where(['level_positions.isdelete'=>0]);
-//     $join->where(['positions.isdelete'=>0]); 
-// });
-// // die($response->withJson($obj->get()));
+function checkPosition($value)
+{
+    $check = DB::table('positions')->where('id', $value)->where(['status' => 1, 'isdelete' => 0])->where('parent_id', '!=', 0)->first();
 
-// $obj->join('level', function ($join) {
-//     $join->on('level.id', '=', 'level_positions.level_id');
-//     $join->where(['level.isdelete'=>0]);
-// });
+    if (!empty($check)) {
+        return $check->id;
+    }
 
-// die($response->withJson($obj->get()));
+    return false;
+}
 
-// $getAll = $obj->join('level_positions', 'positions.id', '=', 'level_positions.position_id')->where(['level_positions.isdelete'=>0])
-//             ->join('level', 'level.id', '=', 'level_positions.level_id')->where(['level.isdelete'=>0])
-//             ->get(); 
+function getPosition($value)
+{
+    $position = DB::table('positions')->where('id', $value)->where(['status' => 1, 'isdelete' => 0])->where('parent_id', '!=', 0)->first();
 
+    if (!empty($position)) {
+        return $position->title;
+    }
 
-// $getAll = DB::table('level_positions as lp')->join('level', 'level.id', '=', 'lp.level_id')->where(['lp.isdelete'=>0])
-//             // ->join('level', 'level.id', '=', 'level_positions.level_id')->where(['level.isdelete'=>0])
-//             ->get(); 
-//             $dataid = [];
-// foreach($getAll as $key => $value){
-//     $dataid[$key] = $value->level_id;
-// }           
-// die($response->withJson($getAll));
+    return false;
+}
 
+function checkLevel($value)
+{
+    $check = DB::table('level')->where('id', $value)->where(['status' => 1, 'isdelete' => 0])->first();
 
+    if (!empty($check)) {
+        return $check->id;
+    }
 
-//  $test = DB::table('level_positions as lp')->join('positions as p', 'p.id','=','lp.position_id')->get();
-// die($test);
+    return false;
+}
 
-// die($getAll);
-// ＄users = DB::table('users')
-//             ->join('contacts', 'users.id', '=', 'contacts.user_id')
-//             ->join('orders', 'users.id', '=', 'orders.user_id')
-//             ->select('users.*', 'contacts.phone', 'orders.price')
-//             ->get();
+function getLevel($value)
+{
+    $level = DB::table('level')->where('id', $value)->where(['status' => 1, 'isdelete' => 0])->first();
 
+    if (!empty($level)) {
+        return $level->title;
+    }
 
-// cac buoc 
-// - diem get tu level_positions
-// kiem tra
+    return false;
+}
 
+function checkLevelPosition($value)
+{
+    $check = DB::table('level_positions')->where('position_id', $value)->where(['isdelete' => 0])->where('position_id', '!=', 0)->first();
 
+    if (!empty($check)) {
+        return $check->position_id;
+    }
 
+    return false;
+}
+
+foreach ($get_positions as $key => $value) {
+    $lables[$value->id] = $value->title;
+}
+
+foreach ($get_levels as $index => $v) {
+    $levels[$v->id] = $v->title;
+}
+
+$point_positions = [[[]]];
+
+for ($i = 0; $i < count($level_positions); $i++) {
+    if ($level_positions[$i]->level_id == checkLevel($level_positions[$i]->level_id) && $level_positions[$i]->position_id == checkPosition($level_positions[$i]->position_id)) {
+        $point_positions[getPosition($level_positions[$i]->position_id)][getLevel($level_positions[$i]->level_id)] = $level_positions[$i]->point;
+    }
+}
+
+foreach ($lables as $key => $lable) {
+    if (empty($point_positions[$lable])) {
+        foreach ($levels as $index => $level) {
+            if (empty($point_positions[$lable][$level])) {
+                $point_positions[$lable][$level] = 1;
+            }
+        }
+    }
+
+    if (!empty($point_positions[$lable])) {
+        foreach ($levels as $index => $level) {
+            if (empty($point_positions[$lable][$level])) {
+                $point_positions[$lable][$level] = 1;
+            }
+        }
+    }
+}
+
+unset($point_positions[0]);
+
+$results = [
+    'status' => 'success',
+    'data' => $point_positions ? $point_positions : null,
+    'total' => $point_positions ? count($point_positions) : null,
+    'time' => time(),
+];

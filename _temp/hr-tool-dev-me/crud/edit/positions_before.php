@@ -9,6 +9,10 @@ throwError($container, $request, [
     'rank' => v::length(1, 4)->notEmpty(),
 ]);
 
+if (is_string($data->rank)) {
+    throw new Exception('Rank must be numeric!');
+}
+
 if (isset($data->title)) 
 {
     if (!empty($data->parent_id)) 

@@ -183,3 +183,162 @@ SELECT count(*) FROM `cv` WHERE step >5 group by position_id;
 
 
 
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+*chức năng import CV
+
+
+// mô tả chức năng từ design 
+yêu cầu
+- cấu trúc design nuhuw sau:
+Requestor: thaimh - Number: 10 - Deadline: 8/2022
+- dữ liệu theo cấu trúc trên lấy từ bảng request 
+- tương ứng các column: requestor_id, 
+
+
+
+
+
+Xem trước
+- hợp lệ(90)
+- không hợp lệ(2)
+
+ps: hợp lệ(90) tức là 90 line được insert vào hệ thống 
+không hợp lệ(2) tức là 2 line không được insert vào hệ thống 
+
+
+note: 
+- không có nút submit thì khi chọn file thì sẽ import vào hệ thống 
+- có nút submit thì khi chọn file và click vào submit thì sẽ import vào hệ thống 
+
+
+
+file: 
+method/post/import.php
+
+
+table:
+positions
+level
+request
+source
+users
+cv
+cv_history
+
+
+
+
+
+
+
+----------
+- các vấn đề cần tìm hiểu 
++ tìm hiểu các thực thi file import.php
++ cách thức hoạt động của nó, chạy từ đâu, cơ chế load tải 
++ liên quan đến table nào, ... 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

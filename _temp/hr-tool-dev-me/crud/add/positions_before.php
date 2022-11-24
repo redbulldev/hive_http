@@ -35,9 +35,7 @@ use Respect\Validation\Validator as v;
 // echo $zero ;die();
 // echo $data->rank ;die();
 
-if (is_string($data->rank)) {
-    throw new Exception('Data must be numeric!');
-}
+
 
 throwError($container, $request, [
     'title' => v::length(3, 50)->notEmpty(),
@@ -45,7 +43,9 @@ throwError($container, $request, [
     'rank' => v::length(1, 4)->notEmpty(),
 ]);
 
-// die('die');
+if (is_string($data->rank)) {
+    throw new Exception('Rank must be numeric!');
+}
 
 if (!empty($data->parent_id)) 
 {
@@ -142,7 +142,7 @@ if (isset($data->title))
     }
 }
 
-die('end');
+// die('end');
 
 // $t = $request->getBody();
 // die($t);

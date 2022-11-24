@@ -162,9 +162,7 @@ function checkRole($permission, $name, $action, $id = null, $username = null)
 		'review_physiognomy2.view' => 'cv.decision',
 		'review_physiognomy2.add' => 'cv.decision',
 		'to_interview.view' => 'cv.decision',
-		'to_interview.add' => 'cv.decision',
-		'position_point.view' => 'cv.decision',
-		'position_point.add' => 'cv.decision',
+		'to_interview.add' => 'cv.decision'
 	];
 	$haveall = ['request', 'cv', 'positions'];
 	if (!empty($convert[$name . '.' . $action])) {
