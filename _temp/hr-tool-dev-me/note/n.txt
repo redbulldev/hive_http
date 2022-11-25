@@ -98,3 +98,64 @@ data
 
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+***Yêu cầu***
+*task - import CV*
+input: Requestor: thaimh - Number: 10 - Deadline: 8/2022
+tương ứng với 3 trường trong table: request: requestor_id, target, deadline
+
+- khi click submit thì data ta này thì sẽ sử lý the nào khi mà theo logic code hiện có thì data sẽ được insert vào table: cv
+trong khi trong table: cv  không có các trường trên 
+
+- độ phức tạp: Medium 
+
+- orther: 
++ liên quan đến nhiều table
++ design thiếu submit hoặc là default
++ sử dụng thư viện bên ngoài
++ setup chức năng khác biệt so với các chức năng khác 
++ luồng data chưa dõ
+
+*task - thống kê theo CV*
+1. đơn ứng tuyển/pass phỏng vấn
+- đơn ứng tuyển: 
++ liên quan đến table nào, trong table đó column nào được set, ex: ở column status thì step bằng mấy thì là đơn ứng tuyển... 
+- qua phỏn vấn: 
++ liên quan đến table nào, trong table đó column nào được set, ex: ở column status thì step bằng mấy thì là qua phỏn vấn... 
+- số lượng: chưa rõ
+
+
+
+2. bảng xếp hạng số lượng đã tuyển 
+- tương tự như task (1). đơn ứng tuyển/pass phỏng vấn
+
+
+- orther: 
++ liên quan đến rất nhiều table
++ query phức tạp, chưa nắm rõ được cách thức query data
++ chưa nắm dõ các trạng thái CV liên quan đến bước nào trong table data tương ứng ex: 'step' => 5 là qua phỏng ván hây dã pass
+
+- độ phức tạp: Hard 
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+ 
+

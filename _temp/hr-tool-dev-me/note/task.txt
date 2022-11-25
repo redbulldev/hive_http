@@ -197,7 +197,7 @@ yêu cầu
 - cấu trúc design nuhuw sau:
 Requestor: thaimh - Number: 10 - Deadline: 8/2022
 - dữ liệu theo cấu trúc trên lấy từ bảng request 
-- tương ứng các column: requestor_id, 
+- tương ứng các column: requestor_id, target, deadline
 
 
 
