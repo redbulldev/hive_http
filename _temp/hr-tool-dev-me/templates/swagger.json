@@ -9708,34 +9708,26 @@
                     "require": true,
                     "example": {
                         "request_id": 23,
-                        "interviewer_id": "huynhnv",
-                        "reviewer_id": "thangpm",
-                        "assignee_id":  "thanglv",
-                        "chairman_id": "lent",
-                        "position_id": 123,
-                        "level_id":  4,
+                        "interviewer": "huynhnv",
+                        "reviewer": "thangpm",
+                         assignee: "lent",
+                        "position": "Java",
+                        "level": "Fresher",
                         "fullname": "Nguyễn Xuân Khoát",
                         "email": "xuankhoat@gmail.com",
                         "mobile": "09124578963",
                         "birthday": "1988-10-27",
                         "address": "123 Xuân Thủy, Cầu giấy, Hà Nội",
-                        "gender":  1,
+                        "gender":  "Nam",
                         "linkcv": "https:\/\/download.com\/cv.pdf",
                         "images":  [
                                 "http:\/\/...jpg",
                                 "http:\/\/...png"
                         ],
-                        "source_id": 0,
-                        "appoint_type": 1,
+                        "source": "topcv.cv",
                         "description": "Lorem ipsum dolor sit amet...",
-                        "appoint_date": 1622504033,
-                        "appoint_place": "Phòng họp lớn",
-                        "appoint_link": "https:\/\/meet.ossigroup.net\/interview",
                         "salary": 40000000,
-                        "checklist":  "http:\/\/link.checklist.com",
-                        "onboard": "2022-05-15",
-                        "step": 9,
-                        "status": 1
+                        "onboard": "2022-05-15"
                     }
                 }
             }

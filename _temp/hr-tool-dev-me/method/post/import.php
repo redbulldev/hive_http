@@ -3,73 +3,24 @@
 use Illuminate\Database\Capsule\Manager as DB;
 use Respect\Validation\Validator as v;
 
-// die('ok');
-
-// $uploadedFiles = $request->getUploadedFiles();
-
-// $t = count($uploadedFiles) ;
-
-// if($t){
-//     echo 'exist';
-// }else{
-//     echo 'not exist';
-// }
-// die();
-
-//
-// // $request_id = $request->getBody(); // false
-// // $request_id = $request->getParsedBody(); // true
-// // $request_id = $request->getParsedBody('request_id'); // true
-// $request_id = $request->getParam('request_id'); // true
-// // $request_id = json_decode($request->getBody());
-// // $request_id = $request->getQueryParams('request_id'); //false
-
-// // echo $request_id;
-// print_r($request_id);
-// die('t');
-
-// throwError($container, $request, [
-//     'request_id' => v::length(1, 8)->notEmpty()->noWhitespace(),
-// ]);
-
-// // or
-// // $body = json_decode($request->getBody());
-// $body = $request->getParsedBody(); // true
-// // $request_id = $body->request_id;
-// // $request_id = !empty($body->request_id) ? $body->request_id : '';
-// // echo $request_id;
-
-// // print_r((int)$request_id['request_id']);
-// $request_id = (int)$body['request_id'];
-// echo $request_id;
-// die(getType($request_id));
-
-///////////////////////////////////////////////////////////
-$body = $request->getParsedBody();
-
-$request_id = (int) $body['request_id'];
-
-// if (empty($request_id)) {
-//     throw new Exception('Invalid data!');
-// }
-
-// if (!DB::table('request')->where(['id' => $request_id])->where('isdelete', 0)->count())
-// {
-//     // throw new Exception('Request not exist');
-
-//     $responseMessage = json_encode(["success"=>false, "response"=>"Not found"  ]);
-
-//     $response->getBody()->write($responseMessage);
-
-//     return $response
-//         ->withHeader('Content-Type', 'application/json')
-//         ->withStatus(500);
-// }
-// die($response->withJson());
-// die();
-
 try {
     require './shared/getToken.php';
+
+    // $body = json_decode($request->getBody());
+
+    // $request_id = $body->request_id;
+
+    // if (empty($request_id)) {
+    //     @json_decode(throw new Exception('Invalid data!'));
+    // }
+
+    // if (!empty($request_id)) {
+    //     if (!DB::table('request')->where(['id' => $request_id])->where('isdelete', 0)->count()) {
+    //         @json_decode(throw new Exception('Request not exist'));
+    //     }
+    // }
+
+    // die('xxx');
 
     $uploadedFiles = $request->getUploadedFiles();
 
@@ -215,7 +166,7 @@ try {
 
                     // $item['request_id'] = $request->id;
                     // $item['request_id'] = !empty($request_id) ? $request_id : 'AUTO';
-                    $item['request_id'] = $request_id;
+                    $item['request_id'] = 1375;  // $request_id;
 
                     $item['level_id'] = $level->id;
 
@@ -261,20 +212,21 @@ try {
 
                     // die($response->withJson($newCv));
 
-                    // $cvId = DB::table('cv')->insertGetId($newCv);
+                    $cvId = DB::table('cv')->insertGetId($newCv);
 
-                    // DB::table('cv_history')->insert(['author_id' => "hungnv1", 'cv_id' => $cvId, 'description' => 'CV được import từ Excel', 'datecreate' => time()]);
+                    DB::table('cv_history')->insert(['author_id' => "hungnv1", 'cv_id' => $cvId, 'description' => 'CV được import từ Excel', 'datecreate' => time()]);
 
+                    //line > 100
                     if ($index == 101) {
                         break;
                     }
-                    //line > 100
                 } else {
                     foreach ($collection as $key => $val) {
                         $indexKey[$key] = $sheet->getCell($key . $index)->getValue();
                     }
                 }
             }
+
             $results = ['status' => 'success', 'data' => $numberOk, 'error' => $listError, 'time' => time()];
         }
     }

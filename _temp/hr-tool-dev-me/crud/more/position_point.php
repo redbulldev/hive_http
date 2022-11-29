@@ -16,7 +16,7 @@ $get_positions = $obj->get();
 
 function checkPosition($value)
 {
-    $check = DB::table('positions')->where('id', $value)->where(['status' => 1, 'isdelete' => 0])->where('parent_id', '!=', 0)->first();
+    $check = DB::table('positions')->where('id', $value)->where(['status' => 1, 'point_status' => 1,'isdelete' => 0])->where('parent_id', '!=', 0)->first();
 
     if (!empty($check)) {
         return $check->id;
@@ -27,7 +27,7 @@ function checkPosition($value)
 
 function getPosition($value)
 {
-    $position = DB::table('positions')->where('id', $value)->where(['status' => 1, 'isdelete' => 0])->where('parent_id', '!=', 0)->first();
+    $position = DB::table('positions')->where('id', $value)->where(['status' => 1, 'point_status' => 1, 'isdelete' => 0])->where('parent_id', '!=', 0)->first();
 
     if (!empty($position)) {
         return $position->title;

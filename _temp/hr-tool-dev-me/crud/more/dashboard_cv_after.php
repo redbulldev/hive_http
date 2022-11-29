@@ -29,14 +29,14 @@ foreach($dataPositionId as $key => $value) {
 }
 
 // $allCvs = DB::table('cv')->select(DB::raw('count(*), position_id'))->where('isdelete', 0)->groupBy('position_id')->get();
-// die($response->withJson($allCvs));
+// die($response->withJson($positionId));
 
 foreach($positionId as $key => $k)
 {
     $obj1 = clone  $obj; //request
 
     // $res = $obj1->where('request.position_id',$k)->selectRaw('count(cv.step) AS total_cv')->where('cv.step', '>', 5)->first();
-    $res = $obj1->where('cv.position_id',$k)->selectRaw('count(cv.step) AS total_cv')->where('cv.step', '>', 7)->first();//->groupBy('cv.position_id')
+    $res = $obj1->where('cv.position_id',$k)->selectRaw('count(cv.step) AS total_cv')->where('cv.step', '>', 8)->first();//->groupBy('cv.position_id')
 // die($response->withJson($res));
 
     $department['values'][$k] = $res->total_cv; //yêu cầu (số lượng)
@@ -47,12 +47,13 @@ foreach($positionId as $key => $k)
 
 /////////////////////////////////////////
 // Tổng điểm
-$all_level_positions = DB::table('level_positions')->where(['isdelete'=>0])->get(); 
+$all_level_positions = DB::table('level_positions')->where(['isdelete'=>0])->where('position_id', '!=', 0)->get(); 
 
 $count_point = 0;
 foreach ($all_level_positions as $key => $value) {
     foreach($positionId as $index => $k) {
         if ($value->position_id == $k) {
+            // echo $value->id.';' ;
             $count_point += $value->point;
         }
     }
@@ -76,6 +77,7 @@ foreach ($all_level_positions as $key => $value) {
 // $test = $obj->where('step', 5)->get();
 // die($test);
 $obj->selectRaw(' 
+    GROUP_CONCAT(cv.step,\'\') AS steps, 
     SUM(target) AS target, 
     SUM(total_cv) AS total_cv, 
     SUM(interview_cv) AS interview_cv, 
@@ -91,14 +93,17 @@ $obj->selectRaw('
     GROUP_CONCAT(positions.title,\'\') as labels
 ');//->where('cv.step', '>', 5);
 
-// $c = $obj->where('request.status', 1)->count();
-// die($c);
+
+// $check_step = $obj->whereRaw('cv.step', '>', 5)->get();
 
 $summary=$obj->first();
+// die($response->withJson($summary));
 
 $list_target = explode(',',$summary->list_target);
 
 $list_pass = explode(',',$summary->list_pass);
+
+$list_step = explode(',',$summary->steps);
 
 $list_total = explode(',',$summary->list_total);
 
@@ -116,32 +121,57 @@ $newlist_total=[];
 
 $newlist_onboard=[];
 
+
+$newlist_step=[];
+// foreach($list_step as $key=>$value)
+// {
+//     if($value>5){
+//         $newlist_step[$value] = (!empty($newlist_step[$value])?$newlist_step[$value]:0) + 1;
+//         echo $newlist_step[$value].';';
+//     }
+// }
+// die();
+
 foreach($labels as $key=>$label)
 {
+    // echo $key.';';
     if($label)
     {
         $newlabel[$label]= $label;
+        // echo $newlabel[$label].';';
 
         $newlist_target[$label]= (!empty($newlist_target[$label])?$newlist_target[$label]:0) + $list_target[$key];
+        // echo $newlist_target[$label].';'; //10;20;6;106;116;122;222;232;4;2;6;12;1;
+        // echo $list_target[$key].';';    //10;10;6;100;10;6;100;10;4;2;4;6;1;
 
-        // if($summary->step > 5)
-        // {
-            $newlist_pass[$label]= (!empty($newlist_pass[$label])?$newlist_pass[$label]:0) + $list_pass[$key];
-        // } else {
-        //     $newlist_pass[$label]= 0;         
+        $newlist_pass[$label]= (!empty($newlist_pass[$label])?$newlist_pass[$label]:0) + $list_pass[$key];
+        // echo $newlist_pass[$label].';';
+        // echo $list_pass[$key];
+
+        // foreach($list_step as $key=>$value){
+        //     if($value>5){
+        //         $newlist_step[$label] = (!empty($newlist_step[$label])?$newlist_step[$label]:0) + 1;
+        //         echo $newlist_step[$label].';';
+        //     }
         // }
 
-        $newlist_total[$label]= (!empty($newlist_total[$label])?$newlist_total[$label]:0) + $list_total[$key];
+        $newlist_total[$label] = (!empty($newlist_total[$label])?$newlist_total[$label]:0) + $list_total[$key];
+        // echo $newlist_total[$label].';';
+        // echo $list_total[$key].';';
 
         $newlist_onboard[$label]= (!empty($newlist_onboard[$label])?$newlist_onboard[$label]:0) + $list_onboard[$key];
+        // echo $newlist_onboard[$label].';';
+        // echo $list_onboard[$key].';';
     }
 }
-
+// die();
 $summary->labels = implode(',',array_keys($newlabel));
 
 $summary->list_target =  implode(',',array_values($newlist_target));
 
 $summary->list_pass =  implode(',',array_values($newlist_pass));
+
+// $summary->steps =  implode(',',array_values($newlist_pass));
 
 $summary->list_total =  implode(',',array_values($newlist_total));
 
