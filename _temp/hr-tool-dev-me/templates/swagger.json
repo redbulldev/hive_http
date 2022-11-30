@@ -6912,6 +6912,11 @@
                                     "description": "Trạng thái thành công",
                                     "example": "success"
                                 },
+                                "point": {
+                                    "type": "number",
+                                    "description": "Trạng thái thành công",
+                                    "example": 234.5435
+                                },
                                 "data": {
                                     "type": "array",
                                     "description": "Danh sách Dashboard Cv",
@@ -11535,6 +11540,18 @@
                     "require": false,
                     "example": "40"
                 },
+                "list_cv_new": {
+                    "type": "number",
+                    "description": "Danh sách Số lượng CV mới",
+                    "require": false,
+                    "example": "101"
+                },
+                "list_cv_pass": {
+                    "type": "number",
+                    "description": "Danh sách Số lượng CV pass qua phỏng vấn",
+                    "require": false,
+                    "example": "35"
+                },
                 "offer_cv": {
                     "type": "number",
                     "description": "Số lượng CV tham gia offer",
@@ -12031,7 +12048,7 @@
                 },
                 "step": {
                     "type": "number",
-                    "description": "Các buocws xét duyệt CV",
+                    "description": "Các bước xét duyệt CV",
                     "require": false,
                     "example": 5
                 }
@@ -14148,6 +14165,8 @@
             "fail_job": "4",
             "list_target": "2,3,2,5,3,5,2,...",
             "list_pass": "2,0,3,1,4,...",
+            "list_cv_new": "3,0,4,2,4,...",
+            "list_cv_pass": "1,0,3,0,1,...",
             "list_total": "10,30,15,25,13,30,...",
             "list_onboard": "0,1,0,0,0,0,0,1,0,0",
             "labels": "HR - Senior-,HR - Middle+,Marketing - Junior-,Marketing - Middle,Designer - Junior-,Designer - Fresher,FE,..."

@@ -6,19 +6,25 @@ use Respect\Validation\Validator as v;
 try {
     require './shared/getToken.php';
 
+    $body = $request->getParsedBody();
+
+    $request_id = (int)$body['request_id'];
+  // echo $request_id;
+
+
     // $body = json_decode($request->getBody());
 
     // $request_id = $body->request_id;
 
-    // if (empty($request_id)) {
-    //     @json_decode(throw new Exception('Invalid data!'));
-    // }
+    if (empty($request_id)) {
+        @json_decode(throw new Exception('Invalid data!'));
+    }
 
-    // if (!empty($request_id)) {
-    //     if (!DB::table('request')->where(['id' => $request_id])->where('isdelete', 0)->count()) {
-    //         @json_decode(throw new Exception('Request not exist'));
-    //     }
-    // }
+    if (!empty($request_id)) {
+        if (!DB::table('request')->where(['id' => $request_id])->where('isdelete', 0)->count()) {
+            @json_decode(throw new Exception('Request not exist'));
+        }
+    }
 
     // die('xxx');
 
@@ -166,7 +172,7 @@ try {
 
                     // $item['request_id'] = $request->id;
                     // $item['request_id'] = !empty($request_id) ? $request_id : 'AUTO';
-                    $item['request_id'] = 1375;  // $request_id;
+                    $item['request_id'] = $request_id;
 
                     $item['level_id'] = $level->id;
 
