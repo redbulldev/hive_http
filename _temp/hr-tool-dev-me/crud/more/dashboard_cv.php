@@ -56,7 +56,7 @@ $obj->join('positions as parent', function ($join) {
 
 $obj->join('cv', function ($join) {
     $join->on('cv.position_id', '=', 'positions.id');
-    $join->where(['cv.isdelete'=>0])->where('cv.step', '>', 0);
+    $join->where(['cv.isdelete'=>0]);
 }); 
 
 // $obj->join('level_positions as lp', function ($join) {

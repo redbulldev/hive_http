@@ -12,7 +12,7 @@ if (in_array($name,$conf['block'])) {
 } else {
     try {
         require('./shared/getToken.php');
-        if (!$ignoreUrl) checkRole($permission, $name, 'add');
+        // if (!$ignoreUrl) checkRole($permission, $name, 'add');
         try {
             $id = 0;
             $datas = json_decode($request->getBody());
