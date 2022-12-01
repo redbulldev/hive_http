@@ -10,6 +10,8 @@ $one->level =  DB::table('level')->where('id', $one->level_id)->first();
 
 if(!empty($one->last_level_id)){
     $one->last_level = DB::table('level')->where('id', $one->last_level_id)->first();
+} else {
+    $one->last_level =  '';
 }
 
 

@@ -58,8 +58,6 @@ foreach ($all_level_positions as $key => $value) {
 }
 
 /////////////////// data - summary ///////////////////////////////////////////////////////
-$obj_step = clone $obj;
-
 function getPosition($value)
 {
     $position = DB::table('positions')->where('id', $value)->where(['status' => 1, 'point_status' => 1, 'isdelete' => 0])->where('parent_id', '!=', 0)->first();
@@ -73,10 +71,13 @@ function getPosition($value)
 
 $list_cv_pass = [];
 
-foreach ($obj_step->get() as $key => $value) {
+$obj_step = clone $obj->get();
+
+foreach ($obj_step as $key => $value) {
     if ($value->step > 5) {
         if (!empty(getPosition($value->position_id)) && $value->status == 2) {
             $index = getPosition($value->position_id);
+            
             $list_cv_pass[$index]++;
         }
     }

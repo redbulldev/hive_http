@@ -8,6 +8,7 @@
 
 *view
 "slim/twig-view": "^2.5",
+"slim/twig-view": "^2.5",
 
 *thao thác với csdl
 "illuminate/database": "^5.8",
@@ -22,6 +23,10 @@
 *tạo dữ liệu mẫu
 "fakerphp/faker": "^1.19",
 
+*đọc fexcel excel
+"phpoffice/phpspreadsheet": "^1.12",
+
+*
 
 
 *****struct-folder*****

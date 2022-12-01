@@ -5,6 +5,13 @@ use Illuminate\Database\Capsule\Manager as DB;
 $obj->whereIn('request.status', [2, 4])->where('request.isdelete', 0);
 
 //start - chức năng "Bộ lọc thông tin:"
+// die($params['from']);
+if (!empty($params['from']) && !empty($params['to'])) {
+    $from = $params['from'];
+    $to = $params['to'];
+    $obj->where('date', '>=', $from)->where('date', '<=', $to);
+}
+
 if (!empty($params['department_id'])) {
     $department_id = explode('-', $params['department_id']);
 
@@ -23,12 +30,6 @@ if (!empty($params['assignee_id'])) {
             $query->orWhere('request.assignee_id', 'LIKE', "%$id%");
         }
     });
-}
-// die($params['from']);
-if (!empty($params['from']) && !empty($params['to'])) {
-    $from = $params['from'];
-    $to = $params['to'];
-    $obj->where('date', '>=', $from)->where('date', '<=', $to);
 }
 
 $obj->join('positions', function ($join) {

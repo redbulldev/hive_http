@@ -6915,7 +6915,7 @@
                                 "point": {
                                     "type": "number",
                                     "description": "Trạng thái thành công",
-                                    "example": 234.5435
+                                    "example": 237
                                 },
                                 "data": {
                                     "type": "array",
@@ -14164,7 +14164,6 @@
             "onboard_cv": "15",
             "fail_job": "4",
             "list_target": "2,3,2,5,3,5,2,...",
-            "list_pass": "2,0,3,1,4,...",
             "list_cv_new": "3,0,4,2,4,...",
             "list_cv_pass": "1,0,3,0,1,...",
             "list_total": "10,30,15,25,13,30,...",
@@ -14269,7 +14268,8 @@
             "status": 1,
             "isauto": 1,
             "positions_title": "FE",
-            "level_title": "Junior"
+            "level_title": "Junior",
+            "step": 9
         },
         "SettingResItem": {
             "id": 1,
