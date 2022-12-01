@@ -8,7 +8,7 @@ $obj->whereIn('request.status', [2, 4])->where('request.isdelete', 0);
 if (!empty($params['department_id'])) {
     $department_id = explode('-', $params['department_id']);
 
-    $obj->where(function ($query) use ($department_id) {
+    $obj->orWhere(function ($query) use ($department_id) {
         foreach ($department_id as $id) {
             $query->orWhere('request.position_id', 'LIKE', "%$id%");
         }
@@ -18,13 +18,13 @@ if (!empty($params['department_id'])) {
 if (!empty($params['assignee_id'])) {
     $assignee_id = explode('-', $params['assignee_id']);
 
-    $obj->where(function ($query) use ($assignee_id) {
+    $obj->orWhere(function ($query) use ($assignee_id) {
         foreach ($assignee_id as $key  => $id) {
             $query->orWhere('request.assignee_id', 'LIKE', "%$id%");
         }
     });
 }
-
+// die($params['from']);
 if (!empty($params['from']) && !empty($params['to'])) {
     $from = $params['from'];
     $to = $params['to'];

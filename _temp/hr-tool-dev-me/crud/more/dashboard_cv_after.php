@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Capsule\Manager as DB;
 
+error_reporting (E_ALL ^ E_NOTICE);
+
 $obj = DB::table($name);
 
 require './crud/all_where.php';
@@ -9,6 +11,8 @@ require './crud/all_where.php';
 //////////////////// *Bảng xếp hạng số lượng đã tuyển ////////////////////////////////////////////////////////
 // data - department //
 $department = ['labels' => [], 'values' => []];
+
+$temp_department = [];
 
 $get_position_ids = $obj->get();
 
@@ -19,19 +23,25 @@ $position_ids = [];
 foreach ($get_position_ids as $key => $value) {
     foreach ($get_positions as $index => $l) {
         if ($l->id == $value->position_id) {
-            $department['labels'][$l->id] = $l->title;
+            // $department['labels'][$l->id] = $l->title;
+            $temp_department[$index] = $l->title;
 
             $position_ids[$index] = $l->id;
         }
     }
 }
+foreach ($temp_department as $index => $value) {
+    $department['labels'][] = $value;
+}
+
+// die($response->withJson($department));
 
 foreach ($position_ids as $key => $k) {
     $position_request = clone $obj; //request
 
     $res = $position_request->where('cv.position_id', $k)->selectRaw('count(cv.step) AS total_cv')->where('cv.step', '>', 8)->where('cv.status', 2)->first(); 
 
-    $department['values'][$k] = $res->total_cv; //yêu cầu (số lượng)
+    $department['values'][] = $res->total_cv; //yêu cầu (số lượng)
 }
 
 ////////////////// Tổng điểm/////////////////////////
@@ -61,15 +71,17 @@ function getPosition($value)
     return false;
 }
 
-$list_pass = [];
+$list_cv_pass = [];
+
 foreach ($obj_step->get() as $key => $value) {
     if ($value->step > 5) {
         if (!empty(getPosition($value->position_id)) && $value->status == 2) {
-            $list_pass[getPosition($value->position_id)]++;
+            $index = getPosition($value->position_id);
+            $list_cv_pass[$index]++;
         }
     }
 }
-// die($response->withJson($list_pass));
+// die($response->withJson($list_cv_pass));
 
 $obj->selectRaw(' 
     GROUP_CONCAT(cv.position_id) AS list_cv_new, 
@@ -122,7 +134,7 @@ foreach ($labels as $key => $label) {
 
         $newlist_target[$label]= (!empty($newlist_target[$label])?$newlist_target[$label]:0) + $list_target[$key];
 
-        $newlist_cv_pass[$label] = (!empty($list_pass[$label]) ? $newlist_cv_pass[$label] + 1 : 0);
+        $newlist_cv_pass[$label] = (!empty($list_cv_pass[$label]) ? $newlist_cv_pass[$label] + 1 : 0);
 
         $newlist_cv_new[$label] = (!empty($newlist_cv_new[$label]) ? $newlist_cv_new[$label] : 0) + 1;
 
@@ -133,9 +145,9 @@ foreach ($labels as $key => $label) {
 }
 
 foreach ($newlist_cv_pass as $key => $item) {
-    foreach ($list_pass as $index => $value) {
+    foreach ($list_cv_pass as $index => $value) {
         if ($key == $index) {
-            $newlist_cv_pass[$key] = $newlist_cv_pass[$key] - $list_pass[$index];
+            $newlist_cv_pass[$key] = $newlist_cv_pass[$key] - $list_cv_pass[$index];
         }
     }
 }
