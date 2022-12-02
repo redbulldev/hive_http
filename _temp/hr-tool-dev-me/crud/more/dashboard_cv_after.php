@@ -30,18 +30,31 @@ foreach ($get_position_ids as $key => $value) {
         }
     }
 }
+
 foreach ($temp_department as $index => $value) {
     $department['labels'][] = $value;
 }
 
 // die($response->withJson($department));
 
-foreach ($position_ids as $key => $k) {
-    $position_request = clone $obj; //request
+$position_request = clone $obj; //request
 
-    $res = $position_request->where('cv.position_id', $k)->selectRaw('count(cv.step) AS total_cv')->where('cv.step', '>', 8)->where('cv.status', 2)->first(); 
+$check_positions = $position_request->whereIn('cv.position_id', $position_ids)->where(['cv.isdelete', 0])->get(); 
 
-    $department['values'][] = $res->total_cv; //yêu cầu (số lượng)
+$count_onboard = 0;
+
+$temp_values = [];
+
+foreach ($check_positions as $key => $value) {
+    if ($value->step > 8 && $value->status == 2) {
+        $temp_values[$value->position_id] = ++$count_test;
+    } else {
+        $temp_values[$value->position_id] = 0;
+    }
+}
+
+foreach ($temp_values as $key => $value) {
+    $department['values'][] = $value;
 }
 
 ////////////////// Tổng điểm/////////////////////////
@@ -165,7 +178,6 @@ $summary->list_cv_new = implode(',', array_values($newlist_cv_new));
 $summary->list_total = implode(',', array_values($newlist_total));
 
 $summary->list_onboard = implode(',', array_values($newlist_onboard));
-
 
 $results = [
     'status' => 'success',
