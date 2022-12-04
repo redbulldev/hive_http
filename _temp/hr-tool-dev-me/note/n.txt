@@ -29,6 +29,37 @@
 *
 
 
+
+https://github.com/tuupola/base62
+
+https://github.com/tuupola/slim-jwt-auth
+
+
+https://github.com/firebase/php-jwt
+
+
+https://github.com/marcelbonnet/slim-auth
+
+https://github.com/php-amqplib/php-amqplib
+
+https://github.com/shuchkin/simplexlsxgen
+
+https://github.com/googleapis/google-api-php-client
+
+
+https://viblo.asia/p/quan-ly-cac-bien-moi-truong-voi-phpdotenv-oOVlY1Myl8W
+
+https://github.com/Nicolab/php-ftp-client
+
+
+
+
+
+
+
+
+
+
 *****struct-folder*****
 
 /shared
