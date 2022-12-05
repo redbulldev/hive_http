@@ -10,7 +10,7 @@ if (isset($data->requestor) && is_array($data->requestor) && count($data->reques
     {
         $pradd = ['user_id' => $user_id, 'position_id' => $id, 'status' => 0];
 
-        DB::table('positions_requester')->insert($pradd);
+        DB::table('positions_requester')->insertOrIgnore($pradd);
 
         $parent_id = $olddata->parent_id;
 
@@ -27,7 +27,7 @@ if (isset($data->requestor) && is_array($data->requestor) && count($data->reques
 
             if (!$check) 
             {
-                DB::table('positions_requester')->insert($pradd2);
+                DB::table('positions_requester')->insertOrIgnore($pradd2);
             }
         }
     }

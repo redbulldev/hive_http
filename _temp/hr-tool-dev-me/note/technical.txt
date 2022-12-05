@@ -1,20 +1,18 @@
 crud\more\dashboard.php
 - lọc data
 - join table 
-//start - chức năng "Bộ lọc thông tin:"
+//start - chức năng "Bộ lọc thông tin:" - lọc theo level 
 if(!empty($params['level_id']))
 {
-    $idrole= explode('-',$params['level_id']);
+    $idrole= explode('-',$params['level_id']); //chuyển chuỗi thành mảng 
     // print_r($idrole);
    
     $obj->where(function($query) use ($idrole){
         foreach ($idrole as $id) {
-            //  print_r($query);
-            //   die('ok');
-            $k1='"'.$id.'"';
-            $k2=': '.$id.',';
-            $k3=':'.$id.',';
-            $k4=':'.$id.' ,';
+            $k1='"'.$id.'"'; //"13"
+            $k2=': '.$id.','; //: 13,
+            $k3=':'.$id.','; //: 13,
+            $k4=':'.$id.' ,'; //: 13,
             $query->orWhere('request.levels' , 'LIKE', "%$k1%")
             ->orWhere('request.levels' , 'LIKE', "%$k2%")
             ->orWhere('request.levels' , 'LIKE', "%$k3%")
@@ -22,7 +20,16 @@ if(!empty($params['level_id']))
         }
     });
 }
+ex: với mảng như sau sau khi chuyển chuỗi thành mảng sẽ tìm trong `request.levels`
+[
+    {"id": 5, "title": "Junior-"}, 
+    {"id": 4, "title": "Fresher+"}, 
+    {"id": 3, "title": "Fresher"}, 
+    {"id": 2, "title": "Bresher-"}
+]
 
+
+// loc theo thoi gian
 if (!empty($params['from']) && !empty($params['to'])) {
     $from = $params['from'];
     $to = $params['to'];
@@ -42,18 +49,88 @@ crud\more\dashboard_after.php
 
 function throwError($container, $request, $array)
 
-function findby($table, $obj, $k, $nowcolumns = [])
-
-function vi_to_en($str, $sep = ' ')
-
-function updateReport($request_id)
 
 function sendmail()
 
 
+-----------------------------------------------------------------------------------
+function updateReport($request_id) {
+    $emp = DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where('step','>', 9)->selectRaw('GROUP_CONCAT(fullname) as title')->first();
+    DB::table('request')->where('isdelete',0)->where('id',$request_id)->update([
+        // count bản ghi theo điều kiện `save vào csdl`
+        'total_cv'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->count(),
+
+        //
+        'interview_cv'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where(function($query){
+            $query->orWhere('step','>',5);
+            $query->orWhere(function($query){
+                $query->where('step', 5)->where('status','<',3);
+            });
+        })->count(),
+
+        // count bản ghi theo điều kiện `save vào csdl`
+        'pass_cv'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where('step', '>', 5)->count(),
+
+        // count bản ghi theo điều kiện `save vào csdl`
+        'offer_cv'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where('step','>', 7)->count(),
+
+        // count bản ghi theo điều kiện `save vào csdl` - mời thành công 
+        'offer_success'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where('step', '>', 8)->count(),
+
+        // count bản ghi theo điều kiện `save vào csdl` - đã đi làm 
+        'onboard_cv'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where('step','>', 9)->count(),
+
+        // count bản ghi theo điều kiện `save vào csdl`
+        'fail_job'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where('step','>', 9)->where('status', 0)->count(),
+
+        //save follow struct 
+        'employees'=>json_encode(explode(',',isset($emp->title)?$emp->title:'')) // ["Minh Hải"]
+    ]);
+}
 
 
 
+------------------------------
+//kiểm tra column có tồn tại hay không 
+function colExist($table,$col) {
+    $check = DB::select('SHOW COLUMNS FROM `'.$table.'` LIKE \''.$col.'\';');
+    return $check?true:false;
+}
+
+--------------------------
+// hàm tìm kiếm 
+function findby($table, $obj, $k, $nowcolumns = [])
+{
+    $k = trim($k);
+    $k1 = trim(vi_to_en($k)); //Cong nghe Cu phap 
+    $k2 = trim(vi_to_en($k, '-')); //Cong-nghe-Cu-phap 
+    $allcolumn = DB::select('SHOW FULL COLUMNS FROM ' . $table);
+    $obj->where(function ($query) use ($allcolumn, $table, $k, $k1, $k2, $nowcolumns) {
+        if (count($nowcolumns) == 0) {
+            foreach ($allcolumn as $col) {
+                //$col->Type - get kiểu dữ liệu của column
+                //col->Field - get tên trường của column
+                if ((strpos($col->Type, 'varchar') > -1 || strpos($col->Type, 'text') > -1) && $col->Field != 'password') {
+                    $query->orWhere($table . '.' . $col->Field, 'LIKE', "%$k%")->orWhere($table . '.' . $col->Field, 'LIKE', "%$k1%")->orWhere($table . '.' . $col->Field, 'LIKE', "%$k2%");
+                } else {
+                    //if (is_numeric($k)) $query->orWhere($table . '.' . $col->Field, $k);
+                }
+            }
+        } else {
+            foreach ($nowcolumns as $col) {
+                $query->orWhere($col, 'LIKE', "%$k%")->orWhere($col, 'LIKE', "%$k1%")->orWhere($col, 'LIKE', "%$k2%");
+            }
+        }
+    });
+    return $obj;
+}
+
+-----------------------
+// hàm chuyển tiếng việt thành tiếng anh
+function vi_to_en($str, $sep = ' ') {}
+$text = "Công nghệ, Cú pháp";
+echo vi_to_en($text); //Cong nghe Cu phap 
+echo vi_to_en($text, '-'); //Cong-nghe-Cu-phap 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -64,8 +141,12 @@ if (!empty($olddata) && !empty($olddata) && !empty($data->title)) {
     $oldtitle = $olddata->title;
     DB::update('UPDATE request set languages = REPLACE(languages,"' . $oldtitle . '","' . $data->title . '") WHERE languages LIKE "%' . $oldtitle . '%"');
 }
-
-
+-------------
+Hàm REPLACE thay thế tất cả các lần xuất hiện của một chuỗi được chỉ định.
+REPLACE( string, from_substring, to_substring 
+ex:
+mysql> SELECT REPLACE('freetuts.net', 'freetuts', 'myfreetuts');
+Ket qua: 'myfreetuts.net'
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -80,7 +161,13 @@ if (isset($data->month) || isset($data->year)) {
         $data->date = date('Y-m-d', $current);
     }
 }
-
+-----------------
+Hàm strtotime() sẽ phân tích bất kỳ chuỗi thời gian bằng tiếng anh thành một số nguyên chính là timestamp của thời gian đó.
+strtotime ( string $time)
+ex:
+echo strtotime('2021'. '-' . '09' . '-' . '13' . ' 23:59:59'); //1631577599
+echo "<br>";
+echo date('Y-m-d', 1631577599); //2021-09-13 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -154,6 +241,23 @@ if (isset($data->month) || isset($data->year)) {
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*note - technical 
+
+$request_id = [1375, 1368];
+
+// where theo từng recoll, with step>5 or step=5 and status=2
+$test = DB::table('cv')->where('isdelete',0)->whereIn('request_id',$request_id)->where(function($query){
+    // $query->orWhere('step','>',5);
+    $query->where(function($query){
+        $query->where('step', 5)->where('status',2);
+    });
+})->get();
+
+// where theo từng recoll như trên 
+$test = DB::table('cv')->where('isdelete',0)->whereIn('request_id',$request_id)->where('step', 5)->where('status','<',3)->get();
+
+// với trường họp này sẽ khong where theo từng recoll vời ta có selectRaw(), mà nó sẽ chuyển thành orWhere()
+$res = $position_request->where('cv.position_id', $k)->selectRaw('count(cv.step) AS total_cv')->where('cv.step', '>', 8)->where('cv.status', 2)->first(); 
 
 
 
@@ -161,9 +265,23 @@ if (isset($data->month) || isset($data->year)) {
 
 
 
+//thay the
+$position_ids = where ...
 
+$res = $obj1->where('cv.position_id',$position_ids)->where('cv.step', '>', 8)->where('cv.status', 2)->get();
 
+$res->where(function($query){
+    $query->selectRaw('count(cv.step) AS total_cv')->first();
+});
 
+foreach($position_ids as $key => $k)
+{
+    $obj1 = clone $obj; 
+
+    $res = $obj1->where('cv.position_id',$k)->selectRaw('count(cv.step) AS total_cv')->where('cv.step', '>', 8)->where('cv.status', 2)->first();
+
+    $department['values'][$k] = $res->total_cv; 
+}
 
 
 

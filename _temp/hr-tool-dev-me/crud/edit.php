@@ -27,7 +27,7 @@ if (in_array($name, $conf['block'])) {
                 unset($data->isdelete);
             }
             $olddata = $objold->first();
-            die('sdfc');
+            // die('sdfc');
             if (!$olddata) {
                 throw new Exception('Data not found');
             }

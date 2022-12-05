@@ -9,28 +9,33 @@ $obj->whereIn('request.status', [2, 4])->where('request.isdelete',0);
 
 // die($params['level_id']);
 //start - chức năng "Bộ lọc thông tin:"
+
+ //   $idrole= explode('-',$params['level_id']);
+ //    // print_r($idrole);
+ // die($response->withJson($idrole));
+    
+ //    die();
 if(!empty($params['level_id']))
 {
     $idrole= explode('-',$params['level_id']);
-    // print_r($idrole);
+    print_r($idrole);
+    
    
-    $obj->where(function($query) use ($idrole){
-        foreach ($idrole as $id) {
-            //  print_r($query);
-            //   die('ok');
-            $k1='"'.$id.'"';
-            $k2=': '.$id.',';
-            $k3=':'.$id.',';
-            $k4=':'.$id.' ,';
-            $query->orWhere('request.levels' , 'LIKE', "%$k1%")
-            ->orWhere('request.levels' , 'LIKE', "%$k2%")
-            ->orWhere('request.levels' , 'LIKE', "%$k3%")
-            ->orWhere('request.levels' , 'LIKE', "%$k4%");
-        }
-    });
+    // $obj->where(function($query) use ($idrole){
+    //     foreach ($idrole as $id) {         
+    //         $k1='"'.$id.'"';             
+    //         $k2=': '.$id.','; 
+    //         $k3=':'.$id.','; 
+    //         $k4=':'.$id.' ,'; 
+    //         $query->orWhere('request.levels' , 'LIKE', "%$k1%")
+    //         ->orWhere('request.levels' , 'LIKE', "%$k2%")
+    //         ->orWhere('request.levels' , 'LIKE', "%$k3%")
+    //         ->orWhere('request.levels' , 'LIKE', "%$k4%");
+    //     }
+    // });
 }
 
-
+// die();
 
 if (!empty($params['from']) && !empty($params['to'])) {
     $from = $params['from'];

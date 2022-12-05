@@ -2,8 +2,6 @@
 
 use Illuminate\Database\Capsule\Manager as DB;
 
-$obj->where(['point_status' => 1, 'isdelete' => 0, 'status' => 1])->where('parent_id', '!=', 0);
-
 $get_levels = DB::table('level')->where(['status' => 1, 'isdelete' => 0])->get();
 
 $level_positions = DB::table('level_positions as lp')->where(['isdelete' => 0])->where('position_id', '!=', 0)->get();
@@ -12,7 +10,34 @@ $lables = [];
 
 $levels = [];
 
-$get_positions = $obj->get();
+// ----------------------------
+$obj->leftJoin('positions as parent', 'parent.id', '=', 'positions.parent_id')->select('parent.title AS parent_title', 'positions.title AS title');
+
+$obj->where(['parent.isdelete' => 0, 'positions.isdelete' => 0]);
+
+// if(empty($permission->positions->all))
+// {
+//     $obj->join('positions_requester','positions_requester.position_id', '=', 'positions.id');
+//     $obj->where('positions_requester.user_id',$user->username);
+// }else if(!empty($requestor))
+// {
+//     $obj->join('positions_requester','positions_requester.position_id', '=', 'positions.id');
+//     $obj->whereIn('positions_requester.user_id',$requestor);
+// }
+
+// ---------------------------------
+$get_positions = $obj->count();
+// $datas = [];
+
+// foreach($obj->get() as $key => $value){
+//     $datas[$value->id] = $value->title;
+//     echo $value->title.';'; 
+// }
+// // echo count($datas);
+die($response->withJson($get_positions));
+
+// die($response->withJson($get_positions));
+
 
 function checkPosition($value)
 {
@@ -104,6 +129,9 @@ foreach ($lables as $key => $lable) {
 }
 
 unset($point_positions[0]);
+
+// $datas = DB::table('positions')->where(['status' => 1, 'point_status' => 1, 'isdelete' => 0])->where('parent_id', '!=', 0)->get();
+// die($response->withJson($datas));
 
 $results = [
     'status' => 'success',

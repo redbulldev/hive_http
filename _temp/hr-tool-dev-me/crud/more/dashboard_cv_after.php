@@ -39,7 +39,7 @@ foreach ($temp_department as $index => $value) {
 
 $position_request = clone $obj; //request
 
-$check_positions = $position_request->whereIn('cv.position_id', $position_ids)->where(['cv.isdelete', 0])->get(); 
+$check_positions = $position_request->whereIn('cv.position_id', $position_ids)->where(['cv.isdelete' => 0])->get(); 
 
 $count_onboard = 0;
 
@@ -47,7 +47,7 @@ $temp_values = [];
 
 foreach ($check_positions as $key => $value) {
     if ($value->step > 8 && $value->status == 2) {
-        $temp_values[$value->position_id] = ++$count_test;
+        $temp_values[$value->position_id] = ++$count_onboard;
     } else {
         $temp_values[$value->position_id] = 0;
     }
