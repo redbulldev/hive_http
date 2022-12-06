@@ -98,7 +98,7 @@ foreach ($data_validates as $key => $title) {
 
 // die('validate');
 
-// die('ok');
+// die('ok1');
 
 
 
@@ -111,31 +111,58 @@ foreach ($data_validates as $key => $title) {
 // save level_position //
 $get_levels = DB::table('level')->where(['status' => 1, 'isdelete' => 0])->get();
 
-$level_positions = DB::table('level_positions as lp')->where(['isdelete' => 0])->where('position_id', '!=', 0)->get();
+// $level_positions = DB::table('level_positions as lp')->where(['isdelete' => 0])->where('position_id', '!=', 0)->get();
 
 $levels = [];
 
-function checkPosition($value)
+function getObjPosition()
 {
-    $check = DB::table('positions')->where('title', $value)->where(['status' => 1, 'point_status' => 1, 'isdelete' => 0])->where('parent_id', '!=', 0)->first();
+    return DB::table('positions')->leftJoin('positions as parent', 'parent.id', '=', 'positions.parent_id')
+        ->where(['positions.status' => 1, 'positions.point_status' => 1, 'positions.isdelete' => 0, 'parent.isdelete' => 0])
+        ->select('parent.title AS parent_title', 'positions.title AS title', 'positions.id AS id')->get();
+}
 
-    if (!empty($check)) {
-        return $check->id;
+// $datas = getObjPosition();
+// die($response->withJson($test));
+// die('ok');
+
+// foreach ($datas as $value) {
+//             echo $value->title.';';
+//     }
+// die('okx');
+
+
+
+function checkPosition($position)
+{
+    $check_positions = getObjPosition();
+
+    foreach ($check_positions as $key => $value) {
+        if ($value->title == $position) {
+             return $value->id;
+        }
     }
 
     return false;
 }
 
-function getPosition($value)
+function getPosition($position)
 {
-    $position = DB::table('positions')->where('title', $value)->where(['status' => 1, 'point_status' => 1, 'isdelete' => 0])->where('parent_id', '!=', 0)->first();
+    $get_positions = getObjPosition();
 
-    if (!empty($position)) {
-        return $position->title;
+    foreach ($get_positions as $value) {
+        if ($value->title == $position) {
+            return $value->title;
+        }
     }
 
     return false;
 }
+// $te =  getPosition(123);
+// die($response->withJson($te));
+
+// die();
+
 
 function checkLevel($value)
 {
@@ -159,28 +186,17 @@ function getLevel($value)
     return false;
 }
 
-function checkLevelPosition($value)
-{
-    $check = DB::table('level_positions')->where('position_id', $value)->where(['isdelete' => 0])->where('position_id', '!=', 0)->first();
-
-    if (!empty($check)) {
-        return $check->position_id;
-    }
-
-    return false;
-}
-
 foreach ($get_levels as $index => $v) {
     $levels[$v->id] = $v->title;
 }
 
 $data_point_positions = json_decode($request->getBody(), true);
 
-foreach ($data_point_positions as $key => $title) {
+foreach ($data_point_positions as $key => $items) {
     if ($key == getPosition($key)) {
         $position_id = checkPosition($key);
 
-        foreach ($title as $index => $lable) {
+        foreach ($items as $index => $lable) {
             if ($index == getLevel($index) && $key == getPosition($key)) {
                 DB::table('level_positions')
                     ->whereIn('level_id', [checkLevel($index)])->whereIn('position_id',  [checkPosition($key)])
@@ -209,3 +225,5 @@ foreach ($data_point_positions as $key => $title) {
 // print_r($test);
 
 // die('end');
+// các trường họp test 
+// +

@@ -13,11 +13,20 @@ $lables = [];
 $levels = [];
 
 // ----------------------------
-$obj->leftJoin('positions as parent', 'parent.id', '=', 'positions.parent_id')->select('parent.title AS parent_title', 'positions.title AS title', 'positions.id AS id');
+// $obj->leftJoin('positions as parent', 'parent.id', '=', 'positions.parent_id')
+// ->select('parent.title AS parent_title', 'positions.title AS title', 'positions.id AS id');
+
+// $obj->where(['positions.status' => 1, 'positions.point_status' => 1,'positions.isdelete' => 0, 'parent.isdelete' => 0]);
+
+function getObjPosition()
+{
+    return DB::table('positions')->leftJoin('positions as parent', 'parent.id', '=', 'positions.parent_id')
+               ->where(['positions.status' => 1, 'positions.point_status' => 1,'positions.isdelete' => 0, 'parent.isdelete' => 0])
+               ->select('parent.title AS parent_title', 'positions.title AS title', 'positions.id AS id')->get();
+}
 
 // $obj->leftJoin('parent', 'parent.id', '=', 'level_positions.position_id');
 
-$obj->where(['parent.isdelete' => 0, 'positions.isdelete' => 0]);
 
 // if(empty($permission->positions->all))
 // {
@@ -30,7 +39,7 @@ $obj->where(['parent.isdelete' => 0, 'positions.isdelete' => 0]);
 // }
 
 // ---------------------------------
-$get_positions = $obj->get();
+$get_positions = getObjPosition();
 // $datas = [];
 
 // foreach($obj->get() as $key => $value){
@@ -43,7 +52,9 @@ $get_positions = $obj->get();
 // die($response->withJson($get_positions));
 
 
-function checkPosition($value)
+
+
+function checkPosition($position)
 {
     // $check = DB::table('positions')->where('id', $value)->where(['status' => 1, 'point_status' => 1,'isdelete' => 0])->where('parent_id', '!=', 0)->first();
  
@@ -54,33 +65,38 @@ function checkPosition($value)
     // $datas = json_decode($get_positions, true);
     // $datas = (array)json_decode($get_positions);
 
-   $datas = DB::table('positions')->leftJoin('positions as parent', 'parent.id', '=', 'positions.parent_id')->select('parent.title AS parent_title', 'positions.title AS title', 'positions.id AS id');
+   // $datas = DB::table('positions')->leftJoin('positions as parent', 'parent.id', '=', 'positions.parent_id')
+   // ->where(['positions.status' => 1, 'positions.point_status' => 1,'positions.isdelete' => 0, 'parent.isdelete' => 0])
+   // // ->select('parent.title AS parent_title', 'positions.title AS title', 'positions.id AS position_id');
+   // ->select('parent.title AS parent_title', 'positions.title AS title', 'positions.id AS id')->get();
+   // ->select('parent.title AS parent_title', 'positions.title AS title', 'parent.id AS parent_id', 'positions.id AS id', 'positions.point_status AS point_status')->get();
 // print_r($datas);
-// return $datas->get();
+// return $datas->count();
 
 //    die();
 
 
-//    $datas = json_decode($datas, true);
-    foreach ($datas->get() as $key => $v) {
+    $check_positions = getObjPosition();
+
+    foreach ($check_positions as $key => $value) {
         // echo $v->id.';';
-       if ($v->id == $value) {
+       if ($value->id == $position) {
         // die('ok');
-            return $v->id;
+            return $value->id;
        }
     }
 
     return false;
 }
 
-// $test = checkPosition(681);
-// // die($response->withJson($test));
+// $test = checkPosition(668);
+// // // die($response->withJson($test));
 
 // echo $test;
-// // print_r($test);
-// die();
+// // // // print_r($test);
+// // die();
 
-function getPosition($value)
+function getPosition($position)
 {
     // $position = DB::table('positions')->where('id', $value)->where(['status' => 1, 'point_status' => 1, 'isdelete' => 0])->where('parent_id', '!=', 0)->first();
 
@@ -88,11 +104,11 @@ function getPosition($value)
     //     return $position->title;
     // }
 
-    $datas = DB::table('positions')->leftJoin('positions as parent', 'parent.id', '=', 'positions.parent_id')->select('parent.title AS parent_title', 'positions.title AS title', 'positions.id AS id');
+    $get_positions = getObjPosition();
 
-    foreach ($datas->get() as $v) {
-        if ($v->id == $value) {
-             return $v->title;
+    foreach ($get_positions as $value) {
+        if ($value->id == $position) {
+             return $value->title;
         }
      }
 
@@ -121,20 +137,10 @@ function getLevel($value)
     return false;
 }
 
-function checkLevelPosition($value)
-{
-    $check = DB::table('level_positions')->where('position_id', $value)->where(['isdelete' => 0])->where('position_id', '!=', 0)->first();
-
-    if (!empty($check)) {
-        return $check->position_id;
-    }
-
-    return false;
-}
-
 foreach ($get_positions as $key => $value) {
     $lables[$value->id] = $value->title;
 }
+// die($response->withJson($lables));
 
 foreach ($get_levels as $index => $v) {
     $levels[$v->id] = $v->title;
@@ -142,12 +148,19 @@ foreach ($get_levels as $index => $v) {
 
 $point_positions = [[[]]];
 
+
+// $test_pos = [];
 for ($i = 0; $i < count($level_positions); $i++) {
     if ($level_positions[$i]->level_id == checkLevel($level_positions[$i]->level_id) && $level_positions[$i]->position_id == checkPosition($level_positions[$i]->position_id)) {
         // die('ok');
+        // $test_pos[checkPosition($level_positions[$i]->position_id)] = checkPosition($level_positions[$i]->position_id);
+        // echo checkPosition($level_positions[$i]->position_id).';';
         $point_positions[getPosition($level_positions[$i]->position_id)][getLevel($level_positions[$i]->level_id)] = $level_positions[$i]->point;
     }
 }
+// die($response->withJson($test_pos));
+
+
 
 foreach ($lables as $key => $lable) {
     if (empty($point_positions[$lable])) {
@@ -167,6 +180,9 @@ foreach ($lables as $key => $lable) {
     }
 }
 
+
+
+// die();
 unset($point_positions[0]);
 
 // $datas = DB::table('positions')->where(['status' => 1, 'point_status' => 1, 'isdelete' => 0])->where('parent_id', '!=', 0)->get();

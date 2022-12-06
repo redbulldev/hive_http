@@ -1,0 +1,506 @@
+/dashboard_cv_after.php
+--------------------------------------
+
+<?php
+
+use Illuminate\Database\Capsule\Manager as DB;
+
+error_reporting(E_ALL ^ E_NOTICE);
+
+$obj = DB::table($name);
+
+require './crud/all_where.php';
+
+$department = ['labels' => [], 'values' => []];
+
+$temp_department = [];
+
+$get_position_ids = $obj->get();
+
+$get_positions = DB::table('positions')->where(['isdelete' => 0, 'status' => 1])->get();
+
+$position_ids = [];
+
+foreach ($get_position_ids as $key => $value) {
+    foreach ($get_positions as $index => $l) {
+        if ($l->id == $value->position_id) {
+            $temp_department[$index] = $l->title;
+
+            $position_ids[$index] = $l->id;
+        }
+    }
+}
+
+foreach ($temp_department as $index => $value) {
+    $department['labels'][] = $value;
+}
+
+$position_request = clone $obj;
+
+$check_positions = $position_request->whereIn('cv.position_id', $position_ids)->where(['cv.isdelete' => 0])->get();
+
+$count_onboard = 0;
+
+$temp_values = [];
+
+foreach ($check_positions as $key => $value) {
+    if ($value->step > 8 && $value->status == 2) {
+        $temp_values[$value->position_id] = ++$count_onboard;
+    } else {
+        $temp_values[$value->position_id] = 0;
+    }
+}
+
+foreach ($temp_values as $key => $value) {
+    $department['values'][] = $value;
+}
+
+$all_level_positions = DB::table('level_positions')->where(['isdelete' => 0])->where('position_id', '!=', 0)->get();
+
+$count_point = 0;
+
+foreach ($all_level_positions as $key => $value) {
+    foreach ($position_ids as $index => $k) {
+        if ($value->position_id == $k) {
+            $count_point += $value->point;
+        }
+    }
+}
+
+function getPosition($value)
+{
+    $position = DB::table('positions')->where('id', $value)->where(['status' => 1, 'point_status' => 1, 'isdelete' => 0])->where('parent_id', '!=', 0)->first();
+
+    if (!empty($position)) {
+        return $position->title;
+    }
+
+    return false;
+}
+
+$obj_step = clone $obj->get();
+
+$temp_list_cv_pass = [];
+
+foreach ($obj_step as $key => $value) {
+    if ($value->step > 5 && !empty(getPosition($value->position_id)) && $value->status == 2) {
+        $index = getPosition($value->position_id);
+
+        $temp_list_cv_pass[$index] = 0; 
+    }
+}
+
+$list_cv_pass = [];
+
+foreach ($temp_list_cv_pass as $key => $value) {
+    $list_cv_pass[$key] = $value;
+}
+
+// die($response->withJson($list_cv_pass));
+
+foreach ($obj_step as $key => $value) {
+    if ($value->step > 5 && !empty(getPosition($value->position_id)) && $value->status == 2) {
+        $index = getPosition($value->position_id);
+
+        array_key_exists($index, $list_cv_pass) ?  $list_cv_pass[$index]++ : 0;
+    }
+}
+
+$obj->selectRaw(' 
+    GROUP_CONCAT(cv.position_id) AS list_cv_new, 
+    GROUP_CONCAT(cv.step,\'\') AS list_cv_pass, 
+    SUM(target) AS target, 
+    SUM(total_cv) AS total_cv, 
+    SUM(interview_cv) AS interview_cv, 
+    SUM(pass_cv) AS pass_cv, 
+    SUM(offer_cv) AS offer_cv, 
+    SUM(offer_success) AS offer_success, 
+    SUM(onboard_cv) AS onboard_cv, 
+    SUM(fail_job) AS fail_job,
+    GROUP_CONCAT(target) as list_target, 
+    GROUP_CONCAT(total_cv) as list_total, 
+    GROUP_CONCAT(onboard_cv) as list_onboard,
+    GROUP_CONCAT(positions.title,\'\') as labels
+');
+
+$summary = $obj->first();
+die($response->withJson($summary));
+
+$list_target = explode(',', $summary->list_target);
+
+$list_total = explode(',', $summary->list_total);
+
+$list_onboard = explode(',', $summary->list_onboard);
+
+$labels = explode(',', $summary->labels);
+
+$newlabel = [];
+
+$newlist_target = [];
+
+$newlist_cv_pass = [];
+
+$newlist_cv_new = [];
+
+$newlist_total = [];
+
+$newlist_onboard = [];
+
+$newlist_cv_pass = [];
+
+foreach ($labels as $key => $label) {
+    if ($label) {
+        $newlabel[$label] = $label;
+
+        $newlist_target[$label] = (!empty($newlist_target[$label]) ? $newlist_target[$label] : 0) + $list_target[$key];
+
+        $newlist_cv_pass[$label] = (!empty($list_cv_pass[$label]) ? $newlist_cv_pass[$label] + 1 : 0);
+
+        $newlist_cv_new[$label] = (!empty($newlist_cv_new[$label]) ? $newlist_cv_new[$label] : 0) + 1;
+
+        $newlist_total[$label] = (!empty($newlist_total[$label]) ? $newlist_total[$label] : 0) + $list_total[$key];
+
+        $newlist_onboard[$label] = (!empty($newlist_onboard[$label]) ? $newlist_onboard[$label] : 0) + $list_onboard[$key];
+    }
+}
+
+foreach ($newlist_cv_pass as $key => $item) {
+    foreach ($list_cv_pass as $index => $value) {
+        if ($key == $index) {
+            $newlist_cv_pass[$key] = $newlist_cv_pass[$key] - $list_cv_pass[$index];
+        }
+    }
+}
+
+$summary->labels = implode(',', array_keys($newlabel));
+
+$summary->list_target = implode(',', array_values($newlist_target));
+
+$summary->list_cv_pass = implode(',', array_values($newlist_cv_pass));
+
+$summary->list_cv_new = implode(',', array_values($newlist_cv_new));
+
+$summary->list_total = implode(',', array_values($newlist_total));
+
+$summary->list_onboard = implode(',', array_values($newlist_onboard));
+
+$results = [
+    'status' => 'success',
+    'point' => $count_point,
+    'summary' => $summary,
+    'department' => $department,
+    'data' => $ketqua ? $ketqua->all() : null,
+    'total' => $ketqua ? $ketqua->count() : null,
+    'time' => time(),
+];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/import.php
+-----------------------------------------
+
+
+
+
+<?php
+
+use Illuminate\Database\Capsule\Manager as DB;
+
+error_reporting(E_ALL ^ E_NOTICE);
+
+try {
+    require './shared/getToken.php';
+
+    $body = $request->getParsedBody();
+
+    $request_id = (int)$body['request_id'];
+
+    if (empty($request_id)) {
+        @json_decode(throw new Exception('Invalid data!'));
+    }
+
+    if (!empty($request_id)) {
+        if (!DB::table('request')->where(['id' => $request_id])->where('isdelete', 0)->count()) {
+            @json_decode(throw new Exception('Request not exist'));
+        }
+    }
+
+    $uploadedFiles = $request->getUploadedFiles();
+
+    if (count($uploadedFiles) > 0) {
+        foreach ($uploadedFiles as $file) {
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file->file);
+
+            $sheet = $spreadsheet->getActiveSheet(0);
+
+            $list = $sheet->getRowIterator();
+
+            $collection = $sheet->getColumnDimensions();
+
+            $indexKey = [];
+
+            $numberOk = 0;
+
+            $listError = [];
+
+            foreach ($list as $index => $row) {
+                if ($index > 1) {
+                    $item = [];
+
+                    foreach ($collection as $key => $val) {
+                        $item[$indexKey[$key]] = $sheet->getCell($key . $index)->getValue();
+                    }
+
+                    //Invalid fullname
+                    if (empty($item['fullname'])) {
+                        $listError['fullname'] = ['row' => $index, 'fullname' => $item['fullname'], 'message' => 'Invalid column: fullname!'];
+                    }
+
+                    //Invalid position
+                    if (empty($item['position'])) {
+                        $listError['position'] = ['row' => $index, 'fullname' => $item['fullname'], 'message' => 'Invalid column: position!'];
+                    }
+
+                    //Invalid level
+                    if (empty($item['level'])) {
+                        $listError['level'] = ['row' => $index, 'fullname' => $item['fullname'], 'message' => 'Invalid column: level!'];
+                    }
+
+                    //Kiểm tra department
+                    if (!empty($item['department'])) {
+                        $department = DB::table('positions')->where(['title' => trim($item['department']), 'parent_id' => 0, 'status' => 1, 'isdelete' => 0])->first();
+                        // die($response->withJson($department));
+
+                        if (!$department) {
+                            $listError[] = ['row' => $index, 'fullname' => $item['fullname'], 'message' => 'Department not found'];
+
+                            continue;
+                        }
+                    }
+
+                    //Kiểm tra position
+                    if (!empty($item['position'])) {
+                        $position = DB::table('positions')->where(['title' => trim($item['position']), 'parent_id' => $department->id, 'status' => 1, 'isdelete' => 0])->first();
+// die($position);
+// die($response->withJson($position));
+
+                        if (!$position) {
+                            $listError[] = ['row' => $index, 'fullname' => $item['fullname'], 'message' => 'Position not found'];
+
+                            continue;
+                        }
+                    }
+
+                    //Kiểm tra level
+                    if (!empty($item['level'])) {
+                        $level = DB::table('level')->where(['title' => trim($item['level']), 'status' => 1, 'isdelete' => 0])->first();
+
+                        if (!$level) {
+                            $listError[] = ['row' => $index, 'fullname' => $item['fullname'], 'message' => 'Level not found'];
+
+                            continue;
+                        }
+                    }
+
+                    //Kiểm tra source
+                    if (!empty($item['level'])) {
+                        $source = DB::table('source')->where(['title' => trim($item['source']), 'status' => 1, 'isdelete' => 0])->first();
+
+                        if (!$source) {
+                            $listError[] = ['row' => $index, 'fullname' => $item['fullname'], 'message' => 'Source not found'];
+
+                            continue;
+                        }
+                    }
+
+                    //Kiểm tra interviewer
+                    if (!empty($item['level'])) {
+                        $interviewer = DB::table('users')->where(['username' => trim($item['interviewer']), 'status' => 1, 'isdelete' => 0])->first();
+
+                        if (!$interviewer) {
+                            $listError[] = ['row' => $index, 'fullname' => $item['fullname'], 'message' => 'Interviewer not found'];
+
+                            continue;
+                        }
+                    }
+
+                    //Kiểm tra reviewer
+                    if (!empty($item['level'])) {
+                        $reviewer = DB::table('users')->where(['username' => trim($item['reviewer']), 'status' => 1, 'isdelete' => 0])->first();
+
+                        if (!$reviewer) {
+                            $listError[] = ['row' => $index, 'fullname' => $item['fullname'], 'message' => 'Reviewer not found'];
+
+                            continue;
+                        }
+                    }
+
+                    //Kiểm tra assignee
+                    if (!empty($item['level'])) {
+                        $assignee = DB::table('users')->where(['username' => trim($item['assignee']), 'status' => 1, 'isdelete' => 0])->first();
+
+                        if (!$assignee) {
+                            $listError[] = ['row' => $index, 'fullname' => $item['fullname'], 'message' => 'Assignee not found'];
+
+                            continue;
+                        }
+                    }
+
+                    if (!empty($item['gender'])) {
+                        if (strtolower($item['gender']) == 'nam') {
+                            $item['gender'] = 1;
+                        } else {
+                            $item['gender'] = 0;
+                        }
+                    } else {
+                        unset($item['gender']);
+                    }
+
+                    unset($item['department']);
+
+                    unset($item['position']);
+
+                    unset($item['level']);
+
+                    unset($item['source']);
+
+                    unset($item['interviewer']);
+
+                    unset($item['reviewer']);
+
+                    unset($item['assignee']);
+
+                    $item['author_id'] = $user->username;
+
+                    $item['position_id'] = $position->id;
+
+                    $item['request_id'] = $request_id;
+
+                    $item['level_id'] = $level->id;
+
+                    $item['source_id'] = !empty($source->id) ? $source->id : null;
+
+                    $item['interviewer_id'] = !empty($interviewer->username) ? $interviewer->username : null;
+
+                    $item['reviewer_id'] = !empty($reviewer->username) ? $reviewer->username : null;
+
+                    $item['assignee_id'] = !empty($assignee->username) ? $assignee->username : null;
+
+                    $item['images'] = !empty($item['images']) ?  json_encode(explode(',', $item['images'])) : null;
+
+                    if (!empty($item['onboard'])) {
+                        $dob = explode('/', $item['onboard']);
+
+                        if (count($dob) == 3) {
+                            $item['onboard'] = $dob[2] . '-' . $dob[1] . '-' . $dob[0];
+                        } else {
+                            unset($item['onboard']);
+                        }
+                    }
+
+                    if (!empty($item['birthday'])) {
+                        $dbd = explode('/', $item['birthday']);
+
+                        if (count($dbd) == 3) {
+                            $item['birthday'] = $dbd[2] . '-' . $dbd[1] . '-' . $dbd[0];
+                        } else {
+                            unset($item['birthday']);
+                        }
+                    }
+
+                    $numberOk++;
+
+                    $item['datecreate'] = time();
+
+                    $item['datemodified'] = time();
+
+                    $item['step'] = 0;
+
+                    $item['status'] = 2;
+
+                    $item['isdelete'] = 0;
+
+                    $newCv = removecolumn('cv', $item);
+
+                    if (!empty($listError['fullname']) || !empty($listError['position']) || !empty($listError['level'])) {
+                        if (!empty($listError['fullname'])) {
+                            $listError[] = ['row' => $index, 'fullname' => $item['fullname'], 'message' => 'Fullname not found'];
+                        }
+
+                        if (!empty($listError['position'])) {
+                            $listError[] = ['row' => $index, 'fullname' => $item['fullname'], 'message' => 'Position not found'];
+                        }
+
+                        if (!empty($listError['level'])) {
+                            $listError[] = ['row' => $index, 'fullname' => $item['fullname'], 'message' => 'Level not found'];
+                        }
+                    } else {
+                        // $cvId = DB::table('cv')->insertGetId($newCv);
+
+                        // DB::table('cv_history')->insert(['author_id' => "hungnv1", 'cv_id' => $cvId, 'description' => 'CV được import từ Excel', 'datecreate' => time()]);
+                    }
+
+                    if ($index == 101) {
+                        break;
+                    }
+                } else {
+                    foreach ($collection as $key => $val) {
+                        $indexKey[$key] = $sheet->getCell($key . $index)->getValue();
+                    }
+                }
+            }
+
+            $results = ['status' => 'success', 'data' => $numberOk, 'error' => $listError, 'time' => time()];
+        }
+    }
+} catch (Exception $e) {
+    $obj = @json_decode($e->getMessage());
+
+    if (is_object($obj)) {
+        $httpStatus = $obj->status;
+
+        $results = ['status' => 'error', 'message' => $obj->message, 'code' => $obj->code];
+
+        if (!empty($obj->more)) {
+            $results['more'] = $obj->more;
+        }
+    } else {
+        $httpStatus = 201;
+
+        $results = ['status' => 'error', 'message' => $e->getMessage(), 'code' => 'fatalerror'];
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
