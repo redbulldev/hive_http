@@ -160,25 +160,34 @@ for ($i = 0; $i < count($level_positions); $i++) {
 }
 // die($response->withJson($test_pos));
 
-
-
 foreach ($lables as $key => $lable) {
     if (empty($point_positions[$lable])) {
-        foreach ($levels as $index => $level) {
-            if (empty($point_positions[$lable][$level])) {
-                $point_positions[$lable][$level] = 1;
-            }
-        }
-    }
-
-    if (!empty($point_positions[$lable])) {
-        foreach ($levels as $index => $level) {
-            if (empty($point_positions[$lable][$level])) {
-                $point_positions[$lable][$level] = 1;
-            }
-        }
+        // foreach ($levels as $index => $level) {
+        //     if (empty($point_positions[$lable][$level])) {
+                $point_positions[$lable] = null;
+            // }
+        // }
     }
 }
+
+
+// foreach ($lables as $key => $lable) {
+//     if (empty($point_positions[$lable])) {
+//         foreach ($levels as $index => $level) {
+//             if (empty($point_positions[$lable][$level])) {
+//                 $point_positions[$lable][$level] = 1;
+//             }
+//         }
+//     }
+
+//     if (!empty($point_positions[$lable])) {
+//         foreach ($levels as $index => $level) {
+//             if (empty($point_positions[$lable][$level])) {
+//                 $point_positions[$lable][$level] = 1;
+//             }
+//         }
+//     }
+// }
 
 
 

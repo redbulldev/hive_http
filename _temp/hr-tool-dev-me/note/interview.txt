@@ -23,6 +23,49 @@ D. Gửi phản hồi HTTP: Sau khi middleware layer ngoài cùng nhường quy�
 
 
 
+//Mọi yêu cầu HTTP đều có phần thân. Nếu đang xây dựng một ứng dụng Slim sử dụng dữ liệu JSON hoặc XML, có thể sử dụng phương thức getParsedBody() của đối tượng Yêu cầu PSR-7 để phân tích cú pháp nội dung yêu cầu HTTP thành định dạng PHP gốc.
+$parsedBody = $request->getParsedBody();
+
+
+//Nếu phương thức yêu cầu là POST và Content-Type là ứng dụng/x-www-form-urlencoding hoặc multipart/form-data, bạn có thể truy xuất tất cả các tham số POST như sau:
+/ Get all POST parameters
+$params = (array)$request->getParsedBody();
+
+// Get a single POST parameter
+$foo = $params['foo'];
+
+
+//file uploads lên trong $_FILES có sẵn từ phương thức getUploadedFiles() của đối tượng Yêu cầu. Điều này trả về một mảng returns an array keyed by the name của phần tử đầu vào.
+$files = $request->getUploadedFiles();
+
+
+//Về mặt kỹ thuật, đối tượng Yêu cầu PSR-7 đại diện cho nội dung yêu cầu HTTP như một phiên bản của Psr\Http\Message\StreamInterface. có thể lấy phiên bản StreamInterface của thân yêu cầu HTTP bằng phương thức getBody() của đối tượng Yêu cầu PSR-7. Phương thức getBody() thích hợp hơn nếu kích thước yêu cầu HTTP đến không xác định hoặc quá lớn đối với bộ nhớ khả dụng.
+$body = $request->getBody();
+
+
+- Để hiển thị một string ra màn hình sử dụng 
+ $response->getBody()->write('Hello World');
+
+
+//iểm tra phương thức của yêu cầu HTTP bằng phương thức
+$method = $request->getMethod(); //GET, POST ...
+
+
+//get tham số trên url 
+$request->getAttribute('id');
+
+
+//để get data riêng lẻ  với puong thức post, put sử dụng 
+$request->getParam('title')
+
+
+//Cách sử dụng getParam() trong phiên bản 4
+Tùy chọn 1: Sử dụng đối tượng yêu cầu PSR-7, ví dụ: $request->getQueryParams() hoặc $request->getParsedBody()
+
+Tùy chọn 2: Sử dụng đối tượng yêu cầu tương thích PSR-7 slim/http 71, ví dụ: $request->getParam('my-param') hoặc $request->getParsedBodyParam('key')
+https://discourse.slimframework.com/t/how-to-use-getparam-in-version-4/3655
+
+
 
 
 

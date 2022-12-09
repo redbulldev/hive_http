@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Capsule\Manager as DB;
 
-error_reporting (E_ALL ^ E_NOTICE);
+error_reporting(E_ALL ^ E_NOTICE);
 
 $obj = DB::table($name);
 
@@ -23,7 +23,6 @@ $position_ids = [];
 foreach ($get_position_ids as $key => $value) {
     foreach ($get_positions as $index => $l) {
         if ($l->id == $value->position_id) {
-            // $department['labels'][$l->id] = $l->title;
             $temp_department[$index] = $l->title;
 
             $position_ids[$index] = $l->id;
@@ -35,23 +34,28 @@ foreach ($temp_department as $index => $value) {
     $department['labels'][] = $value;
 }
 
-// die($response->withJson($department));
+$position_request = clone $obj;
 
-$position_request = clone $obj; //request
-
-$check_positions = $position_request->whereIn('cv.position_id', $position_ids)->where(['cv.isdelete' => 0])->get(); 
-
-$count_onboard = 0;
+$check_positions = $position_request->whereIn('cv.position_id', $position_ids)->where(['cv.isdelete' => 0])->get();
 
 $temp_values = [];
 
 foreach ($check_positions as $key => $value) {
     if ($value->step > 8 && $value->status == 2) {
-        $temp_values[$value->position_id] = ++$count_onboard;
-    } else {
         $temp_values[$value->position_id] = 0;
     }
 }
+
+foreach ($check_positions as $key => $value) {
+    if ($value->step > 8 && $value->status == 2) {
+        $temp_values[$value->position_id]++;
+    }
+
+    if (!array_key_exists($value->position_id, $temp_values)) {
+        $temp_values[$value->position_id] = 0;
+    }
+}
+// die($response->withJson($check_positions));
 
 foreach ($temp_values as $key => $value) {
     $department['values'][] = $value;
@@ -82,20 +86,31 @@ function getPosition($value)
     return false;
 }
 
-$list_cv_pass = [];
-
 $obj_step = clone $obj->get();
 
+$temp_list_cv_pass = [];
+
 foreach ($obj_step as $key => $value) {
-    if ($value->step > 5) {
-        if (!empty(getPosition($value->position_id)) && $value->status == 2) {
-            $index = getPosition($value->position_id);
-            
-            $list_cv_pass[$index]++;
-        }
+    if ($value->step > 5 && !empty(getPosition($value->position_id)) && $value->status == 2) {
+        $index = getPosition($value->position_id);
+
+        $temp_list_cv_pass[$index] = 0;
     }
 }
-// die($response->withJson($list_cv_pass));
+
+$list_cv_pass = [];
+
+foreach ($temp_list_cv_pass as $key => $value) {
+    $list_cv_pass[$key] = $value;
+}
+
+foreach ($obj_step as $key => $value) {
+    if ($value->step > 5 && !empty(getPosition($value->position_id)) && $value->status == 2) {
+        $index = getPosition($value->position_id);
+
+        array_key_exists($index, $list_cv_pass) ?  $list_cv_pass[$index]++ : 0;
+    }
+}
 
 $obj->selectRaw(' 
     GROUP_CONCAT(cv.position_id) AS list_cv_new, 
@@ -114,13 +129,9 @@ $obj->selectRaw('
     GROUP_CONCAT(positions.title,\'\') as labels
 ');
 
-
 $summary = $obj->first();
-// die($response->withJson($summary));
 
 $list_target = explode(',', $summary->list_target);
-
-// $list_cv_new = explode(',',$summary->cv_new);
 
 $list_total = explode(',', $summary->list_total);
 
@@ -144,9 +155,15 @@ $newlist_cv_pass = [];
 
 foreach ($labels as $key => $label) {
     if ($label) {
+        $newlist_cv_pass[$label] = 0;       
+    }
+}
+
+foreach ($labels as $key => $label) {
+    if ($label) {
         $newlabel[$label] = $label;
 
-        $newlist_target[$label]= (!empty($newlist_target[$label])?$newlist_target[$label]:0) + $list_target[$key];
+        $newlist_target[$label] = (!empty($newlist_target[$label]) ? $newlist_target[$label] : 0) + $list_target[$key];
 
         $newlist_cv_pass[$label] = (!empty($list_cv_pass[$label]) ? $newlist_cv_pass[$label] + 1 : 0);
 
@@ -160,16 +177,15 @@ foreach ($labels as $key => $label) {
 
 foreach ($newlist_cv_pass as $key => $item) {
     foreach ($list_cv_pass as $index => $value) {
-        if ($key == $index) {
+        if ($key == $index && $value != 1) {
             $newlist_cv_pass[$key] = $newlist_cv_pass[$key] - $list_cv_pass[$index];
         }
     }
 }
-// die($response->withJson($newlist_cv_pass));
 
 $summary->labels = implode(',', array_keys($newlabel));
 
-$summary->list_target = implode(',',array_values($newlist_target));
+$summary->list_target = implode(',', array_values($newlist_target));
 
 $summary->list_cv_pass = implode(',', array_values($newlist_cv_pass));
 
@@ -178,6 +194,20 @@ $summary->list_cv_new = implode(',', array_values($newlist_cv_new));
 $summary->list_total = implode(',', array_values($newlist_total));
 
 $summary->list_onboard = implode(',', array_values($newlist_onboard));
+
+// $obj->distinct();
+
+// $results = [
+//     'status' => 'success',
+//     'point' => $count_point,
+//     'summary' => $summary,
+//     'department' => $department,
+//     'data' => $ketqua ? $ketqua->distinct()->get() : null,
+//     'total' => $ketqua ? $ketqua->distinct()->count() : null,
+//     'time' => time(),
+// ];
+
+
 
 $results = [
     'status' => 'success',

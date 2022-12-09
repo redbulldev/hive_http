@@ -1,14 +1,23 @@
 <?php
+
+            // die($where);
+
 if(isset($where) && isset($obj)) 
 {
     if(isset($where['notlike']))$obj->where($where['notlike']);
     if(isset($where['in'])){
+        // die('$where');
+
         foreach($where['in'] as $column=>$value)
         {
             $obj->whereIn($column,$value);
         }
     }
     if(isset($where['like'])){
+        //             print_r($where['like']);
+
+        // die($where);
+
         foreach($where['like'] as $column=>$value)
         {
             $arrkey = explode('-',$value);
@@ -25,3 +34,7 @@ if(isset($where) && isset($obj))
         }
     }
 }
+
+//          die($response->withJson($obj->get()));
+//         //  print_r($obj->get());
+// die('ebnd');

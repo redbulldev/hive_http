@@ -49,9 +49,9 @@ foreach ($data_validates as $key => $title) {
         if (is_int($point)  || is_float($point)) {
             $point = rtrim($point, 0);
 
-            if ($point < 1) {
-                throw new Exception('Do not enter leading zeros!!');
-            }
+            // if ($point < 1) {
+            //     throw new Exception('Do not enter leading zeros!!');
+            // }
 
             $numlength = strlen((string) $point);
 
@@ -69,30 +69,29 @@ foreach ($data_validates as $key => $title) {
             $count = strlen($point); //length
             // die($count);
 
-            $dot = strpos($point, '.'); //return position
+            $dot = strpos($point, '.'); //return position; 0.1
             // echo $dot;die();
 
             $dots = substr_count($point, '.');  //count dot(.)
 
             // input: 2.
-            if (($count != 1 && $count == $dot + 1) || $dot === 0 || $dots > 1 || $count > 6) { //
+            if (($count != 1 && $count == $dot + 1) || $dots > 1 || $count > 6) { //
                 throw new Exception('Invalid data!');
             }
 
-            if ($dot) {
-                $point = rtrim($point, 0);  //cut - 0 - right
+            // if ($dot) {
+            //     $point = rtrim($point, 0);  //cut - 0 - right
 
-                $count = strlen($point);
+            //     $count = strlen($point);
 
-                $dot = strpos($point, '.');
+            //     $dot = strpos($point, '.');
 
-                // xoa (.) o cuoi khi remove (0) truoc 
-                if ($count == $dot + 1) {
-                    $point = rtrim($point, '.');
-                }              
-            }
+            //     // xoa (.) o cuoi khi remove (0) truoc 
+            //     if ($count == $dot + 1) {
+            //         $point = rtrim($point, '.');
+            //     }              
+            // }
         }
-
     }
 }
 
@@ -201,23 +200,23 @@ foreach ($data_point_positions as $key => $items) {
                 DB::table('level_positions')
                     ->whereIn('level_id', [checkLevel($index)])->whereIn('position_id',  [checkPosition($key)])
                     ->update([
-                        'point' => rtrim($data_point_positions[$key][$index], 0),
+                        'point' => $data_point_positions[$key][$index]
                     ]);
             } 
 
-            $level_id = checkLevel($index);
+            // $level_id = checkLevel($index);
 
-            $check_exist = DB::table('level_positions')
-                ->whereIn('level_id', [$level_id])->whereIn('position_id',  [$position_id])
-                ->first();
+            // $check_exist = DB::table('level_positions')
+            //     ->whereIn('level_id', [$level_id])->whereIn('position_id',  [$position_id])
+            //     ->first();
 
-            if (empty($check_exist) && !empty($level_id)) {
-                DB::table('level_positions')->updateOrInsert([
-                    'level_id' => $level_id,
-                    'position_id' => $position_id,
-                    'point' => rtrim($data_point_positions[$key][$index], 0),
-                ]);
-            }              
+            // if (empty($check_exist) && !empty($level_id)) {
+            //     DB::table('level_positions')->updateOrInsert([
+            //         'level_id' => $level_id,
+            //         'position_id' => $position_id,
+            //         'point' => rtrim($data_point_positions[$key][$index], 0),
+            //     ]);
+            // }              
         }
     }
 }

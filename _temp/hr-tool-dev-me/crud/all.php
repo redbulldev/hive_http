@@ -15,6 +15,8 @@ if (in_array($name,$conf['block'])) {
     try {
         require('./shared/getToken.php');
         if (!$ignoreUrl)checkRole($permission, $name, 'view');
+
+        // 
         function filterparam($table, $params)
         {
             $allcolumn = DB::select('SHOW FULL COLUMNS FROM ' . $table);
@@ -51,6 +53,8 @@ if (in_array($name,$conf['block'])) {
             if($limit==0)$limit = 1000;
             $key = $request->getQueryParam('key', $request->getQueryParam('keyword', ''));
             $daterange = $request->getQueryParam('daterange', '');
+            // die($daterange);
+            
             if (!is_numeric($page) || $page < 1) $page = 1;
             //if (!is_numeric($limit) || $limit < 1) $limit = 30;
             $params = $request->getQueryParams();

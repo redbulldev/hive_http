@@ -7,6 +7,7 @@ $obj->leftJoin('positions', 'positions.id', '=', 'cv.position_id')
     ->leftJoin('source', 'source.id', '=', 'cv.source_id');
 
 if (!empty($params['progress'])) {
+    // false
     $idprogress = explode('-', $params['progress']);
     if (count($idprogress)) {
         $obj->where(function ($query) use ($idprogress) {
@@ -27,6 +28,8 @@ if (!empty($params['progress'])) {
 }
 
 if (empty($permission->cv->all)) {
+// die('tét');
+    // false 
     $obj->where(function ($query) use ($user) {
         $query->orWhere('cv.author_id', $user->username)
             ->orWhere('cv.interviewer_id', $user->username)
