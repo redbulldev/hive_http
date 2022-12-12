@@ -432,3 +432,60 @@ $moreselect= ['positions.title as positions_title', 'parent.title as department_
 
 
 
+DROP TABLE IF EXISTS `plan`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `plan` 
+    AS SELECT `request`.`id`
+    AS `id`, `request`.`author_id` 
+    AS `author_id`, `request`.`requestor_id` 
+    AS `requestor_id`, `request`.`decision_id` 
+    AS `decision_id`, `request`.`position_id` 
+    AS `position_id`, `request`.`typework_id`
+    AS `typework_id`, `request`.`assignee_id` 
+    AS `assignee_id`, `request`.`levels` 
+    AS `levels`, `request`.`assessment` 
+    AS `assessment`, `request`.`target`
+    AS `target`, `request`.`languages`
+    AS `languages`, `request`.`priority`
+    AS `priority`, `request`.`day`
+    AS `day`, `request`.`month` 
+    AS `month`, `request`.`year` 
+    AS `year`, `request`.`date`
+    AS `date`, `request`.`deadline`
+    AS `deadline`, `request`.`total_cv` 
+    AS `total_cv`, `request`.`interview_cv` 
+    AS `interview_cv`, `request`.`pass_cv` 
+    AS `pass_cv`, `request`.`offer_cv` 
+    AS `offer_cv`, `request`.`offer_success`
+    AS `offer_success`, `request`.`onboard_cv`
+    AS `onboard_cv`, `request`.`fail_job` 
+    AS `fail_job`, `request`.`employees` 
+    AS `employees`, `request`.`sources` 
+    AS `sources`, `request`.`description` 
+    AS `description`, `request`.`jd` 
+    AS `jd`, `request`.`datecreate`
+    AS `datecreate`, `request`.`datemodified`
+    AS `datemodified`, `request`.`status` 
+    AS `status`, `request`.`isauto` 
+    AS `isauto`, `request`.`isdelete` 
+    AS `isdelete` 
+FROM 
+(
+    (
+        `request` left join `positions` on(
+            (
+                (`positions`.`id` = `request`.`position_id`) 
+                and (`positions`.`status` = 1) 
+                and (`positions`.`isdelete` = 0) 
+            )
+        )
+    ) 
+
+    left join `positions` `department` on(
+            (
+                (`department`.`id` = `positions`.`parent_id`) 
+                and (`department`.`status` = 1) 
+                and (`department`.`isdelete` = 0)
+            )
+        )
+)  ;
