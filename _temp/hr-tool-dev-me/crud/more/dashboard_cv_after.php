@@ -57,6 +57,9 @@ $summary=$obj->first();
 // die($response->withJson($obj->get()));
 
 // die($response->withJson($summary));
+
+$newlabel = [];
+
 $labels = explode(',', $summary->labels);
 
 foreach($labels as $key=>$label){
@@ -149,7 +152,7 @@ $obj_plan = DB::table('plan');
 
 if (!empty($params['from']) && !empty($params['to'])) {
     $obj_plan->groupBy('year')->groupBy('month')->whereIn('status', [2,4])
-        ->selectRaw("year,month,SUM(target) AS target,SUM(total_cv) AS total_cv, SUM(interview_cv) AS interview_cv, SUM(pass_cv) AS pass_cv, SUM(offer_cv) AS offer_cv, SUM(offer_success) AS offer_success, SUM(onboard_cv) AS onboard_cv, SUM(fail_job) AS fail_job");
+        ->selectRaw("SUM(target) AS target");
    
     if (!empty($params['from']) && !empty($params['to'])) {
         $from = substr($params['from'], 0, 7) . '-01';
@@ -164,6 +167,7 @@ if (!empty($params['from']) && !empty($params['to'])) {
     }
 } 
 
+// $total_cv = $obj_plan->sum("target");
 $total_cv = 0;
 
 foreach ($obj_plan->get() as $key => $value) {
@@ -174,12 +178,65 @@ $summary->total_cv = !empty($total_cv) ? $total_cv : 0;
 // die($response->withJson($total_cv));
 
 
+////////////////// Số lượng cần tuyển/////////////////////////
+// $obj_request = DB::table($name);
+$obj_request = DB::table('request');
+
+$position_request_ids =[];
+foreach ($ketqua->all() as $key => $value) {
+   $position_request_ids[$value->position_id] = $value->position_id;
+}
+$obj_request->whereIn('position_id', $position_request_ids)->where([ 'request.isdelete' => 0]);
+// die($response->withJson($position_request_ids));
+
+// $obj_request->join('request', function ($join) {
+//     $join->on('request.position_id', '=', 'cv.position_id');
+//     $join->where([ 'request.isdelete' => 0]);
+// });
+$obj_request->join('positions', function ($join) {
+    $join->on('positions.id', '=', 'request.position_id');
+    $join->where(['positions.status' => 1, 'positions.isdelete' => 0]);
+});
+
+$obj_request->join('positions as parent', function ($join) {
+    $join->on('parent.id', '=', 'positions.parent_id');
+    $join->where(['parent.status' => 1, 'parent.isdelete' => 0]);
+});
+$obj_request->selectRaw('positions.title AS position_title, parent.title AS parent_title, request.*');
+if (!empty($params['from']) && !empty($params['to'])) {
+    $from = $params['from'];
+    $to = $params['to'];
+    $obj_request->where('date', '>=', $from)->where('date', '<=', $to);
+}
+if (!empty($params['assignee_id'])) {
+    $assignee_id = explode('-', $params['assignee_id']);
+
+    $obj_request->where(function ($query) use ($assignee_id) {
+        foreach ($assignee_id as $key  => $id) {
+            $query->orWhere('request.assignee_id', 'LIKE', "%$id%");
+        }
+    });
+}
+if (!empty($params['department_id'])) {
+    $department_id = explode('-', $params['department_id']);
+
+    $obj_request->where(function ($query) use ($department_id) {
+        foreach ($department_id as $id) {
+            $query->orWhere('positions.parent_id', 'LIKE', "%$id%");
+        }
+    });
+}
+
+// die($response->withJson($obj_request->get()));
+
+
 $results = [
     'status' => 'success',
+    'point' => $count_point,
     'summary' => $summary,
     'department' => $department,
-    'data' => $ketqua ? $ketqua->all() : null,
-    'total' => $ketqua ? $ketqua->count() : null,
+    'data' => $obj_request ? $obj_request->get() : null,
+    'total' => $obj_request ? $obj_request->count() : null,
     'time' => time(),
 ];
 
