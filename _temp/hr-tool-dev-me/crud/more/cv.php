@@ -31,10 +31,10 @@ if (empty($permission->cv->all)) {
 // die('tét');
     // false 
     $obj->where(function ($query) use ($user) {
-        $query->orWhere('cv.author_id', 'hungnv1')
-            ->orWhere('cv.interviewer_id', 'hungnv1')
-            ->orWhere('cv.reviewer_id', 'hungnv1')
-            ->orWhere('cv.assignee_id', 'hungnv1');
+        $query->orWhere('cv.author_id', $user->username)
+            ->orWhere('cv.interviewer_id', $user->username)
+            ->orWhere('cv.reviewer_id', $user->username)
+            ->orWhere('cv.assignee_id', $user->username);
     });
 }
 

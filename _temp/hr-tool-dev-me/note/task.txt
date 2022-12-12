@@ -265,6 +265,17 @@ cv_history
 
 
 
+//////////////////////////
+- tim hieu plan.php
+- tim hieu cv.php
++tim hieu cach search: user, deparmant, ..
+
+
+
+
+
+
+
 
 
 
