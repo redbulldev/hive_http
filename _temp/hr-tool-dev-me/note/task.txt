@@ -271,6 +271,15 @@ cv_history
 +tim hieu cach search: user, deparmant, ..
 
 
+ hoi Số lượng cần tuyển
+ hoi tong hop diem 
+hoi tinh ty le offer thanh cong 
+doc bao cao tuyn dung 
+
+
+
+
+onboard_cv/target * 100
 
 
 
@@ -279,14 +288,14 @@ cv_history
 
 
 
+Tỉ lệ tuyển dụng
+interview_cv: qua review 
 
+onboard_cv: tuyen
 
+pass_cv: pass phong van 
 
-
-
-
-
-
+total_cv: ung tuyen
 
 
 
