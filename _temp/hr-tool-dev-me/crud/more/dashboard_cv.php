@@ -63,7 +63,7 @@ if (!empty($params['from']) && !empty($params['to'])) {
 if (!empty($params['department_id'])) {
     $department_id = explode('-', $params['department_id']);
 
-    $obj->orWhere(function ($query) use ($department_id) {
+    $obj->where(function ($query) use ($department_id) {
         foreach ($department_id as $id) {
             $query->orWhere('positions.parent_id', 'LIKE', "%$id%");
         }

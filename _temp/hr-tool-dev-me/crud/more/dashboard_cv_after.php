@@ -105,28 +105,13 @@ $get_position_ids = $obj->get();
 
 $get_positions = DB::table('positions')->where(['isdelete' => 0, 'status' => 1])->get();
 
-// $position_ids = [];
-
 foreach ($ketqua->all() as $key => $value) {
-    // foreach ($get_positions as $index => $l) {
-    // if ($l->id == $value->position_id) {
     if (!empty(getPosition($value->position_id))) {
         $index = getPosition($value->position_id);
 
         $temp_department_lables[$value->position_id] = $index;
-
-        // $position_ids[$value->position_id] = $value->position_id;
     }
-    // }
 }
-
-foreach ($temp_department_lables as $index => $value) {
-    $department['labels'][] = $value;
-}
-
-// $position_request = clone $obj;
-
-// $check_positions = $position_request->whereIn('cv.position_id', $position_ids)->where(['cv.isdelete' => 0])->get();
 
 $temp_department_values = [];
 
@@ -150,17 +135,50 @@ foreach ($ketqua->all() as $key => $value) {
     $position_point_ids[$value->position_id] = $value->position_id;
 }
 
-foreach ($temp_department_lables as $index => $lable) {
-    foreach ($temp_department_values as $key => $value) {
-        if ($index == $key) {
-            $department['values'][] = $value;
-        }
+$max_key = 0;
+foreach ($temp_department_values as $index => $value) {
+    if($index >= $max_key){
+        $max_key = $index;
     }
 }
 
+$min_key = $max_key;
+foreach ($temp_department_values as $index => $value) {
+    if($index <= $min_key){
+        $min_key = $index;
+    }
+}
+// die($response->withJson($max_key));
+// die($response->withJson($min_key));
+
+$temp = 0;
+foreach ($temp_department_values as $index => $value) {
+   for ($i=$min_key; $i < $max_key; $i++) { 
+        if(!empty($temp_department_values[$i])){
+            if($temp_department_values[$i] <= $temp_department_values[$index]){
+                $temp =  $temp_department_values[$index];
+                $temp_department_values[$index] =  $temp_department_values[$i];
+                $temp_department_values[$i] = $temp;
+            }
+        }
+   }
+}
+foreach ($temp_department_values as $index => $value) {
+    $department['values'][ $index] = $value;
+}
+
+foreach ($temp_department_values as $key => $value) {
+    foreach ($temp_department_lables as $index => $lable) {
+
+        if ($index == $key) {
+            $department['labels'][$index] = $lable;
+        }
+    }
+}
+// die($response->withJson($department));
+
 $summary->onboard_cv = (int)array_sum($department['values']);
 
-// die($response->withJson($position_point_ids));
 
 ////////////////// Tổng điểm/////////////////////////
 $all_level_positions = DB::table('level_positions')->where(['isdelete' => 0])->where('position_id', '!=', 0)->whereIn('position_id', $position_point_ids)->get();
@@ -204,7 +222,9 @@ $summary->target = !empty($target_cv) ? $target_cv : 0;
 
 ////////////////// Số lượng cần tuyển/////////////////////////
 // // $obj_request = DB::table($name);
-$obj_request = DB::table('request');
+$name='request';
+
+$obj_request = DB::table($name);
 
 $position_request_ids = [];
 foreach ($ketqua->all() as $key => $value) {
@@ -259,26 +279,39 @@ if (!empty($params['department_id'])) {
 // die($response->withJson($obj_request->get()));
 
 
-$results = [
-    'status' => 'success',
-    'point' => $count_point,
-    'summary' => $summary,
-    'department' => $department,
-    'data' => $obj_request ? $obj_request->get() : null,
-    'total' => $obj_request ? $obj_request->count() : null,
-    'time' => time(),
-];
-
+// $results = [
+//     'status' => 'success',
+//     'point' => $count_point,
+//     'summary' => $summary,
+//     'department' => $department,
+//     'datas' => $obj_request ? $obj_request->get() : null,
+//     'totals' => $obj_request ? $obj_request->count() : null,
+//     'time' => time(),
+// ];
 
 // $results = [
 //     'status' => 'success',
 //     'point' => $count_point,
 //     'summary' => $summary,
 //     'department' => $department,
-//     'data' => $ketqua ? $ketqua->all() : null,
-//     'total' => $ketqua ? $ketqua->count() : null,
+//     'datas' => $statistic_cv ? $statistic_cv->all() : null,
+//     'totals' => $statistic_cv ? $statistic_cv->count() : null,
 //     'time' => time(),
 // ];
+
+$ketqua = $obj_request ? $obj_request->get() : null;
+
+$total = $obj_request ? $obj_request->count() : null;
+
+$results = [
+    'status' => 'success',
+    'point' => $count_point,
+    'summary' => $summary,
+    'department' => $department,
+    'data' => $ketqua,
+    'total' => $total,
+    'time' => time(),
+];
 
 
 
