@@ -54,6 +54,8 @@ if (!$cv) {
     throw new Exception('CV not exist');
 }
 $obj = $arrStatus[$name];
+// die($response->withJson($obj));
+
 $where['cv_id'] = trim($data->cv_id);
 if ($name === 'review_physiognomy1') {
     $where['issecond'] = 0;

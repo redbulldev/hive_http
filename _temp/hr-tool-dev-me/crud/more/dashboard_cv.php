@@ -7,6 +7,7 @@ $obj->where('cv.isdelete', 0);
 // $getobj = DB::table('cv')->leftJoin('positions', 'positions.id', '=', 'cv.position_id')
 // $obj->rightJoin('cv', 'cv.request_id', '=', 'request.id')
 $obj->leftJoin('positions', 'positions.id', '=', 'cv.position_id')
+    ->leftJoin('request', 'request.id', '=', 'cv.request_id')
     ->leftJoin('positions as parent', 'parent.id', '=', 'positions.parent_id')
     ->leftJoin('level', 'level.id', '=', 'cv.level_id')
     ->leftJoin('source', 'source.id', '=', 'cv.source_id');
@@ -85,7 +86,78 @@ if (!empty($params['department_id'])) {
 //     $join->where(['cv.isdelete' => 0]);
 // });
 
-$moreselect = ['positions.title as positions_title', 'parent.title as department_title', 'cv.step as step','cv.assignee_id as cv_assignee_id'];
+$moreselect = [
+    'positions.title as positions_title', 
+    'parent.title as department_title', 
+    'cv.step as step',
+    'cv.assignee_id as cv_assignee_id',
 
-// die($response->withJson($obj->count()));
+    'request.interview_cv',
+    'request.pass_cv',
+    'request.offer_cv',
+    'request.offer_success',
+    'request.onboard_cv',
+    'request.fail_job',
+    'request.employees',
+    'request.levels',
+    'request.month',
+    'request.year',
+];
+
+ // $obj->select('cv.interview_cv');
+
+
+ // $obj->select(DB::raw('cv.assignee_id  as user_count'));
+
+ // $obj->select('cv.assignee_id');
+// $test = DB::table('cv')->select([
+//     "id as total_cv", 
+
+//     DB::raw("1 as active")
+// ], DB::raw("SELECT id as test  FROM cv "))->whereRaw('step >= 0')->get();
+
+
+    //$test = DB::select("SELECT step as total_cv FROM cv where step > 4");
+// $test = DB::table('cv');
+// $test->select("SELECT step FROM cv");
+
+// $test->where('step', '>',4);
+
+// $obj->orWhere(function ($query) {
+//     $query->select('cv.step as total_cv_cv')->where('cv.step','>' ,0);
+// });
+
+
+// $obj->get(['step', DB::raw('1 as active')]);
+
+// $test = $obj->first();
+// $obj->abc = 'abc';
+// print_r($obj->email);
+// die($obj->email);
+
+ // as $obj->test = 3,
+
+// $obj->addSelect('cv.step as abc_test');
+
+// $obj->selectRaw('request.interview_cv');
+
+// Phòng ban : positions_title  
+// Vị trí : department_title
+// Số lượng CV: total_cv
+// Số CV tham dự buổi phỏng vấn :  interview_cv  
+// Số CV pass phỏng vấn:   pass_cv
+// Số UV được offer:  offer_cv 
+// Offer thành công :  offer_success  
+// Số lượng UV đã đi làm :  onboard_cv
+// Tỉ lệ offer/ yêu cầu:  (offer_success/target)  * 100 
+// Tỉ lệ onboard/ yêu cầu:  (onboard_cv, target) * 100
+// Tỉ lệ onboard/ tỉ lệ offer :  (onboard_cv, offer_success) * 100
+// Ngày hoàn thành : item.month/item.year
+// Số người fail thử việc: fail_job
+// Danh sách UV đi làm: employees
+// Trình độ: levels
+
 // die($response->withJson($obj->get()));
+// die($response->withJson($obj->count()));
+// die($response->withJson($obj->count()))
+// die($response->withJson($test));

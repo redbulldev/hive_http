@@ -3,14 +3,9 @@
 use Illuminate\Database\Capsule\Manager as DB;
 
 $obj = DB::table($name);
+
 require './crud/all_where.php';
 
-
-/////////////////// data - summary ///////////////////////////////////////////////////////
-$obj_step = clone $obj->get();
-$temp_list_cv_pass = [];
-$newlist_cv_pass = [];
-$newlist_cv_new = [];
 function getPosition($value)
 {
     $position = DB::table('positions')->where('id', $value)->where(['status' => 1, 'point_status' => 1, 'isdelete' => 0])->where('parent_id', '!=', 0)->first();
@@ -21,18 +16,20 @@ function getPosition($value)
 
     return false;
 }
-// die($response->withJson($obj_step));
+
+// summary //
+$temp_list_cv_pass = [];
 
 $interview_cv = 0;
 
-foreach ($ketqua->all() as $key => $value) {
-    if ($value->step > 5 && $value->status == 2) {
+foreach ($obj->get()as $key => $value) {
+    if ($value->step > 5 && !empty(getPosition($value->position_id))) {
         $index = getPosition($value->position_id);
 
         $temp_list_cv_pass[$index] = 0;
     }
 
-    if ($value->step > 1 && $value->status == 2) {
+    if ($value->step > 4) {
         $interview_cv++;
     }
 }
@@ -43,28 +40,43 @@ foreach ($temp_list_cv_pass as $key => $value) {
     $list_cv_pass[$key] = $value;
 }
 
-foreach ($ketqua->all() as $key => $value) {
-    if ($value->step > 5 && $value->status == 2) {
+foreach ($obj->get()as $key => $value) {
+    if ($value->step > 5 && !empty(getPosition($value->position_id))) {
         $index = getPosition($value->position_id);
 
         array_key_exists($index, $list_cv_pass) ?  $list_cv_pass[$index]++ : 0;
     }
 }
 
-// die($response->withJson($list_cv_pass));
+$obj_cv = clone $obj;
 
-$obj->selectRaw('
+$obj_cv->selectRaw('
     GROUP_CONCAT(cv.position_id) AS list_cv_new, 
     GROUP_CONCAT(cv.step,\'\') AS list_cv_pass, 
     GROUP_CONCAT(positions.title,\'\') as labels
 ');
 
-$summary = $obj->first();
+$summary = $obj_cv->first();
+
+// "list_cv_new": "6,6,4,2,2,2,1,1",
+// "list_cv_pass": "0,0,0,1,1,0,0,1",
+// "labels": "test 7,test 1,Tester,Front-end,test 3,Fullstack,test 6,test 2",
+// "interview_cv": 5,
+// "total_cv": 24,
+// "pass_cv": 3,
+// "onboard_cv": 2,
+// "target": 229
+
+// die($response->withJson($ketqua->count()));
+// die($response->withJson($ketqua->all()));
+// die($response->withJson($obj->count()));
 // die($response->withJson($obj->get()));
 
-// die($response->withJson($summary));
-
 $newlabel = [];
+
+$newlist_cv_pass = [];
+
+$newlist_cv_new = [];
 
 $labels = explode(',', $summary->labels);
 
@@ -78,34 +90,44 @@ foreach ($labels as $key => $label) {
     }
 }
 
+arsort($newlist_cv_new);
 
-$summary->labels = implode(',', array_keys($newlabel));
+$temp_cv_pass = [];
+
+$temp_newlabel = [];
+
+foreach ($newlist_cv_new as $key => $new) { 
+        $temp_cv_pass[$key] = $new;
+
+        $temp_newlabel[$key] = 1;
+}
+
+foreach ($newlist_cv_pass as $key => $value) {
+    foreach ($temp_cv_pass as $index => $pass) {
+        if ($key == $index) {
+            $temp_cv_pass[$index] = $value;
+        }
+    }
+}
+
+$summary->labels = implode(',', array_keys($temp_newlabel));
 
 $summary->list_cv_new = implode(',', array_values($newlist_cv_new));
 
 $summary->interview_cv =  !empty($interview_cv) ? $interview_cv : 0;
 
-$summary->list_cv_pass = implode(',', array_values($newlist_cv_pass));
+$summary->list_cv_pass = implode(',', array_values($temp_cv_pass));
 
-$summary->total_cv = (int)array_sum($newlist_cv_new);
+$summary->total_cv = !empty($newlist_cv_new) ? (int)array_sum($newlist_cv_new) : 0;
 
-$summary->pass_cv = (int)array_sum($newlist_cv_pass);
+$summary->pass_cv = !empty($newlist_cv_pass) ? (int)array_sum($newlist_cv_pass) : 0;
 
-// die($response->withJson($summary));
-
-
-
-//////////////////// *Bảng xếp hạng số lượng đã tuyển ////////////////////////////////////////////////////////
-// data - department //
+// department //
 $department = ['labels' => [], 'values' => []];
 
 $temp_department_lables = [];
 
-$get_position_ids = $obj->get();
-
-$get_positions = DB::table('positions')->where(['isdelete' => 0, 'status' => 1])->get();
-
-foreach ($ketqua->all() as $key => $value) {
+foreach ($obj->get()as $key => $value) {
     if (!empty(getPosition($value->position_id))) {
         $index = getPosition($value->position_id);
 
@@ -115,16 +137,16 @@ foreach ($ketqua->all() as $key => $value) {
 
 $temp_department_values = [];
 
-foreach ($ketqua->all() as $key => $value) {
-    if ($value->step > 8 && $value->status == 2) {
+foreach ($obj->get()as $key => $value) {
+    if ($value->step > 8 && $value->isdelete == 0) {
         $temp_department_values[$value->position_id] = 0;
     }
 }
 
 $position_point_ids = [];
 
-foreach ($ketqua->all() as $key => $value) {
-    if ($value->step > 8 && $value->status == 2) {
+foreach ($obj->get()as $key => $value) {
+    if ($value->step > 8 && $value->isdelete == 0) {
         $temp_department_values[$value->position_id]++;
     }
 
@@ -135,52 +157,23 @@ foreach ($ketqua->all() as $key => $value) {
     $position_point_ids[$value->position_id] = $value->position_id;
 }
 
-$max_key = 0;
-foreach ($temp_department_values as $index => $value) {
-    if($index >= $max_key){
-        $max_key = $index;
-    }
-}
+arsort($temp_department_values);
 
-$min_key = $max_key;
 foreach ($temp_department_values as $index => $value) {
-    if($index <= $min_key){
-        $min_key = $index;
-    }
-}
-// die($response->withJson($max_key));
-// die($response->withJson($min_key));
-
-$temp = 0;
-foreach ($temp_department_values as $index => $value) {
-   for ($i=$min_key; $i < $max_key; $i++) { 
-        if(!empty($temp_department_values[$i])){
-            if($temp_department_values[$i] <= $temp_department_values[$index]){
-                $temp =  $temp_department_values[$index];
-                $temp_department_values[$index] =  $temp_department_values[$i];
-                $temp_department_values[$i] = $temp;
-            }
-        }
-   }
-}
-foreach ($temp_department_values as $index => $value) {
-    $department['values'][ $index] = $value;
+    $department['values'][] = $value;
 }
 
 foreach ($temp_department_values as $key => $value) {
     foreach ($temp_department_lables as $index => $lable) {
-
         if ($index == $key) {
-            $department['labels'][$index] = $lable;
+            $department['labels'][] = $lable;
         }
     }
 }
-// die($response->withJson($department));
 
 $summary->onboard_cv = (int)array_sum($department['values']);
 
-
-////////////////// Tổng điểm/////////////////////////
+// point //
 $all_level_positions = DB::table('level_positions')->where(['isdelete' => 0])->where('position_id', '!=', 0)->whereIn('position_id', $position_point_ids)->get();
 
 $count_point = 0;
@@ -189,7 +182,7 @@ foreach ($all_level_positions as $key => $value) {
     $count_point += $value->point;
 }
 
-////////////////// Số lượng cần tuyển/////////////////////////
+// target //
 $obj_plan = DB::table('plan');
 
 if (!empty($params['from']) && !empty($params['to'])) {
@@ -201,140 +194,116 @@ if (!empty($params['from']) && !empty($params['to'])) {
 
         $to = substr($params['to'], 0, 7) . '-31';
 
-        // $from = $params['from'];
-        // $to = $params['to'];
-        // die($to);
-
         $obj_plan->where('date', '>=', $from)->where('date', '<=', $to);
     }
 }
 
-// $total_cv = $obj_plan->sum("target");
 $target_cv = 0;
 
 foreach ($obj_plan->get() as $key => $value) {
     $target_cv += $value->target;
 }
+
 $summary->target = !empty($target_cv) ? $target_cv : 0;
 
-// die($response->withJson($total_cv));
-
-
-////////////////// Số lượng cần tuyển/////////////////////////
-// // $obj_request = DB::table($name);
-$name='request';
-
-$obj_request = DB::table($name);
-
-$position_request_ids = [];
-foreach ($ketqua->all() as $key => $value) {
-    $position_request_ids[$value->position_id] = $value->position_id;
-}
-
-$obj_request->whereIn('position_id', $position_request_ids)->where(['request.isdelete' => 0]);
-// die($response->withJson($position_request_ids));
-
-$obj_request->join('positions', function ($join) {
-    $join->on('positions.id', '=', 'request.position_id');
-
-    $join->where(['positions.status' => 1, 'positions.isdelete' => 0]);
-});
-
-$obj_request->join('positions as parent', function ($join) {
-    $join->on('parent.id', '=', 'positions.parent_id');
-
-    $join->where(['parent.status' => 1, 'parent.isdelete' => 0]);
-});
-
-$obj_request->selectRaw('positions.title AS position_title, parent.title AS parent_title, request.*');
-
-if (!empty($params['from']) && !empty($params['to'])) {
-    $from = $params['from'];
-
-    $to = $params['to'];
-
-    $obj_request->where('date', '>=', $from)->where('date', '<=', $to);
-}
-
-if (!empty($params['assignee_id'])) {
-    $assignee_id = explode('-', $params['assignee_id']);
-
-    $obj_request->where(function ($query) use ($assignee_id) {
-        foreach ($assignee_id as $key  => $id) {
-            $query->orWhere('request.assignee_id', 'LIKE', "%$id%");
-        }
-    });
-}
-
-if (!empty($params['department_id'])) {
-    $department_id = explode('-', $params['department_id']);
-
-    $obj_request->where(function ($query) use ($department_id) {
-        foreach ($department_id as $id) {
-            $query->orWhere('positions.parent_id', 'LIKE', "%$id%");
-        }
-    });
-}
-
-// die($response->withJson($obj_request->get()));
-
-
-// $results = [
-//     'status' => 'success',
-//     'point' => $count_point,
-//     'summary' => $summary,
-//     'department' => $department,
-//     'datas' => $obj_request ? $obj_request->get() : null,
-//     'totals' => $obj_request ? $obj_request->count() : null,
-//     'time' => time(),
-// ];
-
-// $results = [
-//     'status' => 'success',
-//     'point' => $count_point,
-//     'summary' => $summary,
-//     'department' => $department,
-//     'datas' => $statistic_cv ? $statistic_cv->all() : null,
-//     'totals' => $statistic_cv ? $statistic_cv->count() : null,
-//     'time' => time(),
-// ];
-
-$ketqua = $obj_request ? $obj_request->get() : null;
-
-$total = $obj_request ? $obj_request->count() : null;
 
 $results = [
     'status' => 'success',
     'point' => $count_point,
     'summary' => $summary,
     'department' => $department,
-    'data' => $ketqua,
-    'total' => $total,
+    'data' => $ketqua ? $ketqua->all(): null,
+    'total' => $ketqua ? $ketqua->count() : null,
     'time' => time(),
 ];
 
 
 
 
+// Phòng ban : positions_title  
+// Vị trí : department_title
+// Số lượng CV: total_cv
+// Số CV tham dự buổi phỏng vấn :  interview_cv  
+// Số CV pass phỏng vấn:   pass_cv
+// Số UV được offer:  offer_cv 
+// Offer thành công :  offer_success  
+// Số lượng UV đã đi làm :  onboard_cv
+// Tỉ lệ offer/ yêu cầu:  (offer_success/target)  * 100 
+// Tỉ lệ onboard/ yêu cầu:  (onboard_cv, target) * 100
+// Tỉ lệ onboard/ tỉ lệ offer :  (onboard_cv, offer_success) * 100
+// Ngày hoàn thành : item.month/item.year
+// Số người fail thử việc: fail_job
+// Danh sách UV đi làm: employees
+// Trình độ: levels
 
 
+//////////
+// report //
+// $obj_request = DB::table('request');
 
+// $position_request_ids = [];
 
+// foreach ($obj->get()as $key => $value) {
+//     $position_request_ids[$value->position_id] = $value->position_id;
+// }
 
+// $obj_request->whereIn('position_id', $position_request_ids)->where(['request.isdelete' => 0]);
 
+// $obj_request->join('positions', function ($join) {
+//     $join->on('positions.id', '=', 'request.position_id');
 
+//     $join->where(['positions.status' => 1, 'positions.isdelete' => 0]);
+// });
 
+// $obj_request->join('positions as parent', function ($join) {
+//     $join->on('parent.id', '=', 'positions.parent_id');
 
+//     $join->where(['parent.status' => 1, 'parent.isdelete' => 0]);
+// });
 
+// $obj_request->selectRaw('positions.title AS position_title, parent.title AS parent_title, request.*');
 
+// if (!empty($params['from']) && !empty($params['to'])) {
+//     $from = $params['from'];
 
+//     $to = $params['to'];
 
+//     $obj_request->where('date', '>=', $from)->where('date', '<=', $to);
+// }
 
+// if (!empty($params['assignee_id'])) {
+//     $assignee_id = explode('-', $params['assignee_id']);
 
+//     $obj_request->where(function ($query) use ($assignee_id) {
+//         foreach ($assignee_id as $key  => $id) {
+//             $query->orWhere('request.assignee_id', 'LIKE', "%$id%");
+//         }
+//     });
+// }
 
+// if (!empty($params['department_id'])) {
+//     $department_id = explode('-', $params['department_id']);
 
+//     $obj_request->where(function ($query) use ($department_id) {
+//         foreach ($department_id as $id) {
+//             $query->orWhere('positions.parent_id', 'LIKE', "%$id%");
+//         }
+//     });
+// }
 
+// $ketqua = $obj_request ? $obj_request->get() : null;
 
+// $total = $obj_request ? $obj_request->count() : null;
+
+// $results = [
+//     'status' => 'success',
+//     'point' => $count_point,
+//     'summary' => $summary,
+//     'department' => $department,
+//     'data' => $ketqua,
+//     'total' => $total,
+//     'time' => time(),
+// ];
 
 
 
@@ -536,7 +505,7 @@ $results = [
 //     'point' => $count_point,
 //     'summary' => $summary,
 //     'department' => $department,
-//     'data' => $ketqua ? $ketqua->all() : null,
+//     'data' => $ketqua ? $ketqua->all(): null,
 //     'total' => $ketqua ? $ketqua->count() : null,
 //     'time' => time(),
 // ];
