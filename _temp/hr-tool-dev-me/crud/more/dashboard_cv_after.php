@@ -4,14 +4,27 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 $obj = DB::table($name);
 
+$res = clone $ketqua;
+
 require './crud/all_where.php';
 
 function getPosition($value)
 {
-    $position = DB::table('positions')->where('id', $value)->where(['status' => 1, 'point_status' => 1, 'isdelete' => 0])->where('parent_id', '!=', 0)->first();
+    $position = DB::table('positions')->where('id', $value)->where(['status' => 1, 'isdelete' => 0])->where('parent_id', '!=', 0)->first();
 
     if (!empty($position)) {
         return $position->title;
+    }
+
+    return false;
+}
+
+function getPointOfPosition($pos, $level)
+{
+    $data = DB::table('level_positions')->where('position_id', $pos)->where('level_id', $level)->first();
+
+    if (!empty($data)) {
+        return $data->point;
     }
 
     return false;
@@ -22,14 +35,14 @@ $temp_list_cv_pass = [];
 
 $interview_cv = 0;
 
-foreach ($obj->get()as $key => $value) {
+foreach ($res->all()as $key => $value) {
     if ($value->step > 5 && !empty(getPosition($value->position_id))) {
         $index = getPosition($value->position_id);
 
         $temp_list_cv_pass[$index] = 0;
     }
 
-    if ($value->step > 4) {
+    if ($value->step > 4 && !empty(getPosition($value->position_id))) {
         $interview_cv++;
     }
 }
@@ -40,7 +53,7 @@ foreach ($temp_list_cv_pass as $key => $value) {
     $list_cv_pass[$key] = $value;
 }
 
-foreach ($obj->get()as $key => $value) {
+foreach ($res->all()as $key => $value) {
     if ($value->step > 5 && !empty(getPosition($value->position_id))) {
         $index = getPosition($value->position_id);
 
@@ -127,46 +140,64 @@ $department = ['labels' => [], 'values' => []];
 
 $temp_department_lables = [];
 
-foreach ($obj->get()as $key => $value) {
-    if (!empty(getPosition($value->position_id))) {
+$temp_department_values = [];
+
+foreach ($res->all() as $key => $value) {
+    if ($value->step > 8 && !empty(getPosition($value->position_id))) {
         $index = getPosition($value->position_id);
 
         $temp_department_lables[$value->position_id] = $index;
-    }
-}
 
-$temp_department_values = [];
-
-foreach ($obj->get()as $key => $value) {
-    if ($value->step > 8 && $value->isdelete == 0) {
         $temp_department_values[$value->position_id] = 0;
     }
 }
 
-$position_point_ids = [];
+// die($response->withJson($obj->get()));
+// die($response->withJson($ketqua->all()));
 
-foreach ($obj->get()as $key => $value) {
-    if ($value->step > 8 && $value->isdelete == 0) {
+// die($response->withJson($temp_department_values));
+
+$position_point_ids = [];
+$level_point_ids = [];
+// $level_position_point_ids = [];
+$level_position_point_ids = [];
+// $level_position_point_ids = array(
+// array(  ),
+// array( )
+// );
+
+foreach ($res->all() as $key => $value) {
+    if ($value->step > 8 && !empty(getPosition($value->position_id))) {
         $temp_department_values[$value->position_id]++;
     }
 
-    if (!array_key_exists($value->position_id, $temp_department_values)) {
-        $temp_department_values[$value->position_id] = 0;
-    }
+    // if (!array_key_exists($value->position_id, $temp_department_values)) {
+    //     $temp_department_values[$value->position_id] = 0;
+    // }
 
     $position_point_ids[$value->position_id] = $value->position_id;
+
+    // $level_position_point_ids[$value->position_id][$value->level_id] = 1;
+
+    $level_position_point_ids[$value->position_id.'-'.$value->level_id] = array($value->position_id, $value->level_id);
+    // $level_position_point_ids['position_id'][] = 1;
+
 }
+// die($response->withJson($position_point_ids));
+// die($response->withJson($level_position_point_ids));
+// die($response->withJson(array_unique($level_position_point_ids)));
+
 
 arsort($temp_department_values);
 
 foreach ($temp_department_values as $index => $value) {
-    $department['values'][] = $value;
+    $department['values'][$index] = $value;
 }
 
 foreach ($temp_department_values as $key => $value) {
     foreach ($temp_department_lables as $index => $lable) {
         if ($index == $key) {
-            $department['labels'][] = $lable;
+            $department['labels'][$index] = $lable;
         }
     }
 }
@@ -174,13 +205,40 @@ foreach ($temp_department_values as $key => $value) {
 $summary->onboard_cv = (int)array_sum($department['values']);
 
 // point //
-$all_level_positions = DB::table('level_positions')->where(['isdelete' => 0])->where('position_id', '!=', 0)->whereIn('position_id', $position_point_ids)->get();
+//yeu cau su ly 
+// ['leve_id', 'position_id']
+// [
+//     ['3,1'],
+//     ['3,2'],
+//     ['3,7'],
+//     ['5,2'],
+//     ['5,4'],
+//     ['5,9'],
+// ]
+// cac buoc su ly 
+// $all_level_positions = DB::table('level_positions')->where(['isdelete' => 0])->where('position_id', '!=', 0)->whereIn('position_id', $position_point_ids)->get();
+// $obj_level_position = DB::table('level_positions');
 
 $count_point = 0;
 
-foreach ($all_level_positions as $key => $value) {
-    $count_point += $value->point;
+foreach($level_position_point_ids as $key => $pos){
+
+    $point = getPointOfPosition($pos[0], $pos[1]);
+    
+    if($point){
+        $count_point += $point;
+    }
 }
+
+// die($count_point);
+
+// die($response->withJson($obj_level_position->get()));
+
+// $count_point = 0;
+
+// foreach ($all_level_positions as $key => $value) {
+//     $count_point += $value->point;
+// }
 
 // target //
 $obj_plan = DB::table('plan');
@@ -205,7 +263,6 @@ foreach ($obj_plan->get() as $key => $value) {
 }
 
 $summary->target = !empty($target_cv) ? $target_cv : 0;
-
 
 $results = [
     'status' => 'success',

@@ -8,7 +8,7 @@ $httpStatus= 200;
 $name = str_replace('-', '_', $args['name']);
 // die($name);
 
-$exception_dashboard_cv = false;
+// $exception_dashboard_cv = false;
 
 if (in_array($name,$conf['block'])) {
     $httpStatus= 201;
@@ -126,12 +126,11 @@ if (in_array($name,$conf['block'])) {
                             if (count($arrkey) > 0) $ketqua = $obj->paginate($limit, $arrkey, 'page', $page);
                             else $ketqua = $obj->paginate($limit, $moreselect, 'page', $page);
                         } else{
-                            // if($exception_dashboard_cv == true){
-                            //     $name_new='request';
-                            //     $obj_request = DB::table($name_new);
-                            //     $statistic_cv = $obj_request->paginate();  
-                            // }
+                            if($exception_dashboard_cv == true){
+                                $ketqua = $obj->paginate(999999, $moreselect, 'page', $page);    
+                            } else{
                                 $ketqua = $obj->paginate($limit, $moreselect, 'page', $page);                           
+                            }
                         }
                     }else{ 
                         // drive intro

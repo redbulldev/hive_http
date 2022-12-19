@@ -161,3 +161,38 @@ $moreselect = [
 // die($response->withJson($obj->count()));
 // die($response->withJson($obj->count()))
 // die($response->withJson($test));
+
+
+
+
+
+
+
+
+
+
+
+
+    $total_cv = DB::select("SELECT id as id, step as total_cv FROM cv where step >= 0");
+    $interview_cv = DB::select("SELECT id as id, step as interview_cv FROM cv where step > 4");
+    $pass_cv = DB::select("SELECT id as id, step as pass_cv FROM cv where step > 5");
+    $offer_cv = DB::select("SELECT id as id, step as pass_cv FROM cv where step > 6");
+    $offer_subcess = DB::select("SELECT id as id, step as pass_cv FROM cv where step > 7");
+    $onboard_cv = DB::select("SELECT id as id, step as onboard_cv FROM cv where step > 8");
+
+    
+
+// $data = array($total_cv,$interview_cv,$pass_cv,$onboard_cv);
+
+    $data = array_merge($total_cv,$interview_cv,$pass_cv,$onboard_cv);
+
+    foreach ($data as $key => $item) {
+        // print_r($item['total_cv']) ;
+        foreach ($item as $index => $value) {
+            // echo $value.';';
+            echo $value[$index] ;
+        }
+        // print_r($key) ;
+    }
+    die();
+die($response->withJson($data));
