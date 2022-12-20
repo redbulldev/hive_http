@@ -92,16 +92,16 @@ $moreselect = [
     'cv.step as step',
     'cv.assignee_id as cv_assignee_id',
 
-    'request.interview_cv',
-    'request.pass_cv',
-    'request.offer_cv',
-    'request.offer_success',
-    'request.onboard_cv',
-    'request.fail_job',
-    'request.employees',
-    'request.levels',
-    'request.month',
-    'request.year',
+    // 'request.interview_cv',
+    // 'request.pass_cv',
+    // 'request.offer_cv',
+    // 'request.offer_success',
+    // 'request.onboard_cv',
+    // 'request.fail_job',
+    // 'request.employees',
+    // 'request.levels',
+    // 'request.month',
+    // 'request.year',
 ];
 
  // $obj->select('cv.interview_cv');
@@ -141,21 +141,6 @@ $moreselect = [
 
 // $obj->selectRaw('request.interview_cv');
 
-// Phòng ban : positions_title  
-// Vị trí : department_title
-// Số lượng CV: total_cv
-// Số CV tham dự buổi phỏng vấn :  interview_cv  
-// Số CV pass phỏng vấn:   pass_cv
-// Số UV được offer:  offer_cv 
-// Offer thành công :  offer_success  
-// Số lượng UV đã đi làm :  onboard_cv
-// Tỉ lệ offer/ yêu cầu:  (offer_success/target)  * 100 
-// Tỉ lệ onboard/ yêu cầu:  (onboard_cv, target) * 100
-// Tỉ lệ onboard/ tỉ lệ offer :  (onboard_cv, offer_success) * 100
-// Ngày hoàn thành : item.month/item.year
-// Số người fail thử việc: fail_job
-// Danh sách UV đi làm: employees
-// Trình độ: levels
 
 // die($response->withJson($obj->get()));
 // die($response->withJson($obj->count()));
@@ -169,30 +154,63 @@ $moreselect = [
 
 
 
-
-
-
-
-    $total_cv = DB::select("SELECT id as id, step as total_cv FROM cv where step >= 0");
-    $interview_cv = DB::select("SELECT id as id, step as interview_cv FROM cv where step > 4");
-    $pass_cv = DB::select("SELECT id as id, step as pass_cv FROM cv where step > 5");
-    $offer_cv = DB::select("SELECT id as id, step as pass_cv FROM cv where step > 6");
-    $offer_subcess = DB::select("SELECT id as id, step as pass_cv FROM cv where step > 7");
-    $onboard_cv = DB::select("SELECT id as id, step as onboard_cv FROM cv where step > 8");
+    // $total_cv = DB::select("SELECT id as id, step as total_cv FROM cv where step >= 0");
+    // $interview_cv = DB::select("SELECT id as id, step as interview_cv FROM cv where step > 4");
+    // $pass_cv = DB::select("SELECT id as id, step as pass_cv FROM cv where step > 5");
+    // $offer_cv = DB::select("SELECT id as id, step as pass_cv FROM cv where step > 6");
+    // $offer_subcess = DB::select("SELECT id as id, step as pass_cv FROM cv where step > 7");
+    // $onboard_cv = DB::select("SELECT id as id, step as onboard_cv FROM cv where step > 8");
 
     
 
 // $data = array($total_cv,$interview_cv,$pass_cv,$onboard_cv);
 
-    $data = array_merge($total_cv,$interview_cv,$pass_cv,$onboard_cv);
+    // $data = array_merge($total_cv,$interview_cv,$pass_cv,$onboard_cv);
 
-    foreach ($data as $key => $item) {
-        // print_r($item['total_cv']) ;
-        foreach ($item as $index => $value) {
-            // echo $value.';';
-            echo $value[$index] ;
-        }
-        // print_r($key) ;
-    }
-    die();
-die($response->withJson($data));
+    // foreach ($data as $key => $item) {
+    //     // print_r($item['total_cv']) ;
+    //     foreach ($item as $index => $value) {
+    //         // echo $value.';';
+    //         echo $value[$index] ;
+    //     }
+    //     // print_r($key) ;
+    // }
+    // die();
+
+    // $test = DB::select("
+    //     SELECT id as id, step as total_cv, 
+    //     (SELECT COUNT(c.step) FROM cv as c where step > 6 ) AS interview_cv  
+    //     FROM cv where step >= 0
+    // ");
+
+
+    //  $test = DB::select("
+    //     SELECT id as id, step as total_cv, 1 AS SiteName, IF(step > 4, 'a', 'null') as test,
+    //     (SELECT count(1) FROM cv as c where step > 4 ) AS interview_cv  
+    //     FROM cv where step >= 0
+    // ");
+
+
+
+
+
+// Phòng ban : positions_title   (+) 
+// Vị trí : department_title  (+)
+// Trình độ: level  (+)    
+// mục tiêu: target
+// Số lượng CV: total_cv  (+)
+// Số CV tham dự buổi phỏng vấn :  interview_cv  (+)
+// Số CV pass phỏng vấn:   pass_cv  (+)
+// Số UV được offer:  offer_cv   (+)
+// Offer thành công :  offer_success   (+) 
+// Số lượng UV đã đi làm :  onboard_cv  (+)
+// Tỉ lệ offer/ yêu cầu:  (offer_success/target)  * 100 
+// Tỉ lệ onboard/ yêu cầu:  (onboard_cv, target) * 100
+// Tỉ lệ onboard/ tỉ lệ offer :  (onboard_cv, offer_success) * 100
+// Ngày hoàn thành : item.month/item.year
+// Số người fail thử việc: fail_job  (+)
+// Danh sách UV đi làm: employees
+
+
+
+// die($response->withJson(count($test)));

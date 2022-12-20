@@ -277,6 +277,74 @@ $results = [
 
 
 
+// // report - v1 //
+// $report_ids = [];
+
+// foreach ($res->all() as $key => $value) {
+//     $report_ids[$value->id] =  $value->id;
+// }
+
+// $str_report_ids = implode(",",$report_ids);
+
+// $reports = DB::select("
+    // SELECT 
+    //     -- cv.*,
+    //     cv.id ,
+    //     cv.position_id ,
+    //     IF(step > 8, cv.fullname, null) as employees,
+    //     cv.datecreate,
+    //     request.day,
+    //     request.month,
+    //     request.year,
+    //     request.deadline,
+    //     cv.step,
+    //     cv.status,
+    //     parent.title as department_title, 
+    //     positions.title as positions_title, 
+    //     level.title as level_title,
+    //     IF(step >= 0, 1, null) as total_cv,
+    //     IF(step > 4, 1, null) as interview_cv,
+    //     IF(step > 5, 1, null) as pass_cv,
+    //     IF(step > 6, 1, null) as offer_cv,
+    //     IF(step > 7, 1, null) as offer_success,
+    //     IF(step > 8, 1, null) as onboard_cv,
+    //     IF(cv.status = 0 and cv.step > 8, 1, null) as fail_job
+    // FROM cv 
+    //     left join positions on positions.id = cv.position_id
+    //     left join positions as parent on parent.id = positions.parent_id
+    //     left join request on request.id = cv.request_id
+    //     left join level on level.id = cv.level_id
+    //     left join source on source.id = cv.source_id
+    // -- WHERE cv.isdelete = 0
+    // WHERE cv.id In ($str_report_ids)
+    // -- HAVING cv.position_id = positions.id and cv.level_id = level.id
+    // -- GROUP BY cv.position_id       
+// ");
+
+// // die($response->withJson($test));
+
+// $results = [
+//     'status' => 'success',
+//     'point' => $count_point,
+//     'summary' => $summary,
+//     'department' => $department,
+//     'data' => $reports ? $reports: null,
+//     'total' => $reports ? count($reports) : null,
+//     'time' => time()
+// ];
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Phòng ban : positions_title  
 // Vị trí : department_title
 // Số lượng CV: total_cv
