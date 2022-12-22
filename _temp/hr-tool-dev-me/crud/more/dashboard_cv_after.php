@@ -4,9 +4,10 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 $obj = DB::table($name);
 
-$res = clone $ketqua;
-
 require './crud/all_where.php';
+
+// $res = clone $ketqua;
+$res = clone $statisticCv;
 
 function getPosition($value)
 {
@@ -35,7 +36,7 @@ $temp_list_cv_pass = [];
 
 $interview_cv = 0;
 
-foreach ($res->all()as $key => $value) {
+foreach ($res->all() as $key => $value) {
     if ($value->step > 5 && !empty(getPosition($value->position_id))) {
         $index = getPosition($value->position_id);
 
@@ -53,7 +54,7 @@ foreach ($temp_list_cv_pass as $key => $value) {
     $list_cv_pass[$key] = $value;
 }
 
-foreach ($res->all()as $key => $value) {
+foreach ($res->all() as $key => $value) {
     if ($value->step > 5 && !empty(getPosition($value->position_id))) {
         $index = getPosition($value->position_id);
 
@@ -70,20 +71,6 @@ $obj_cv->selectRaw('
 ');
 
 $summary = $obj_cv->first();
-
-// "list_cv_new": "6,6,4,2,2,2,1,1",
-// "list_cv_pass": "0,0,0,1,1,0,0,1",
-// "labels": "test 7,test 1,Tester,Front-end,test 3,Fullstack,test 6,test 2",
-// "interview_cv": 5,
-// "total_cv": 24,
-// "pass_cv": 3,
-// "onboard_cv": 2,
-// "target": 229
-
-// die($response->withJson($ketqua->count()));
-// die($response->withJson($ketqua->all()));
-// die($response->withJson($obj->count()));
-// die($response->withJson($obj->get()));
 
 $newlabel = [];
 
@@ -109,10 +96,10 @@ $temp_cv_pass = [];
 
 $temp_newlabel = [];
 
-foreach ($newlist_cv_new as $key => $new) { 
-        $temp_cv_pass[$key] = $new;
+foreach ($newlist_cv_new as $key => $new) {
+    $temp_cv_pass[$key] = $new;
 
-        $temp_newlabel[$key] = 1;
+    $temp_newlabel[$key] = 1;
 }
 
 foreach ($newlist_cv_pass as $key => $value) {
@@ -152,41 +139,15 @@ foreach ($res->all() as $key => $value) {
     }
 }
 
-// die($response->withJson($obj->get()));
-// die($response->withJson($ketqua->all()));
-
-// die($response->withJson($temp_department_values));
-
-$position_point_ids = [];
-$level_point_ids = [];
-// $level_position_point_ids = [];
 $level_position_point_ids = [];
-// $level_position_point_ids = array(
-// array(  ),
-// array( )
-// );
 
 foreach ($res->all() as $key => $value) {
     if ($value->step > 8 && !empty(getPosition($value->position_id))) {
         $temp_department_values[$value->position_id]++;
     }
 
-    // if (!array_key_exists($value->position_id, $temp_department_values)) {
-    //     $temp_department_values[$value->position_id] = 0;
-    // }
-
-    $position_point_ids[$value->position_id] = $value->position_id;
-
-    // $level_position_point_ids[$value->position_id][$value->level_id] = 1;
-
-    $level_position_point_ids[$value->position_id.'-'.$value->level_id] = array($value->position_id, $value->level_id);
-    // $level_position_point_ids['position_id'][] = 1;
-
+    $level_position_point_ids[$value->position_id . '-' . $value->level_id] = array($value->position_id, $value->level_id);
 }
-// die($response->withJson($position_point_ids));
-// die($response->withJson($level_position_point_ids));
-// die($response->withJson(array_unique($level_position_point_ids)));
-
 
 arsort($temp_department_values);
 
@@ -205,40 +166,15 @@ foreach ($temp_department_values as $key => $value) {
 $summary->onboard_cv = (int)array_sum($department['values']);
 
 // point //
-//yeu cau su ly 
-// ['leve_id', 'position_id']
-// [
-//     ['3,1'],
-//     ['3,2'],
-//     ['3,7'],
-//     ['5,2'],
-//     ['5,4'],
-//     ['5,9'],
-// ]
-// cac buoc su ly 
-// $all_level_positions = DB::table('level_positions')->where(['isdelete' => 0])->where('position_id', '!=', 0)->whereIn('position_id', $position_point_ids)->get();
-// $obj_level_position = DB::table('level_positions');
-
 $count_point = 0;
 
-foreach($level_position_point_ids as $key => $pos){
-
+foreach ($level_position_point_ids as $key => $pos) {
     $point = getPointOfPosition($pos[0], $pos[1]);
-    
-    if($point){
+
+    if (!empty($point)) {
         $count_point += $point;
     }
 }
-
-// die($count_point);
-
-// die($response->withJson($obj_level_position->get()));
-
-// $count_point = 0;
-
-// foreach ($all_level_positions as $key => $value) {
-//     $count_point += $value->point;
-// }
 
 // target //
 $obj_plan = DB::table('plan');
@@ -264,74 +200,162 @@ foreach ($obj_plan->get() as $key => $value) {
 
 $summary->target = !empty($target_cv) ? $target_cv : 0;
 
+// $results = [
+//     'status' => 'success',
+//     'point' => $count_point,
+//     'summary' => $summary,
+//     'department' => $department,
+//     'data' => $statisticCv ? $statisticCv->all() : null,
+//     'total' => $statisticCv ? $statisticCv->count() : null,
+//     'time' => time(),
+// ];
+
+
+
+// // // report - v1 //
+$report_ids = [];
+
+foreach ($res->all() as $key => $value) {
+    $report_ids[$value->id] =  $value->id;
+}
+
+$str_report_ids = implode(",",$report_ids);
+
+$reports = DB::select(
+    DB::raw("
+        SELECT 
+        -- cv.*,
+        cv.id,
+        -- count(cv.position_id) as cv_position_id,      
+        -- cv.position_id as cv_position_id,
+        -- cv.level_id as cv_level_id,
+        positions.id  as position_id,
+        level.id as level_id,
+        -- IF(step > 8, cv.fullname, cv.fullname) as employees,
+        (
+           select GROUP_CONCAT(cv.fullname) from cv WHERE cv.isdelete = 0 GROUP BY cv.position_id, cv.level_id HAVING cv.position_id = positions.id  and cv.level_id = level.id
+        ) as employees,
+        cv.datecreate,
+        request.day,
+        request.month,
+        request.year,
+        request.deadline,
+        cv.step,
+        cv.status,
+        parent.title as department_title, 
+        positions.title as positions_title, 
+        level.title as level_title,
+        -- IF(step >= 0, 1, 0) as total_cv,
+        (
+           select count(step) from cv WHERE step >= 0 and cv.isdelete = 0 GROUP BY cv.position_id, cv.level_id HAVING cv.position_id = positions.id  and cv.level_id = level.id
+        ) as total_cv,
+        -- IF(step > 4, 1, 0) as interview_cv,
+        (
+           select count(step) from cv WHERE step > 4 and cv.isdelete = 0  GROUP BY cv.position_id, cv.level_id HAVING cv.position_id = positions.id  and cv.level_id = level.id
+        ) as interview_cv,
+        -- IF(step > 5, 1, 0) as pass_cv,
+        (
+           select count(step) from cv WHERE step > 5 and cv.isdelete = 0  GROUP BY cv.position_id, cv.level_id HAVING cv.position_id = positions.id  and cv.level_id = level.id
+        ) as pass_cv,
+        -- IF(step > 6, 1, 0) as offer_cv,
+        (
+           select count(step) from cv WHERE step > 6 and cv.isdelete = 0  GROUP BY cv.position_id, cv.level_id HAVING cv.position_id = positions.id  and cv.level_id = level.id
+        ) as offer_cv,
+        -- IF(step > 7, 1, 0) as offer_success,
+        (
+           select count(step) from cv WHERE step > 7 and cv.isdelete = 0  GROUP BY cv.position_id, cv.level_id HAVING cv.position_id = positions.id  and cv.level_id = level.id
+        ) as offer_success,
+        -- IF(step > 8, 1, 0) as onboard_cv,
+        (
+           select count(step) from cv WHERE step > 8 and cv.isdelete = 0  GROUP BY cv.position_id, cv.level_id HAVING cv.position_id = positions.id  and cv.level_id = level.id
+        ) as onboard_cv,
+        -- IF(cv.status = 0 and cv.step > 8, 1, null) as fail_job,
+        (
+           select count(step) from cv WHERE step > 9 and cv.status = 0 and cv.isdelete = 0 GROUP BY cv.position_id, cv.level_id HAVING cv.position_id = positions.id  and cv.level_id = level.id
+        ) as fail_job
+      FROM cv 
+        left join positions on positions.id = cv.position_id
+        left join positions as parent on parent.id = positions.parent_id
+        left join request on request.id = cv.request_id
+        left join level on level.id = cv.level_id
+        left join source on source.id = cv.source_id
+      -- WHERE cv.isdelete = 0
+       WHERE cv.id In ($str_report_ids)
+       GROUP BY cv.position_id, cv.level_id
+    ")
+);
+
+$page = $request->getQueryParam('page', 1);
+
+$limit = $request->getQueryParam('limit', 10);
+
+$totalCount = count($reports);
+
+$collection = collect($reports);
+
+$paginator = new \Illuminate\Pagination\LengthAwarePaginator($collection->forPage($page, $limit), $totalCount, $limit , $page); 
+
 $results = [
     'status' => 'success',
     'point' => $count_point,
     'summary' => $summary,
     'department' => $department,
-    'data' => $ketqua ? $ketqua->all(): null,
-    'total' => $ketqua ? $ketqua->count() : null,
-    'time' => time(),
+    'data' => $paginator ? $paginator->all(): null,
+    'total' => $reports ? count($reports) : null,
+    'time' => time()
 ];
 
 
+//error - group 
+//slution: https://stackoverflow.com/questions/41887460/select-list-is-not-in-group-by-clause-and-contains-nonaggregated-column-inc
+// https://stackoverflow.com/questions/23921117/disable-only-full-group-by
 
 
-// // report - v1 //
-// $report_ids = [];
 
-// foreach ($res->all() as $key => $value) {
-//     $report_ids[$value->id] =  $value->id;
-// }
 
-// $str_report_ids = implode(",",$report_ids);
 
-// $reports = DB::select("
-    // SELECT 
-    //     -- cv.*,
-    //     cv.id ,
-    //     cv.position_id ,
-    //     IF(step > 8, cv.fullname, null) as employees,
-    //     cv.datecreate,
-    //     request.day,
-    //     request.month,
-    //     request.year,
-    //     request.deadline,
-    //     cv.step,
-    //     cv.status,
-    //     parent.title as department_title, 
-    //     positions.title as positions_title, 
-    //     level.title as level_title,
-    //     IF(step >= 0, 1, null) as total_cv,
-    //     IF(step > 4, 1, null) as interview_cv,
-    //     IF(step > 5, 1, null) as pass_cv,
-    //     IF(step > 6, 1, null) as offer_cv,
-    //     IF(step > 7, 1, null) as offer_success,
-    //     IF(step > 8, 1, null) as onboard_cv,
-    //     IF(cv.status = 0 and cv.step > 8, 1, null) as fail_job
-    // FROM cv 
-    //     left join positions on positions.id = cv.position_id
-    //     left join positions as parent on parent.id = positions.parent_id
-    //     left join request on request.id = cv.request_id
-    //     left join level on level.id = cv.level_id
-    //     left join source on source.id = cv.source_id
-    // -- WHERE cv.isdelete = 0
-    // WHERE cv.id In ($str_report_ids)
-    // -- HAVING cv.position_id = positions.id and cv.level_id = level.id
-    // -- GROUP BY cv.position_id       
-// ");
 
-// // die($response->withJson($test));
+
+
+
+// // die($reports[0]);
+// // $reports; 
+// // $test = (object)$reports;
+
+// // $result = $test
+// //     ->take(10)
+// //     ->skip(10)
+// //     ->get();
+
+// // https://stackoverflow.com/questions/39738004/laravel-paginate-usage-with-dbraw-query
+// https://stackoverflow.com/questions/43601095/laravel-5-4-lengthawarepaginator
+//     $paginator = new \Illuminate\Pagination\LengthAwarePaginator((object)$reports, 5, 5, 1,[1]);
+
+//     // json_decode($paginator);
+//     // $result = json_decode($reports, true);
+//     // die($result);
+//     // die($response->withJson($paginator));
+//     // // json_encode($reports);
+//     // $test = (object)$reports;
+// //    $test->paginate(10); 
+//     // die($response->withJson($test->paginate(10)));
+
 
 // $results = [
 //     'status' => 'success',
 //     'point' => $count_point,
 //     'summary' => $summary,
 //     'department' => $department,
-//     'data' => $reports ? $reports: null,
+//     'data' => $paginator ? $paginator: null,
 //     'total' => $reports ? count($reports) : null,
 //     'time' => time()
 // ];
+
+
+
+
+
+
 
 
 

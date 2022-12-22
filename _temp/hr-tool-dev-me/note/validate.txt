@@ -8,3 +8,15 @@ https://stackoverflow.com/questions/5570820/regex-allow-digits-and-a-single-dot
 
 
 https://social.msdn.microsoft.com/Forums/en-US/23467ae1-ebba-4915-bc0e-20a8827d174f/4-digits-after-decimal-point?forum=asphtmlcssjavascript
+
+
+/////////////////////////////////////
+crud/edit/cv_before.php
+if (!preg_match("/^\+?[0-9]{10,13}$/", $data->mobile)) {
+    throw new Exception('Mobile must be valid');
+}
+
+
+
+/shared/getToken.php
+if (preg_match('/Bearer\s(\S+)/', $authorization, $matches)) {}

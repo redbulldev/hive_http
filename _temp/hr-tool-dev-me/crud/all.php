@@ -126,13 +126,21 @@ if (in_array($name,$conf['block'])) {
                             if (count($arrkey) > 0) $ketqua = $obj->paginate($limit, $arrkey, 'page', $page);
                             else $ketqua = $obj->paginate($limit, $moreselect, 'page', $page);
                         } else{
-                            if(isset($exception_dashboard_cv)){
-                                if($exception_dashboard_cv == true){
-                                    $ketqua = $obj->paginate(999999, $moreselect, 'page', $page);   
-                                } 
-                            } else{
-                                $ketqua = $obj->paginate($limit, $moreselect, 'page', $page);                           
-                            }
+                            // if (isset($exception_dashboard_cv)) {
+                            //     if ($exception_dashboard_cv == true) {
+                            //         $ketqua = $obj->paginate(999999, $moreselect, 'page', $page);   
+                            //     } 
+
+                            //     $statisticCv = $obj->paginate($limit, $moreselect, 'page', $page);                           
+                            // } else{
+                            //     $ketqua = $obj->paginate($limit, $moreselect, 'page', $page);                           
+                            // }
+
+
+                            //update
+                            $statisticCv = $obj->paginate(999999, $moreselect, 'page', $page);                           
+
+                            $ketqua = $obj->paginate($limit, $moreselect, 'page', $page);      
                         }
                     }else{ 
                         // drive intro
