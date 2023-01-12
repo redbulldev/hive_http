@@ -1,0 +1,43 @@
+
+ở ô "tìm kiếm"  yêu cầu khi click chuột vào sẽ hiển thị ra lịch sử tìm kiếm 
+https://staging-hrm.ossigroup.net/request?limit=10&page=1
+https://staging-hrm.ossigroup.net/cv?limit=10&page=1
+
+
+
+
+- thay đổi "Physiognomy 2" về trước "Physiognomy 1"
+- ở phần "lịch sử cập nhập"  y/c chỉ cần hiển thị 3 mục thay đổi gần nhất 
+- ở  phân "HR REVIEW" thêm các trường
+https://staging-hrm.ossigroup.net/cv/15635?limit=10&page=1
+
+
+-
+
+
+//ong chien pv
+nodejs tu 2019->now co thay doi the nao
+them js vao bang cach gi
+js6 dac diem nhan dang noi bat nhat cua no la gi
+module
+ phan biet, khi nao ... require vs import
+js async await
+vi du anh dung ham gui mail di thi dung dong hay bat dong bo
+nodejs woker, socket
+upload file thi dung dong hay bat dong bo
+... upload data thi sao
+
+mongodb
+quan ly file
+
+
+
+
+
+
+
+
+
+
+
+

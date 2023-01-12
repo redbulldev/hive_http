@@ -1,0 +1,291 @@
+SELECT 
+    cv.id as cv_id,
+    parent.id as pos_parent_id,
+    positions.id as pos_position_id,
+    level.id as lv_level_id,
+    parent.title as department_title, 
+    positions.title as positions_title, 
+    level.title as level_title,
+    cv.assignee_id,
+    cv.datecreate,       
+    cv.request_id,
+    (
+        SELECT 
+            cv.request_id 
+        FROM 
+            cv 
+        GROUP BY 
+            cv.request_id, cv.position_id, cv.level_id 
+        HAVING cv.position_id = pos_position_id 
+            AND parent.id = pos_parent_id AND cv.level_id = lv_level_id AND request.id = cv.request_id 
+        LIMIT 1
+    ) as cv_request_id,          
+    (
+        SELECT 
+            GROUP_CONCAT(cv.fullname) 
+        FROM 
+            cv 
+        WHERE 
+            (step = 9 AND cv.status = 2) OR step > 9 AND cv.isdelete = 0 
+        GROUP BY 
+            cv.request_id ,cv.position_id, cv.level_id
+        HAVING 
+            cv.position_id = positions.id AND cv.level_id = level.id AND request.id = cv.request_id
+    ) as employees,            
+    -- request.target,    
+    (
+        SELECT request.target FROM request where request.id = cv_request_id AND request.status = 2  LIMIT 1
+    ) as target,  
+    (
+        SELECT 
+            request.deadline
+        FROM cv 
+            left join positions on positions.id = cv.position_id
+            left join positions as parent on parent.id = positions.parent_id
+            left join request on request.id = cv.request_id AND cv.position_id = request.position_id
+            left join request_level on request.id = request_level.request_id  
+        WHERE 
+            request.id = cv_request_id AND cv_request_id = request_level.request_id 
+            AND request.status = 2 AND parent.id = pos_parent_id AND cv.position_id = pos_position_id 
+            AND level.id = request_level.level_id AND cv.isdelete = 0 AND request.isdelete = 0                     
+            AND request_level.level_id = cv.level_id
+        ORDER BY 
+            request.id DESC 
+        LIMIT 1
+    ) as deadline,     
+    (
+        SELECT 
+            count(step) 
+        FROM 
+            cv 
+        WHERE 
+            step >= 0 AND cv.isdelete = 0 
+        GROUP BY 
+            cv.request_id, cv.position_id, cv.level_id 
+        HAVING 
+            cv.position_id = positions.id AND cv.level_id = level.id  AND request.id = cv.request_id
+    ) as total_cv,
+    (
+        SELECT 
+            count(step) 
+        FROM 
+            cv 
+        WHERE 
+            (step = 5 AND cv.status = 2) OR step > 5 AND cv.isdelete = 0 
+        GROUP BY 
+            cv.request_id, cv.position_id, cv.level_id 
+        HAVING 
+            cv.position_id = positions.id AND cv.level_id = level.id AND request.id = cv.request_id
+    ) as interview_cv,
+    (
+        SELECT 
+            count(step) 
+        FROM 
+            cv 
+        WHERE 
+            (step = 6 AND cv.status = 2) OR step > 6 AND cv.isdelete = 0 
+        GROUP BY 
+            cv.request_id, cv.position_id, cv.level_id 
+        HAVING 
+            cv.position_id = positions.id AND cv.level_id = level.id AND request.id = cv.request_id
+    ) as pass_cv,
+    (
+        SELECT 
+            count(step) 
+        FROM 
+            cv 
+        WHERE 
+            (step = 7 AND cv.status = 2) OR step > 7 AND cv.isdelete = 0 
+        GROUP BY  
+            cv.request_id,cv.position_id, cv.level_id 
+        HAVING 
+            cv.position_id = positions.id AND cv.level_id = level.id AND request.id = cv.request_id
+    ) as offer_cv,
+    (
+        SELECT 
+            count(step) 
+        FROM 
+            cv 
+        WHERE 
+            (step = 8 AND cv.status = 2) OR step > 8 AND cv.isdelete = 0 
+        GROUP BY 
+            cv.request_id, cv.position_id, cv.level_id 
+        HAVING 
+            cv.position_id = positions.id AND cv.level_id = level.id AND request.id = cv.request_id
+    ) as offer_success,
+    (
+        SELECT 
+            count(step) 
+        FROM 
+            cv 
+        WHERE 
+            (step = 9 AND cv.status = 2) OR step > 9 AND cv.isdelete = 0
+        GROUP BY 
+            cv.request_id,cv.position_id, cv.level_id 
+        HAVING 
+            cv.position_id = positions.id AND cv.level_id = level.id AND request.id = cv.request_id
+    ) as onboard_cv,
+    (
+        SELECT 
+            count(step) 
+        FROM 
+            cv 
+        WHERE 
+            step = 10 AND cv.status = 0 AND cv.isdelete = 0 
+        GROUP BY 
+            cv.request_id, cv.position_id, cv.level_id 
+        HAVING 
+            cv.position_id = positions.id AND cv.level_id = level.id AND request.id = cv.request_id
+    ) as fail_job
+FROM cv 
+    left join positions on positions.id = cv.position_id
+    left join positions as parent on parent.id = positions.parent_id
+    left join request on request.id = cv.request_id
+    left join level on level.id = cv.level_id
+WHERE 
+    cv.id In ($str_report_ids)
+GROUP 
+    BY cv.request_id, cv.position_id, cv.level_id   
+
+
+////////////////////////////////////////////////////////////////
+- đoạn code sql trên đáp ứng cho:
+-- thỏa mãn y/c: request, department_title, positions_title, level_title
+*với mỗi department, positions, level sẽ thuộc một request với  request set theo cả id nghĩa là thời gian tạo request khác nhau với các request khác nhau mặc dù nội dung y/c giống nhau.
+ex: 
+1383    Test            Test1       Tech lead, Fresher
+1381    Test            Test1       Tech lead, Senior+, Fresher
+1380    Production      Test2       Test, Tech lead, Senior+, Middle-
+
+- ví dụ ta có một CV các trường tương ứng với: department, positions, level, request_id
+1. Test  Test1   Fresher   1381
+2. Test  Test1   Fresher   1383
+
+- với CV trên nếu sét các trường department, positions, level thì sẽ thuộc một trong các request nhưng nếu sét cả request id thì cv-1 thuộc 1381, cv-2 thuộc 1383
+
+*với cách push lên product hiện tại chỉ sét department, positions, level sẽ thuộc một request id sét mốc thời gian gian tạo request(nghĩa là với các request khác nhau) nhưng không sét được các department, positions, level trùng nhau và khác request id 
+
+
+*với cách hiện tại thì sẽ false column deadline vì với các department, positions, level trùng nhau và khác request id sẽ không sét đúng được deadline 
+
+*với tài liệu document hiện tại cần chao đổi với team về cách nào mới đúng 
+- với cách hiện tại sẽ hạn chế sẽ data hiển thị ra có vẻ phù hợp với y/c những sẽ sai phần deadline điều nều cần chao đổi lại   
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+- chuuẩn push lên staing thêm filter theo thời gian 
+
+
+
+$from_raw = !empty($params['from']) ? strtotime($params['from']) : 0;
+
+$to_raw = !empty($params['to']) ? strtotime('+1 day', strtotime($params['to'])) : 0;
+
+$report = DB::select(
+    DB::raw("
+        SELECT 
+            parent.id as pos_parent_id,
+            positions.id as pos_position_id,
+            level.id as lv_level_id,
+            parent.title as department_title, 
+            positions.title as positions_title, 
+            cv.datecreate, 
+            cv.assignee_id,
+            level.title as level_title,
+            (
+                SELECT cv.request_id FROM cv GROUP BY cv.position_id, cv.level_id HAVING cv.position_id = pos_position_id AND parent.id = pos_parent_id LIMIT 1
+            ) as cv_request_id,         
+            (
+                SELECT 
+                    GROUP_CONCAT(cv.fullname) 
+                FROM 
+                    cv 
+                WHERE 
+                    (step = 9 AND cv.status = 2) OR step > 9 AND cv.isdelete = 0 
+                    AND (cv.datecreate >= $from_raw && cv.datecreate <= $to_raw ) 
+                GROUP BY
+                    cv.position_id, cv.level_id 
+                HAVING 
+                    cv.position_id = positions.id AND cv.level_id = level.id
+            ) as employees,                  
+            (
+                -- SELECT request.target FROM request where request.id = cv_request_id AND request.status = 2 ORDER BY request.id DESC LIMIT 1
+                -- SELECT request.target FROM cv GROUP BY cv.position_id, cv.level_id HAVING cv.position_id = pos_position_id AND parent.id = pos_parent_id ORDER BY request.id DESC LIMIT 1
+
+                SELECT 
+                    request.target
+                    -- GROUP_CONCAT(cv.request_id)
+                FROM cv 
+                    left join positions on positions.id = cv.position_id
+                    left join positions as parent on parent.id = positions.parent_id
+                    left join request on request.id = cv.request_id  
+                    left join request_level on request.id = request_level.request_id               
+                WHERE 
+                   -- request.id = cv_request_id AND 
+                    cv.isdelete = 0 AND request.isdelete = 0 
+                    AND request.status = 2 AND parent.id = pos_parent_id AND cv.position_id = pos_position_id 
+                    AND level.id = request_level.level_id AND cv.isdelete = 0 AND request.isdelete = 0                     
+                    AND request_level.level_id = cv.level_id
+                    AND (cv.datecreate >= $from_raw && cv.datecreate <= $to_raw ) 
+                ORDER BY 
+                    request.id DESC 
+                LIMIT 1
+            ) as target,       
+            (
+                SELECT 
+                   request.deadline    
+                FROM request  
+                    left join positions on positions.id = cv.position_id
+                    left join positions as parent on parent.id = positions.parent_id
+                    left join request_level on request.id = request_level.request_id  
+                WHERE  
+                    request.position_id = pos_position_id AND parent.id = pos_parent_id AND request_level.level_id = lv_level_id
+                    AND request.isdelete = 0 AND (cv.datecreate >= $from_raw && cv.datecreate <= $to_raw ) 
+                ORDER BY 
+                    request.id DESC 
+                LIMIT 1        
+            ) as deadline, 
+            (
+                SELECT count(step) FROM cv WHERE step >= 0 AND cv.isdelete = 0  AND (cv.datecreate >= $from_raw && cv.datecreate <= $to_raw ) GROUP BY cv.position_id, cv.level_id HAVING cv.position_id = positions.id AND cv.level_id = level.id
+            ) as total_cv,
+            (
+                SELECT count(step) FROM cv WHERE (step = 5 AND cv.status = 2) OR step > 5 AND cv.isdelete = 0  AND (cv.datecreate >= $from_raw && cv.datecreate <= $to_raw ) GROUP BY cv.position_id, cv.level_id HAVING cv.position_id = positions.id AND cv.level_id = level.id
+            ) as interview_cv,
+            (
+                SELECT count(step) FROM cv WHERE (step = 6 AND cv.status = 2) OR step > 6 AND cv.isdelete = 0 AND (cv.datecreate >= $from_raw && cv.datecreate <= $to_raw ) GROUP BY cv.position_id, cv.level_id HAVING cv.position_id = positions.id AND cv.level_id = level.id
+            ) as pass_cv,
+            (
+                SELECT count(step) FROM cv WHERE (step = 7 AND cv.status = 2) OR step > 7 AND cv.isdelete = 0 AND (cv.datecreate >= $from_raw && cv.datecreate <= $to_raw ) GROUP BY cv.position_id, cv.level_id HAVING cv.position_id = positions.id AND cv.level_id = level.id
+            ) as offer_cv,
+            (
+                SELECT count(step) FROM cv WHERE (step = 8 AND cv.status = 2) OR step > 8 AND cv.isdelete = 0 AND (cv.datecreate >= $from_raw && cv.datecreate <= $to_raw ) GROUP BY cv.position_id, cv.level_id HAVING cv.position_id = positions.id AND cv.level_id = level.id
+            ) as offer_success,
+            (
+                SELECT count(step) FROM cv WHERE (step = 9 AND cv.status = 2) OR step > 9 AND cv.isdelete = 0 AND (cv.datecreate >= $from_raw && cv.datecreate <= $to_raw ) GROUP BY cv.position_id, cv.level_id HAVING cv.position_id = positions.id AND cv.level_id = level.id
+            ) as onboard_cv,
+            (
+                SELECT count(step) FROM cv WHERE step = 10 AND cv.status = 0 AND cv.isdelete = 0  AND (cv.datecreate >= $from_raw && cv.datecreate <= $to_raw )  GROUP BY cv.position_id, cv.level_id HAVING cv.position_id = positions.id AND cv.level_id = level.id
+            ) as fail_job
+        FROM cv 
+            left join positions on positions.id = cv.position_id
+            left join positions as parent on parent.id = positions.parent_id
+            left join request on request.id = cv.request_id
+            left join level on level.id = cv.level_id
+        WHERE 
+            cv.id In ($str_report_ids) AND cv.isdelete = 0 AND request.isdelete = 0 AND (cv.datecreate >= $from_raw && cv.datecreate <= $to_raw )
+        GROUP BY 
+            cv.position_id, cv.level_id   
+    ")
+);
+
+
+
+
+

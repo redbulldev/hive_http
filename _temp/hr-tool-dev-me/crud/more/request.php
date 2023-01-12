@@ -5,6 +5,7 @@ $obj->leftJoin('positions', 'positions.id', '=', 'request.position_id')
     ->leftJoin('type_work', 'type_work.id', '=', 'request.typework_id');
 if(!empty($params['level_id']))
 {
+    die('ok');
     $idrole= explode('-',$params['level_id']);
     $obj->where(function($query) use ($idrole){
         foreach ($idrole as $id) {
@@ -21,12 +22,15 @@ if(!empty($params['level_id']))
 }
 if(!empty($params['cv']) && $params['cv']==='add')
 {
+    // die('ok');
     $date=date('Y-m');
+    // die($date);
     $obj->where('request.date','>=',$date.'-0');
     $obj->whereIn('request.status', [2, 4]);
 }
 if(empty($permission->request->all))
 {
+    // die('ok'); //false
     $obj->where( function ($query) use ($user){
         $query->orWhere('request.author_id',$user->username);
         $query->orWhere('request.requestor_id',$user->username);

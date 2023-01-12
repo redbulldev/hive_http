@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Capsule\Manager as DB;
 use Respect\Validation\Validator as v;
+// echo $data->request_id;
+// die($data->request_id);
 
 throwError($container, $request,  [
     'request_id' =>  v::digit()->notEmpty(),
@@ -38,6 +40,7 @@ if (!empty($data->source_id)) {
 }
 
 if (!empty($data->reviewer_id)) {
+    // die('nbjdcvn');
     if (!DB::table('users')->where('username', $data->reviewer_id)->where('isdelete',0)->count()) {
         throw new Exception('Reviewer not exist');
     }

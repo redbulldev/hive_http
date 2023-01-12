@@ -152,3 +152,46 @@ FROM cv
     left join level on level.id = cv.level_id
     left join source on source.id = cv.source_id
 WHERE cv.isdelete = 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ngày hoàn thành: onboard in table cv
++ lấy cv cuối cùng ngày và lấy ra onboard của cv đó
++ ngày hoàn thành chỉ hiển thị khi Số lượng CV là đủ trong target (của request) của cv đó nếu không hiển thị là "chưa hoàn thành" 
+
+
+số lượng cv: phải đủ khi hiển thị `ngày hoàn thành`
+
+
+`Báo cáo tuyển dụng` ở statistic-cv phải trùng khớp với `Báo cáo tuyển dụng` ở statistic-request 
+
+
+- bỏ 
++ bỏ target 
++ Tỉ lệ offer/ yêu cầu  
++ Tỉ lệ onboard/ yêu cầu
+
+
+ps:
+- lọc theo tháng - hay lọc theo ngày
+- có cần thêm cột hay không
+
+
+
+

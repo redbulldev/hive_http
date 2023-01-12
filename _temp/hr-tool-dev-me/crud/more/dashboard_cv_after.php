@@ -151,6 +151,8 @@ foreach ($res->all() as $key => $value) {
     }
 }
 
+// die($response->withJson($level_position_point_ids));
+
 arsort($temp_department_values);
 
 foreach ($temp_department_values as $index => $value) {
@@ -227,7 +229,7 @@ $report = DB::select(
             request.target,      
             (
                 -- SELECT request.deadline FROM request WHERE request.id = cv.request_id AND cv.isdelete = 0 AND request.status = 2 AND parent.id = cv_parent_id AND cv.position_id = request.position_id  LIMIT 1
-                -- thỏa mãn y/c: request, department_title, positions_title
+                -- thỏa mãn y/c: request, department_title, positions_title, level_title
 
                 SELECT 
                     -- GROUP_CONCAT(request.id, request.deadline)
