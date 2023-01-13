@@ -47,6 +47,9 @@ export default function usePositionLevelAndRequest({ form, cv }) {
           level_id: selectedLevel,
         });
         const requestList = res.data.data;
+				console.log(requestList);
+				// console.log('data'+requestList);
+				// console.log('data'+JSON.stringify(requestList));
         if (requestList.length > 0) {
           setRequests(pre => {
             return [
