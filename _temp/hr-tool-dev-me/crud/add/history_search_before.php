@@ -4,6 +4,34 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 $exception_feature = true;
 
+function checkResultOfRequest($keyword){
+    return DB::table('request')->where('name', $keyword)->get();
+}
+
+function checkResultOfCv($keyword){
+    return DB::table('cv')->where('fullname', $keyword)->get();
+}
+
+function callPage($keyword, $page, $user){
+    if ($page == 'manager') {
+        if(checkResultOfCv($keyword)){
+            addKeyword($user, $keyword, $page);  
+            
+            return true;
+        }
+    }
+    
+    if ($page == 'request') {
+        if(checkResultOfRequest($keyword)){
+            addKeyword($user, $keyword, $page);  
+            
+            return true;
+        }
+    }
+
+    return false;
+}
+
 function addKeyword($user, $keyword, $page){
     DB::table('history_search')->insert([
         'keyword' => $keyword,
@@ -17,6 +45,7 @@ $keyword_of_user = DB::table('history_search')->where('keyword', $data->keyword)
 // echo $keyword_of_user;
 // die();
 
+
 if(!empty($keyword_of_user)){
     $keyword_top = DB::table('history_search')->where('user_id', $data->user)->where('page', $data->page)->max('id');
 
@@ -24,12 +53,14 @@ if(!empty($keyword_of_user)){
     // print_r($keyword_top);
     // die();
     if($keyword_top != $keyword_of_user){
-        DB::table('history_search')->where('id', $keyword_of_user)->delete();
+        $check = callPage($data->keyword, $data->page, $data->user);
 
-        return addKeyword($data->user, $data->keyword, $data->page);
+        if($check){
+            DB::table('history_search')->where('id', $keyword_of_user)->delete();
+        }
     } 
 } else {
-    return addKeyword($data->user, $data->keyword, $data->page);
+    return callPage($data->keyword, $data->page, $data->user);
 }
 
 
