@@ -5,7 +5,10 @@ use Illuminate\Database\Capsule\Manager as DB;
 // $name='history_search';
 
 
-$name_user = 'thaontp';
+$name_user = $user->username;
+
+echo $name_user ;
+die('ok');
 $page = 'request';
 // $page = 'manager';
 

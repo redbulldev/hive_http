@@ -145,31 +145,6 @@ table: cv_probation
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-*Chuyển bước nhân tướng 2 về sau bước Review CV. Không yêu cầu điền bắt buộc - Phụ thuộc A Lê. 
-
-
-\\
-Số CV tham dự buổi phỏng vấn(step = 5)    
-Số CV pass phỏng vấn (step = 6)   
-Số UV được offer(step = 7)    
-Offer thành công (step = 8)   
-Tỉ lệ onboard/ tỉ lệ offer  
-Số người fail thử việc  (step = 10, status = 0)
-Danh sách UV đi làm (step = 9, cv.status = 2)
-
-
-===> code, data sẽ phải thay đổi ở màn `thống kê theo cv`, `quản lý cv với các bước step`
-
-`thống kê theo cv`
-https://staging-hrm.ossigroup.net/statistic/cv?from=2023-01-01&limit=10&page=1&to=2023-01-13
-
-
-`quản lý cv với các bước step`
-https://staging-hrm.ossigroup.net/cv/15635?limit=10&page=1
-
-
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -226,7 +201,55 @@ table: cv_history
 
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+*Chuyển bước nhân tướng 2 về sau bước Review CV. Không yêu cầu điền bắt buộc - Phụ thuộc A Lê. 
 
 
+\\
+Số CV tham dự buổi phỏng vấn(step = 5)    
+Số CV pass phỏng vấn (step = 6)   
+Số UV được offer(step = 7)    
+Offer thành công (step = 8)   
+Tỉ lệ onboard/ tỉ lệ offer  
+Số người fail thử việc  (step = 10, status = 0)
+Danh sách UV đi làm (step = 9, cv.status = 2)
+
+
+===> code, data sẽ phải thay đổi ở màn `thống kê theo cv`, `quản lý cv với các bước step`
+
+`thống kê theo cv`
+https://staging-hrm.ossigroup.net/statistic/cv?from=2023-01-01&limit=10&page=1&to=2023-01-13
+
+
+`quản lý cv với các bước step`
+https://staging-hrm.ossigroup.net/cv/15635?limit=10&page=1
+
+///
+*file
+crud/add/cv_review_interview.php
+
+crud/add/cv_offer.php
+crud/add/cv_onboard.php
+crud/add/cv_preoffer.php
+crud/add/cv_probation.php
+crud/add/interview_hr.php
+crud/add/interview_tech.php
+crud/add/review_cv.php
+crud/add/review_hr.php
+crud/add/review_physiognomy1.php
+crud/add/review_physiognomy2.php
+crud/add/to_interview.php
+
+///
+ở màn quản lý cv thay đổi ở bước 5 <-> 6 hoán đổi cho nhau tuong dương với status 5,6 trong table CV in csdl 
+node:  5(interview_hr, interview_tech) <-> 6(review_physiognomy)
+
+
+========================
+chiến lược update:
+- hiểu logic chức năng code, 
+- các file phải thay đổi theo chức năng khi các function liên quan được update 
+- đọc document của chức năng cần sửa 
 
 

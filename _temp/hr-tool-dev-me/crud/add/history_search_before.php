@@ -4,6 +4,14 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 $exception_feature = true;
 
+
+$name_user = $user->username;
+
+echo  $name_user;
+
+die('$username');
+
+
 function checkResultOfRequest($keyword){
     return DB::table('request')->where('name', $keyword)->get();
 }

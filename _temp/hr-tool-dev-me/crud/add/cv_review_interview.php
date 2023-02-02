@@ -134,7 +134,7 @@ if (!$olddata) {
     }
     //Thêm mới
     $id = DB::table($name)->insertGetId($newdata);
-    $idlog = historySave($user->username, 'insert', $name, $id);
+    $idlog = historySave($user->username, 'insert', $name, $id); // save lại history 
     $description = $user->username . ' thêm mới thông tin ' . $obj['title'];
 
     if ($name === 'interview_hr' || $name === 'interview_tech') {
@@ -149,12 +149,12 @@ if (!$olddata) {
     //Sửa
     unset($newdata['datecreate']);
     DB::table($name)->where($where)->update($newdata);
-    $idlog = historySave($user->username, 'update', $name, $olddata->id, $olddata);
+    $idlog = historySave($user->username, 'update', $name, $olddata->id, $olddata); // save lại history 
     $description = $user->username . ' cập nhật thông tin ' . $obj['title'];
     if ($datacv['status'] != 2) {
         $datacv['step'] = $obj['current'];
     } else if ($datacv['status'] == 2) {
-        $datacv = cvStep($cv);
+        $datacv = cvStep($cv);  //set step and status 
         if($datacv['step'] == $obj['current'] && $obj['current'] < 10  && $datacv['status']==2)
         {
             $datacv['step'] = $obj['current']+1;
@@ -162,7 +162,7 @@ if (!$olddata) {
         }
     }
     if ($name === 'interview_hr' || $name === 'interview_tech') {
-        $datacv['status'] = udCVInterview($cv);
+        $datacv['status'] = udCVInterview($cv); //get status table  
     }
     if($datacv['status'] <=10) DB::table('cv')->where('id', $cv->id)->update($datacv);
 }
