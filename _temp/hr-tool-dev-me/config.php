@@ -64,31 +64,31 @@ if (isset($domain)) {
 # echo 'SCRIPT_URI: '.$_SERVER['SCRIPT_URI'].'; ';
 
 // ket qua tuong ung
-------------------------------
-PHP_SELF: /index.php; 
-GATEWAY_INTERFACE: CGI/1.1; 
-SERVER_ADDR: 172.17.0.3; 
-SERVER_NAME: api-staging-hrm.ossigroup.net; 
-SERVER_SOFTWARE: Apache/2.4.53 (Debian); 
-SERVER_PROTOCOL: HTTP/1.1; 
-REQUEST_METHOD: GET; 
-REQUEST_TIME: 1675309864; 
-QUERY_STRING: limit=10&page=1; HTTP_ACCEPT: */*; <br />
-<b>Warning</b>:  Undefined array key "HTTP_ACCEPT_CHARSET" in <b>/var/www/html/config.php</b> on line <b>37</b><br />
-HTTP_ACCEPT_CHARSET: ; 
-HTTP_HOST: api-staging-hrm.ossigroup.net; 
-HTTP_REFERER: https://staging-hrm.ossigroup.net/; <br />
-<b>Warning</b>:  Undefined array key "HTTPS" in <b>/var/www/html/config.php</b> on line <b>43</b><br />
-HTTPS: ; 
-REMOTE_ADDR: 192.168.3.141; <br />
-<b>Warning</b>:  Undefined array key "REMOTE_HOST" in <b>/var/www/html/config.php</b> on line <b>47</b><br />
-REMOTE_HOST: ; REMOTE_PORT: 33324; SCRIPT_FILENAME: /var/www/html/index.php; 
-SERVER_ADMIN: webmaster@localhost; 
-SERVER_PORT: 80; 
-SERVER_SIGNATURE: <address>Apache/2.4.53 (Debian) Server at api-staging-hrm.ossigroup.net Port 80</address>;
-SCRIPT_NAME: /index.php; <br />
-<b>Warning</b>:  Undefined array key "SCRIPT_URI" in <b>/var/www/html/config.php</b> on line <b>61</b><br />
-SCRIPT_URI: ; ok
+// ------------------------------
+// PHP_SELF: /index.php; 
+// GATEWAY_INTERFACE: CGI/1.1; 
+// SERVER_ADDR: 172.17.0.3; 
+// SERVER_NAME: api-staging-hrm.ossigroup.net; 
+// SERVER_SOFTWARE: Apache/2.4.53 (Debian); 
+// SERVER_PROTOCOL: HTTP/1.1; 
+// REQUEST_METHOD: GET; 
+// REQUEST_TIME: 1675309864; 
+// QUERY_STRING: limit=10&page=1; HTTP_ACCEPT: */*; <br />
+// <b>Warning</b>:  Undefined array key "HTTP_ACCEPT_CHARSET" in <b>/var/www/html/config.php</b> on line <b>37</b><br />
+// HTTP_ACCEPT_CHARSET: ; 
+// HTTP_HOST: api-staging-hrm.ossigroup.net; 
+// HTTP_REFERER: https://staging-hrm.ossigroup.net/; <br />
+// <b>Warning</b>:  Undefined array key "HTTPS" in <b>/var/www/html/config.php</b> on line <b>43</b><br />
+// HTTPS: ; 
+// REMOTE_ADDR: 192.168.3.141; <br />
+// <b>Warning</b>:  Undefined array key "REMOTE_HOST" in <b>/var/www/html/config.php</b> on line <b>47</b><br />
+// REMOTE_HOST: ; REMOTE_PORT: 33324; SCRIPT_FILENAME: /var/www/html/index.php; 
+// SERVER_ADMIN: webmaster@localhost; 
+// SERVER_PORT: 80; 
+// SERVER_SIGNATURE: <address>Apache/2.4.53 (Debian) Server at api-staging-hrm.ossigroup.net Port 80</address>;
+// SCRIPT_NAME: /index.php; <br />
+// <b>Warning</b>:  Undefined array key "SCRIPT_URI" in <b>/var/www/html/config.php</b> on line <b>61</b><br />
+// SCRIPT_URI: ; ok
 
 
 

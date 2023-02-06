@@ -242,9 +242,10 @@ crud/add/review_physiognomy2.php
 crud/add/to_interview.php
 
 ///
-ở màn quản lý cv thay đổi ở bước 5 <-> 6 hoán đổi cho nhau tuong dương với status 5,6 trong table CV in csdl 
-node:  5(interview_hr, interview_tech) <-> 6(review_physiognomy)
-
+ở màn quản lý cv thay đổi ở bước 4 <- 6 hoán đổi cho nhau tuong dương với status 4,6 trong table CV in csdl 
+node:  
+4(to_interview) -> 5(interview_hr, interview_tech)
+5(interview_hr, interview_tech) -> 6(review_physiognomy)
 
 ========================
 chiến lược update:
@@ -252,4 +253,9 @@ chiến lược update:
 - các file phải thay đổi theo chức năng khi các function liên quan được update 
 - đọc document của chức năng cần sửa 
 
+///////////////////
+*phải update các file 
+
+/hr-tool-dev-me/crud/add/cv_review_interview.php
+/hr-tool-dev-me/model.php
 
