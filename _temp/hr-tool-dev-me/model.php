@@ -9,6 +9,8 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+require('./define.php');
+
 //Slim 
 function sendmail()
 {
@@ -91,16 +93,16 @@ function cvStep($cv) {
 	$step=0;
 	$datacv=['step'=>$step,'status'=>2];
 	$arrcheck = [
-		['name'=>'review_hr','current'=>1],
-		['name'=>'review_physiognomy','current'=>2,'where'=>['issecond'=>0]],
-		['name'=>'review_cv','current'=>3],
-		['name'=>'review_physiognomy','current'=>4,'where'=>['issecond'=>1]],
-		['name'=>'cv','current'=>5],
-		['name'=>['interview_tech','interview_hr'],'current'=>6],
-		['name'=>'cv_preoffer','current'=>7],
-		['name'=>'cv_offer','current'=>8],
-		['name'=>'cv_onboard','current'=>9],
-		['name'=>'cv_probation','current'=>10],
+		['name'=>'review_hr','current'=>CURRENT_REVIEW_HR],
+		['name'=>'review_physiognomy','current'=>CURRENT_REVIEW_PHYSIOGNOMY1,'where'=>['issecond'=>0]],
+		['name'=>'review_cv','current'=>CURRENT_REVIEW_CV],
+		['name'=>'review_physiognomy','current'=>CURRENT_REVIEW_PHYSIOGNOMY2,'where'=>['issecond'=>1]],
+		['name'=>'cv','current'=>CURRENT_TO_INTERVIEW],
+		['name'=>['interview_tech','interview_hr'],'current'=>CURRENT_INTERVIEW_TECH_HR],
+		['name'=>'cv_preoffer','current'=>CURRENT_CV_PREOFFER],
+		['name'=>'cv_offer','current'=>CURRENT_CV_OFFER],
+		['name'=>'cv_onboard','current'=>CURRENT_CV_ONBOARD],
+		['name'=>'cv_probation','current'=>CURRENT_CV_PROBATION],
 	];
 	foreach ($arrcheck as $item)
 	{
@@ -235,20 +237,20 @@ function postUrl($link, $data)
 
 function updateReport($request_id)
 {
-    $emp = DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where('step','>', 9)->selectRaw('GROUP_CONCAT(fullname) as title')->first();
+    $emp = DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where('step','>', CURRENT_CV_ONBOARD)->selectRaw('GROUP_CONCAT(fullname) as title')->first();
     DB::table('request')->where('isdelete',0)->where('id',$request_id)->update([
         'total_cv'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->count(),
 		'interview_cv'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where(function($query){
-			$query->orWhere('step','>',6);
+			$query->orWhere('step','>',CURRENT_INTERVIEW_TECH_HR);
 			$query->orWhere(function($query){
-				$query->where('step', 6)->where('status','<',3);
+				$query->where('step', CURRENT_INTERVIEW_TECH_HR)->where('status','<',3);
 			});
 		})->count(),
-        'pass_cv'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where('step', '>', 6)->count(),
-        'offer_cv'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where('step','>', 7)->count(),
-        'offer_success'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where('step', '>', 8)->count(),
-        'onboard_cv'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where('step','>', 9)->count(),
-        'fail_job'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where('step','>', 9)->where('status', 0)->count(),
+        'pass_cv'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where('step', '>', CURRENT_INTERVIEW_TECH_HR)->count(),
+        'offer_cv'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where('step','>', CURRENT_CV_PREOFFER)->count(),
+        'offer_success'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where('step', '>', CURRENT_CV_OFFER)->count(),
+        'onboard_cv'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where('step','>', CURRENT_CV_ONBOARD)->count(),
+        'fail_job'=>DB::table('cv')->where('isdelete',0)->where('request_id',$request_id)->where('step','>', CURRENT_CV_ONBOARD)->where('status', 0)->count(),
         'employees'=>json_encode(explode(',',isset($emp->title)?$emp->title:''))
     ]);
 }

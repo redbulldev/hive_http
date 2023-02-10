@@ -53,7 +53,16 @@ const CURRENT_CV_PROBATION = 10;
 
 
 
-
+// const CURRENT_REVIEW_HR = 1;
+// const CURRENT_REVIEW_PHYSIOGNOMY1 = 2;
+// const CURRENT_REVIEW_CV = 3;
+// const CURRENT_REVIEW_PHYSIOGNOMY2 = 4;	
+// const CURRENT_TO_INTERVIEW = 5;
+// const CURRENT_INTERVIEW_TECH_HR = 6;
+// const CURRENT_CV_PREOFFER = 7;
+// const CURRENT_CV_OFFER = 8;
+// const CURRENT_CV_ONBOARD = 9;
+// const CURRENT_CV_PROBATION = 10;
 
 // 'name'=>'review_hr','current'=>1],
 // 		['name'=>'review_physiognomy','current'=>2,'where'=>['issecond'=>0]],

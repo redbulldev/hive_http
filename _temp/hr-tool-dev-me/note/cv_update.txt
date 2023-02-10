@@ -1,0 +1,113 @@
+*chiến lược update database
+1. test update database local
+database: hr-tool-dev with docker
+
+2. update database server
+database: hr-tool-dev on server 
+
+3. update database server 
+database: hr-tool on server 
+
+*table `cv`
+- trước thay đổi
+'to_interview' => 4
+'interview_hr', 'interview_tech' => 5
+'review_physiognomy2' => 6
+
++ count step=4: 1 . id: [15624(0), 15479(1)]	
++ count step=5: 1 . id: [15493(0)]
++ count step=6: 2 . id: [15625(0), 15477(1)]
+
+
+- sau thay đổi
+'review_physiognomy2' => 4
+'to_interview' => 5
+'interview_hr', 'interview_tech' => 6
+
++ count step=4: 2 . id: [15625(0), 15477(1)]
++ count step=5: 1 . id: [15624(0), 15479]
++ count step=6: 1 . id: [15493]
+
+===> 
+'to_interview' => 4 ---> 'interview_hr', 'interview_tech' => 5
+'interview_hr', 'interview_tech' => 5  --->  'interview_hr', 'interview_tech' => 6
+'interview_hr', 'interview_tech' => 6  --->  'review_physiognomy2' => 4
+
+*các step update csdl with table `CV`
+0. thêm collumn  `name: changed`, `type: varchar`, `length: 50` 
+
+1. update 
+UPDATE cv 
+SET step = 5, changed = 'to_interview' WHERE step = 4 AND changed = '1' AND isdelete = 0;
+
+2. 
+UPDATE cv 
+SET step = 6, changed = 'interview' WHERE step = 5 AND changed = '1' AND isdelete = 0;
+
+3. 
+UPDATE cv 
+SET step = 4, changed = 'review_physiognomy2' WHERE step = 6 AND changed = '1' AND isdelete = 0;
+
+
+*revert update
+1. 
+UPDATE cv 
+SET step = 4, changed = '1' WHERE step = 5 AND changed = 'to_interview' AND isdelete = 0;
+
+2. 
+UPDATE cv 
+SET step = 5, changed = '1' WHERE step = 4 AND changed = 'interview' AND isdelete = 0;
+
+3. 
+UPDATE cv 
+SET step = 6, changed = '1' WHERE step = 4 AND changed = 'review_physiognomy2' AND isdelete = 0;
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+- cần thêm mới doccument cho các task mới, và update document cho các task đã có rồi nhưng có sự update 
+- \
+
+- trước thay đổi
+pre interview(to_interview) : step = 4
+inetrview(interview_hr, interview_tech): step = 5
+physiognomy2(review_physiognomy) : step = 6
+
+- sau thay đổi
+physiognomy2(review_physiognomy) : step = 4
+pre interview(to_interview) : step = 5
+inetrview(interview_hr, interview_tech): step = 6
+
+---------------
+- trước thay đổi
+interview_cv: Số CV tham dự buổi phỏng vấn  -> step = 5 && status < 3 or > 5
+pass_cv: Số CV pass phỏng vấn   -> step = 6 or > 6
+
+
+- sau thay đổi
+interview_cv: Số CV tham dự buổi phỏng vấn  -> (step = 6 && status < 3) or > 6 
+pass_cv: Số CV pass phỏng vấn   -> (step = 6  && status = 2) or > 6
+
+p/s: 
+cần định nghĩa lại interview_cv thì step bằng mấy 
+cần định nghĩa lại pass_cv thì step bằng mấy 
+
+
+
+
+
+
+
+
+
+
+
