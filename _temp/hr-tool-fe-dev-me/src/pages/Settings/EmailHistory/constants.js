@@ -28,7 +28,12 @@ export const cols = [
     dataIndex: 'datecreate',
     width: 200,
     render(value, record) {
-      const delayInSecond = record?.delay * 60 || 0;
+			console.log('value:')
+			console.log(value)
+			const delayInSecond = record?.delay * 60 || 0;
+			console.log(value
+        ? moment.unix(value + delayInSecond).format(DATE_TIME_FORMAT)
+        : '')
       return value
         ? moment.unix(value + delayInSecond).format(DATE_TIME_FORMAT)
         : '';

@@ -1,4 +1,6 @@
 crud\more\dashboard.php
+url: https://api-staging-hrm.ossigroup.net/v1/dashboard?from=2023-03-01&level_id=321-320-319-318-317-14-13-8-7-6-5-4-3&limit=10&page=1&position_id=685-680-664-684-675-674-673-670-668-662-661-660-643-642-683-663-650-649-648-682-667-665-645-644-681-666-679-672-671-669-678-676-647-646&to=2023-04-24
+
 - lọc data
 - join table 
 //start - chức năng "Bộ lọc thông tin:" - lọc theo level 
@@ -152,7 +154,7 @@ Ket qua: 'myfreetuts.net'
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \crud/edit/plan_before.php
-
+url: https://api-staging-hrm.ossigroup.net/v1/plan?from=2023-01&limit=10&page=1&to=2023-04
 
 if (isset($data->month) || isset($data->year)) {
     $old = DB::table($name)->where('id', $id)->first();
@@ -335,6 +337,22 @@ ex: https://api-staging-hrm.ossigroup.net/v1/cv?daterange=1669827600-1671209999&
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*crud\add\cv_review_interview.php
+
+- một step được chuyển sang step mới dựa vào status và step dữ liệu trả về 
+
+step: Bước CV: 0: new, 1: Hr review,2: nhân tướng 1, 3: CV review,4: To interview,5: Interview,6: Nhân tướng 2,7: Pre offer,8: Offer,9: OnBoard,10: Thử việc;9
+status: Trạng thái:0 Fail, 1 pedding, 2 Pass;0
+
+- khi một step được chuyển tiếp step tiếp theo khi 
++ status = 2
++ step+1
+
+- khi một step dừng lại ở bước đó khi 
++ status = 0, 1
++ step = step(hiện tại)
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 shared/where.php
 
@@ -357,3 +375,241 @@ shared/where.php
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\crud\add\request_before.php
+url: https://api-staging-hrm.ossigroup.net/v1/request?company_id=7-6-5-3&isauto=0&keyword=Tech&level_id=321-320-319-318&limit=10&page=1&position_id=664-684-674-675-683-663-650-649-645-644-679-672-681&priority=0-1-2-3&requestor_id=hungnv1-cuongph-phucnh-kientt-longnt2-chilk-longdv&status=0-1-2-3-5
+
+$setting = DB::table('setting')->where('id', 1)->first();
+if ($setting) {
+    $minalllow = time() + $setting->daybefore * 24 * 60 * 60;
+    $maxalllow = time() + $setting->dayafter * 24 * 60 * 60;
+    if ($current <= time()) {
+        throw new Exception('The selected time must be greater than the current time');
+    }
+
+    if ($current < $minalllow) {
+        throw new Exception('Time must be selected at least ' . $setting->daybefore . ' days');
+    }
+
+    if ($current > $maxalllow) {
+        throw new Exception('Time must be selected no more than ' . $setting->dayafter . ' days');
+    }
+} else {
+    throw new Exception('Please update setting before create request');
+}
+
+-------------------------
+- y/c khi một request được tạo ra 
+daybefore: 2
+dayafter: 90
++ daybefore: Gửi request trước số ngày;2 (daybefore<=request)
++ dayafter: Dealline request tối đa số ngày;90 (request<=daybefore)
+
+
+- 24 * 60 * 60: là thời của một ngày  
+- time() + $setting->daybefore * 24 * 60 * 60: là thời gian hiện tại cộng thêm số ngày(daybefore) được cài đặt.
+
+///////////////////////////////////////////////////////////////////
+\crud\edit\request_before.php
+
+if (isset($data->month) || isset($data->year)) {
+    $old= DB::table('request')->where(['id'=>$id,'isdelete'=>0])->first();
+    if ($old) {
+        $arr = explode('-',  $old->date);
+        $current = strtotime($data->year . '-' . $data->month . '-' . ($old->day > 0 ? $old->day : (!empty($arr[2]) ? $arr[2] : 30)) . ' 23:59:59');
+        $data->date = date('Y-m-d', $current);
+    }
+    $setting = DB::table('setting')->where('id', 1)->first();
+    if ($setting) {
+
+        $minalllow = time() + $setting->daybefore * 24 * 60 * 60;
+        $maxalllow = time() + $setting->dayafter * 24 * 60 * 60;
+
+        if ($current <= time()) {
+            throw new Exception('The selected time must be greater than the current time');
+        }
+
+        if ($current < $minalllow) {
+            throw new Exception('Time must be selected at least ' . $setting->daybefore . ' days');
+        }
+
+        if ($current > $maxalllow) {
+            throw new Exception('Time must be selected no more than ' . $setting->dayafter . ' days');
+        }
+    } else {
+        throw new Exception('Please update setting before create request');
+    }
+}
+
+---------------------------------
+$current = strtotime($data->year . '-' . $data->month . '-' . ($old->day > 0 ? $old->day : (!empty($arr[2]) ? $arr[2] : 30)) . ' 23:59:59');
+
+- đoạn code trên có thể giải thích như sau:
+1, 
+$date = "2023-04-14";
+$arr = explode('-',  $date);
+var_dump($arr);
+array(3) {
+  ...
+  [2] => string(2) "14"
+}
+
+2, 
+$current = strtotime("2023" . '-' . "04" . '-' . "14" . ' 23:59:59');
+echo $time = date("d/m/Y h:i:s A T", $current); 
+
+==> cuối cùng ta được dữ liệu: 14/04/2023 11:59:59 PM UTC
+
+- ngày tháng năm của request sửa khi chỉnh sửa phải phải nằm trong khoảng (daybefore<=request<=dayafter)
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\config.php
+
+if (isset($_SERVER['HTTP_HOST']) && !empty($_SERVER['HTTP_HOST'])) {
+    $domain = $_SERVER['HTTP_HOST'];
+} else {
+    $domain = 'localhost:3001';
+}
+
+$domain = str_replace(':','.',$domain);
+
+if (isset($domain)) {
+    try {
+        if($domain == 'localhost:3002') {
+            require __DIR__ . '/config.localhost.3002.php';
+        } elseif (file_exists(__DIR__ . '/config.' . $domain . '.php')) {   
+            require __DIR__ . '/config.' . $domain . '.php';
+        }
+    } catch (Exception $e) {}
+}
+
+--------------------
+address khi chưa phân giải: 192.168.1.132:7070/7071
+address khi đã phân giải: api-staging-hrm.ossigroup.net
+
+- hàm $_SERVER['HTTP_HOST'] sẽ lấy address chưa phân giải
+- đoạn code tiếp theo sẽ lấy $domain  để trỏ vào file cần lấy.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+DATABASE
+==============================================================================
+*triggers
+
+CREATE DEFINER=`root`@`%` TRIGGER `request_auto_update` BEFORE UPDATE ON `request` FOR EACH ROW BEGIN
+    IF OLD.isauto=1 THEN
+        SET NEW.target = NEW.onboard_cv;
+    END IF;
+    END
+
+
+
+==============================================================================
+*views
+
+DROP VIEW plan;
+CREATE VIEW plan AS select 
+    `request`.`id` AS `id`,
+    `request`.`author_id` AS `author_id`,
+    `request`.`requestor_id` AS `requestor_id`,
+    `request`.`decision_id` AS `decision_id`,
+    `request`.`position_id` AS `position_id`,
+    `request`.`typework_id` AS `typework_id`,
+    `request`.`assignee_id` AS `assignee_id`,
+    `request`.`levels` AS `levels`,
+    `request`.`assessment` AS `assessment`,
+    `request`.`target` AS `target`,
+    `request`.`languages` AS `languages`,
+    `request`.`priority` AS `priority`,
+    `request`.`day` AS `day`,
+    `request`.`month` AS `month`,
+    `request`.`year` AS `year`,
+    `request`.`date` AS `date`,
+    `request`.`deadline` AS `deadline`,
+    `request`.`total_cv` AS `total_cv`,
+    `request`.`interview_cv` AS `interview_cv`,
+    `request`.`pass_cv` AS `pass_cv`,
+    `request`.`offer_cv` AS `offer_cv`,
+    `request`.`offer_success` AS `offer_success`,
+    `request`.`onboard_cv` AS `onboard_cv`,
+    `request`.`fail_job` AS `fail_job`,
+    `request`.`employees` AS `employees`,
+    `request`.`sources` AS `sources`,
+    `request`.`description` AS `description`,
+    `request`.`jd` AS `jd`,
+    `request`.`datecreate` AS `datecreate`,
+    `request`.`datemodified` AS `datemodified`,
+    `request`.`status` AS `status`,
+    `request`.`isauto` AS `isauto`,
+    `request`.`isdelete` AS `isdelete` 
+from 
+(
+    #lấy ra request tương ứng từng positions 
+    (
+    `request` join `positions` 
+        on(
+            (
+                    (`positions`.`id` = `request`.`position_id`) 
+                and 
+                    (`positions`.`status` = 1) 
+                and 
+                    (`positions`.`isdelete` = 0)
+            )
+        )
+    ) 
+    # 
+    #lấy ra data với điều kiện: `department`.`id` = `positions`.`parent_id`
+    join `positions` `department` 
+        on(
+            (
+                    (`department`.`id` = `positions`.`parent_id`) 
+                and 
+                    (`department`.`status` = 1) 
+                and 
+                    (`department`.`isdelete` = 0)
+            )
+        )
+) 
+WHERE `request`.`id` IN (2,4)
+
+
+===> hr-tool
+id      author_id       requestor_id        decision_id     position_id     typework_id     assignee_id     isdelete
+2       trangpt         trangpt             NULL            249             20              NULL            1
+4       trangpt         lent                NULL            9               20              NULL            0
+
+
+===> hr-tool-dev
+null
+
+
+
+
+
+
+
+
+
+
+
+
+
+

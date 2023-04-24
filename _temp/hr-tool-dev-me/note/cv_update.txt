@@ -1,4 +1,5 @@
 *chiến lược update database
+*****hr-tool-dev*****
 1. test update database local
 database: hr-tool-dev with docker
 
@@ -34,33 +35,165 @@ database: hr-tool on server
 'interview_hr', 'interview_tech' => 6  --->  'review_physiognomy2' => 4
 
 *các step update csdl with table `CV`
-0. thêm collumn  `name: changed`, `type: varchar`, `length: 50` 
+0. thêm collumn  `name: changed`, 'default: 0, `type: varchar`, `length: 50` 
 
 1. update 
 UPDATE cv 
-SET step = 5, changed = 'to_interview' WHERE step = 4 AND changed = '1' AND isdelete = 0;
+SET step = 5, changed = 'to_interview' WHERE step = 4 AND changed = '0' AND isdelete = 0 AND datecreate <= xxx;
 
 2. 
 UPDATE cv 
-SET step = 6, changed = 'interview' WHERE step = 5 AND changed = '1' AND isdelete = 0;
+SET step = 6, changed = 'interview' WHERE step = 5 AND changed = '0' AND isdelete = 0 AND datecreate <= xxx;
 
 3. 
 UPDATE cv 
-SET step = 4, changed = 'review_physiognomy2' WHERE step = 6 AND changed = '1' AND isdelete = 0;
+SET step = 4, changed = 'review_physiognomy2' WHERE step = 6 AND changed = '0' AND isdelete = 0 AND datecreate <= xxx;
+
+xxx.
+UPDATE cv 
+SET changed = '1' WHERE changed = '0' AND isdelete = 0 AND datecreate <= xxx;
 
 
 *revert update
 1. 
 UPDATE cv 
-SET step = 4, changed = '1' WHERE step = 5 AND changed = 'to_interview' AND isdelete = 0;
+SET step = 4, changed = '0' WHERE step = 5 AND changed = 'to_interview' AND isdelete = 0 AND datecreate <= xxx;
 
 2. 
 UPDATE cv 
-SET step = 5, changed = '1' WHERE step = 4 AND changed = 'interview' AND isdelete = 0;
+SET step = 5, changed = '0' WHERE step = 6 AND changed = 'interview' AND isdelete = 0 AND datecreate <= xxx;
 
 3. 
 UPDATE cv 
-SET step = 6, changed = '1' WHERE step = 4 AND changed = 'review_physiognomy2' AND isdelete = 0;
+SET step = 6, changed = '0' WHERE step = 4 AND changed = 'review_physiognomy2' AND isdelete = 0 AND datecreate <= xxx;
+
+xxx.
+UPDATE cv 
+SET changed = '0' WHERE changed = '1' AND isdelete = 0 AND datecreate <= xxx;
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+*****hr-tool*****
+*table `cv`
+- trước thay đổi
+'to_interview' => 4
+'interview_hr', 'interview_tech' => 5
+'review_physiognomy2' => 6
+
+
+- sau thay đổi
+'review_physiognomy2' => 4
+'to_interview' => 5
+'interview_hr', 'interview_tech' => 6
+
+
+*các step update csdl with table `CV`
+0. thêm collumn  `name: changed`, 'default: 0, `type: varchar`, `length: 50` , `default: 0`
+
+1. update 
+UPDATE cv 
+SET step = 5, changed = 'to_interview' WHERE step = 4 AND changed = '0' AND isdelete = 0 AND datecreate <= 1678692401;
+
+2. 
+UPDATE cv 
+SET step = 6, changed = 'interview' WHERE step = 5 AND changed = '0' AND isdelete = 0 AND datecreate <= 1678692401;
+
+3. 
+UPDATE cv 
+SET step = 4, changed = 'review_physiognomy2' WHERE step = 6 AND changed = '0' AND isdelete = 0 AND datecreate <= 1678692401;
+
+xxx.
+UPDATE cv 
+SET changed = '1' WHERE changed = '0' AND isdelete = 0 AND datecreate <= 1678692401;
+
+
+*revert update
+1. 
+UPDATE cv 
+SET step = 4, changed = '0' WHERE step = 5 AND changed = 'to_interview' AND isdelete = 0 AND datecreate <= 1678692401;
+
+2. 
+UPDATE cv 
+SET step = 5, changed = '0' WHERE step = 6 AND changed = 'interview' AND isdelete = 0 AND datecreate <= 1678692401;
+
+3. 
+UPDATE cv 
+SET step = 6, changed = '0' WHERE step = 4 AND changed = 'review_physiognomy2' AND isdelete = 0 AND datecreate <= 1678692401;
+
+xxx.
+UPDATE cv 
+SET changed = '0' WHERE changed = '1' AND isdelete = 0 AND datecreate <= 1678692401;
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+0. add clolumn changed 
+alter table cv add column changed varchar(50) null default '0';
+
+*trước cập nhập 
+1. select count(*) from cv where step = 4 and isdelete = 0 and datecreate <= 1678692401
+result: 103
+
+2. select count(*) from cv where step = 5 and isdelete = 0 and datecreate <= 1678692401 
+result: 131
+
+3. select count(*) from cv where step = 6 and isdelete = 0 and datecreate <= 1678692401 
+result: 7
+
+
+
+*sau cập nhập 
+1. select count(*) from cv where step = 4 and isdelete = 0 and datecreate <= 1678692401
+result: 7
+
+2. select count(*) from cv where step = 5 and isdelete = 0 and datecreate <= 1678692401 
+result: 103
+
+3. select count(*) from cv where step = 6 and isdelete = 0 and datecreate <= 1678692401 
+result: 131
+
+
+
+
+//////////////////////////////////////////////////////////////////
+*điều kiện update csdl 
+- đưa website về trạng thái bảo trì 
+- đảm bảo không có bất kỳ request nào lên server database 
+- đảm bảo về khoảng thời gian hợp lý(fix bug)
+- 
+
+*dự kiến ngày 15/3/23 
+- 8h51' update csdl (30')
+- 9h21' anh nguyễn giang nam merge request (2h39')
+- 1h15' sử lý các vấn đề phát sinh (?)
+	+ tester test các chức năng mới trên produt sau khi merge code 
+	+ dev fix bug khi có vấn đề phát sinh 
+	+ đưa vào sử dụng (khi không phát sinh lỗi), dev tiếp tục fix bug (khi phát sinh lỗi)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -90,12 +223,12 @@ inetrview(interview_hr, interview_tech): step = 6
 ---------------
 - trước thay đổi
 interview_cv: Số CV tham dự buổi phỏng vấn  -> step = 5 && status < 3 or > 5
-pass_cv: Số CV pass phỏng vấn   -> step = 6 or > 6
+pass_cv: Số CV pass phỏng vấn   -> step > 5
 
 
 - sau thay đổi
 interview_cv: Số CV tham dự buổi phỏng vấn  -> (step = 6 && status < 3) or > 6 
-pass_cv: Số CV pass phỏng vấn   -> (step = 6  && status = 2) or > 6
+pass_cv: Số CV pass phỏng vấn   -> step > 6
 
 p/s: 
 cần định nghĩa lại interview_cv thì step bằng mấy 
@@ -108,6 +241,45 @@ cần định nghĩa lại pass_cv thì step bằng mấy
 
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+*view - yêu cầu 
+
+- Cột trạng thái - close, open, pending. Có close request thủ công - thay đổi tên trạng thái
+dev: thêm option thay đổi trạng thái 
+
+- Thêm mục list job bên cạnh tạo yêu cầu -> Hiển thị danh sách Job như 1 web
+dev: chưa hình dung ra cách triển khai 
 
 
+*view - Kế hoạch
+Thay thế field lọc: "Người đang xử lý" thành field "Công ty" 
+dev: trong table `CV` không có trường field "Công ty"  -> cần thêm vào table, có thểm update các chức năng crud `CV` 
 
+
+*view - Chuyển bước nhân tướng 2 về sau bước Review CV. Không yêu cầu điền bắt buộc - Phụ thuộc A Lê. 
+dev: sét lại trạng thái cho các step (ở trên)
+
+
+*view -  Hr review: Thêm mục checklist + mục survey - điền k bắt buộc => Mục đích (tổng hợp các thông tin quan trọng: năm sinh, mức lương kỳ vọng, time onboard, level tự đánh giá)
+dev: thêm mục checklist vào table `review_hr, mục survey (có thể thay thế bằng summary, notes được không?)
+
+
+*view - Trong các bước: 
+- Mục thông tin uv (tổng thể) cần "tự động" hiển thị tất cả các thông tin quan trọng: Năm sinh, fb, linkin, mức lương kỳ vọng, time onboard, level tự đánh giá. 
+dev: column nào có trong table thì res về cho fe, nếu không có phải thêm vào các table `...`
+
+- Mục thông tin uv (tổng thể) hiển thị không bắt buộc: Check background & Thông tin người Phỏng vấn đề xuất với UV.  Nhưng đã điền là "tự động" hiển thị
+dev: `background người Phỏng vấn gồm những thông tin gì?, người pv lấy từ đâu?`
+
+
+*Nhân tướng 2 cần thêm mục điền link Facebook, linkedIn,... 
+dev: không có cần thêm vào table `review_physiognomy`
+
+
+*view - Ở sau step interview. Thêm tính năng tự động gửi mail cảm ơn Phỏng vấn và mail phản hồi (thư cảm ơn ứng tuyển (khi UV Fail)) sau 3 - 7 ngày (prefer có nút, Hr thao tác thủ công). UV pass k cần tự động. 
+dev: chưa hình dung ra cách triên khai ở phía backend 
+
+
+*view - Favorite list => list or đánh dấu "*" để lọc sau này
+dev: ý tưởng như hôm qua 
+ 

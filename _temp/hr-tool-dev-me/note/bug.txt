@@ -1,0 +1,15 @@
+*nhập 2000 trong input ngày sinh phát sinh lỗi 
+#1292 - Incorrect date value: '2000' for column 'birthday' at row 1
+https://stackoverflow.com/questions/37292628/1292-incorrect-date-value-0000-00-00
+
+
+
+
+*connect tới máy lent
+smb://192.168.3.219/
+
+
+
+
+
+

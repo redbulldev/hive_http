@@ -1,0 +1,24 @@
+*interview_hr - dữ lại 
+cv_id, author_id, notes, salary_now, salary_want, onboard, status 
+
+
+*interview_tech
+cv_id, author_id, notes, level_id
+
+
+
+
+
+
+
+*mặt lợi - mặt hại (dữ nguyên)
+- tái sử dụng lại table cũ, dữ liệu cũ 
+- phức tạp về mặt config với config project như hiện tại 
+- update code nhiều (statistic, core, udCVInterview)
+- code khác với logic ban đầu, khó cho người sau
+
+*mặt hại - mặt hại (thay đổi)
+- dữ liệu cũ bị mất, phải migrate lại data 
+- rõ ràng về mặt dữ liệu 
+- update code nhiều (statistic, core, updateReport)
+

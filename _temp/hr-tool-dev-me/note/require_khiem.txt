@@ -259,3 +259,78 @@ chiến lược update:
 /hr-tool-dev-me/crud/add/cv_review_interview.php
 /hr-tool-dev-me/model.php
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+*HRT-910
+[Yêu cầu/Quản lý CV] Thêm chức năng Tiêu chí/checklist
+
+
+*template
+- có mẫu template chung(
+    + muẫ có sẽ - không có phép custom
+) 
+- có mẫu template riêng 
+    + cho phép custom
+
+- tạo request
+- khi tạo khi quest cho phép chọn
+    + mẫu template chung(không có phép custom, các tiêu chí được chọ sẵn)
+    + mẫu template riêng(cho phép custom, chỉ hiển thị các tiêu chí và các thành phần của tiêu chí chưa được chọn)
+
+- quản lý CV
+- hiện thị template với các tiêu chí và thành phần tiêu chí được chọn kèm theo phần luận với tùng tiêu chí 
+design:
+--------------------------------------------
+' criteria_a: thấp    cao^    trung bình : comment: tốt quá 
+' criteria_b: thấp    cao^    trung bình : comment: được
+' criteria_c: thấp    cao    trung bình^ : comment: cũng bình thường
+' criteria_d: thấp^    cao    trung bình : comment: không được tốt
+--------------------------------------------
+
+-----------------------
+*các table dự kiến(false)
+*criteria(tiêu chí)
+*criteria_elements(các thành phần tiêu chí)
+*set_criteria(đưa vào bộ(ex: sale, be, fe))
+*template_criteria(bảng trung gian giữa tempalte và criterial)
+*template(chứa các tiêu chí được đưa vào bộ)
+*template_default(tempalte mặc định)
+*template_custum(tempalte có thể custom)  
+*criteria_comment_template(bảng chứa khóa ngoại của comment với tiêu chí)
+*criteria_comment(chứa comment của các tiêu chí)
+
+
+--------------------------------------------
+--------------------------------------------
+*các table dự kiến()
+
+*criteria(tiêu chí)
+*criteria_elements(các thành phần tiêu chí)
+
+
+*criteria_group(đưa vào bộ(ex: sale, be, fe))
+id, name, status
+
+*template_criteria(bảng trung gian giữa tempalte và criterial)
+id, id_template, id_criteria, result(kết quả bộ tiêu chí)
+
+*template(chứa các tiêu chí được đưa vào bộ)
+id, id_criteria_group, name, status
+
+/template_result(chứa các chứ kết quả bộ tiêu chí)
+id, id_template, id_criteria, id_criteria_element, result
+
+*criteria_comment_template(bảng chứa khóa ngoại của comment với tiêu chí)
+id, id_criteria_comment, id_template
+
+*criteria_comment(chứa comment của các tiêu chí)
+id, id_template, id_criteria, comment, status
+
+
+
+
+
+
+
+
+
