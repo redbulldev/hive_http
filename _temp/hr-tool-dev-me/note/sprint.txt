@@ -1,0 +1,57 @@
+*interview_hr - dữ lại 
+cv_id, author_id, notes, salary_now, salary_want, onboard, status 
+
+
+*interview_tech
+cv_id, author_id, notes, level_id
+
+
+
+
+
+
+
+*mặt lợi - mặt hại (dữ nguyên)
+- tái sử dụng lại table cũ, dữ liệu cũ 
+- phức tạp về mặt config với config project như hiện tại 
+- update code nhiều (statistic, core, udCVInterview)
+- code khác với logic ban đầu, khó cho người sau
+
+*mặt hại - mặt hại (thay đổi)
+- dữ liệu cũ bị mất, phải migrate lại data 
+- rõ ràng về mặt dữ liệu 
+- update code nhiều (statistic, core, updateReport)
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+***Sprint 8***
+
+
+*positions
+id      parent_id   name
+1       0           production
+2       1           java
+
+*sử dụng table postions làm template thay thế  table template_request, 
+sử dụng postions(phòng ban) làm template thay thế table criteria_group
+sử dụng postions(vị trí) làm template thay thế table template_request
+
+
+- vấn đề sử dụng table postions làm template thay thế  table template_request là không nên
+lý do:
+1. làm cho mọi thứ phụ thuộc với nhau một cách một cách miễn cưỡng, một table khi này sẽ mang nhiều ý nghĩa  
+2. với vị trí là java thuộc phòng ban là production 
++ vị trí là java có thể là : 
+    + java-intern:+-, java-fesher:+-, java-junior:+-, java-midle:+-
+    + java-junior ở giai đoạn này, ở job này cần có kiến thức tương đối với fontend 
+    + java-junior ở giai đoạn khác, ở job này cần có kiến thức chuyên sâu với framework sprint đẻ với api, 
+    + ...
+
++ như vậy sẽ sinh ra rất nhiều vị trí ở màn hình vị trí cũng trái với ý nhĩa ban đầu của nó 
++ với những màn hình cần chọn vị trí sẽ show ra rất nhiều vị ví tương ứng với phòng ban của nó.
+

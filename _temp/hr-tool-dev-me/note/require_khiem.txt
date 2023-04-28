@@ -307,14 +307,14 @@ design:
 *criteria(tiêu chí)
 *criteria_elements(các thành phần tiêu chí)
 
-
+----------
 *criteria_group(đưa vào bộ(ex: sale, be, fe))
 id, name, status
 
 *template_criteria(bảng trung gian giữa tempalte và criterial)
 id, id_template, id_criteria, result(kết quả bộ tiêu chí)
 
-*template(chứa các tiêu chí được đưa vào bộ)
+*template_request(chứa các tiêu chí được đưa vào bộ)
 id, id_criteria_group, name, status
 
 /template_result(chứa các chứ kết quả bộ tiêu chí)

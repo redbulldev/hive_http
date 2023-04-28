@@ -9,7 +9,6 @@ if (isset($data->levels) && is_array($data->levels) && count($data->levels) > 0)
     }
 }
 
-
 if(!empty($data->template_id)){
     require('add_template.php');
 }
