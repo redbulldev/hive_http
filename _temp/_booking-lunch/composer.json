@@ -1,0 +1,22 @@
+{
+    "require": {
+        "slim/slim": "^3.12",
+        "tuupola/slim-jwt-auth": "^3.4",
+        "firebase/php-jwt": "^5.5.1.0",
+        "slim/twig-view": "^2.5",
+        "tuupola/base62": "^2.0",
+        "mathmarques/smarty-view": "^1.1",
+        "illuminate/database": "^5.8",
+        "illuminate/pagination": "^5.8",
+        "intervention/image": "^2.5",
+        "nicolab/php-ftp-client": "^1.5",
+        "vlucas/phpdotenv": "^5.2",
+        "phpmailer/phpmailer": "^6.3",
+        "google/apiclient": "^2.9",
+        "shuchkin/simplexlsxgen": "^1.0",
+        "shuchkin/simplexlsx": "^0.8.24",
+        "fakerphp/faker": "^1.19",
+        "andrewdyer/slim3-validator": "^0.1.1",
+        "phpoffice/phpspreadsheet": "^1.12"
+    }
+}

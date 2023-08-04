@@ -427,14 +427,17 @@ function throwError($container, $request, $array)
 }
 
 //Gửi tin nhắn Rocket chat
+// https://developer.rocket.chat/reference/api/rest-api/endpoints/core-endpoints
 function sendMessage($user,$msg)
 {
 	$domain= 'https://chat.ossigroup.net/';
 	//1. Login để tạo token: https://chat.ossigroup.net/api/v1/login
+	// https://developer.rocket.chat/reference/api/rest-api/endpoints/other-important-endpoints/authentication-endpoints/login
 	$login= post($domain.'api/v1/login',["username"=>'techqr',"password"=>'123!@#qwer']);
 	if($login && $login->status=='success')
 	{
 		//2. Tạo Direct message: https://chat.ossigroup.net/api/v1/im.create (Gửi Token)
+		// https://developer.rocket.chat/reference/api/rest-api/endpoints/core-endpoints/im-endpoints/create	
 		$userId = $login->data->userId;
 		$authToken = $login->data->authToken;
 		$create= post($domain.'api/v1/im.create',["username"=>$user],[ 'X-Auth-Token: '.$authToken, 'X-User-Id: '.$userId]);
@@ -444,11 +447,41 @@ function sendMessage($user,$msg)
 			if(!empty($rid))
 			{
 				//3. Gửi tin nhắn: https://chat.ossigroup.net/api/v1/chat.sendMessage (Gửi Token)
+				// https://developer.rocket.chat/reference/api/rest-api/endpoints/core-endpoints/chat-endpoints/send-message
 				$data=["message"=>["rid"=>$rid,"msg"=>$msg]];
 				$send = post($domain.'api/v1/chat.sendMessage',$data,[ 'X-Auth-Token: '.$authToken, 'X-User-Id: '.$userId]);
 			}
 		}
 	}
+}
+
+function sendMessageToMultipleMembers($arrMember, $msg, $user)
+{
+    $domain = 'https://chat.ossigroup.net/';
+
+    $login = post($domain . 'api/v1/login', ["username" => 'techqr', "password" => '123!@#qwer']);
+
+    if ($login && $login->status == 'success' && count($arrMember) > 1) {
+        $userId = $login->data->userId;
+
+        $authToken = $login->data->authToken;
+
+        foreach ($arrMember as $key => $member) {
+			if($user->username ===  $member){	
+				$create = post($domain . 'api/v1/im.create', ["username" => $member], ['X-Auth-Token: ' . $authToken, 'X-User-Id: ' . $userId]);
+
+				if ($create && !empty($create->room)) {
+					$rid = $create->room->rid;
+
+					if (!empty($rid)) {
+						$data = ["message" => ["rid" => $rid, "msg" => $msg]];
+
+						post($domain . 'api/v1/chat.sendMessage', $data, ['X-Auth-Token: ' . $authToken, 'X-User-Id: ' . $userId]);
+					}
+				}
+			} 
+        }
+    }
 }
 
 function post($link, $data,$header=[])

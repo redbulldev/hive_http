@@ -1,0 +1,15 @@
+{
+    "positions_title": "FE;string;Tên vị trí",
+    "level_title": "Junior;string;Tên level",
+    "target": "99;number;Tổng số Request",
+    "total_cv": "234;number;Tổng số lượng CV",
+    "interview_cv": "120;number;CV được tham gia phỏng vấn",
+    "pass_cv": "40;number;Số lượng CV pass phỏng vấn",
+    "offer_cv": "30;number;Số lượng CV tham gia offer",
+    "offer_success": "21;number;Số lượng CV offer thành công",
+    "onboard_cv": "15;number;Số lượng CV đi làm",
+    "fail_job": "4;number;Số lượng Fail thử việc",
+    "list_target": "2,3,2,5,3,5,2,...;string;Danh sách số lượng yêu cầu theo request",
+    "list_total": "10,30,15,25,13,30,...;string;Danh sách số lượng CV theo request",
+    "list_onboard": "HR - Senior-,HR - Middle+,Marketing - Junior-,Marketing - Middle,Designer - Junior-,Designer - Fresher,FE,...;string;Danh sách tên vị trí và level theo request"
+}

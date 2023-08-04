@@ -1,0 +1,42 @@
+*Để cập nhật phiên bản Slim Framework 3 lên 4, bạn cần làm theo các bước sau:
+
+I: thử nghiệm 
+1. thử nghiệm với một phiên bản nhỏ chạy slim framework 3 chạy ở local và nâng cấp lên slim framework 4
+2. viết docs, liệt kê các thành phần cần update, quan tâm
+
+II: 
+1. Cập nhật tệp composer.json:
+
+Mở tệp composer.json trong dự án của bạn.
+Tìm đến phần `"require"` và thay `"slim/slim": "^3.0"` bằng `"slim/slim": "^4.0"`.
+Lưu tệp composer.json.
+
+2. Cài đặt phiên bản mới nhất của Slim Framework:
+Mở terminal hoặc command prompt.
+Cd đến thư mục chứa dự án của bạn.
+Chạy lệnh `composer update`.
+
+3. Cập nhật cấu hình và mã nguồn của ứng dụng:
+Tìm và tìm thay đổi cấu hình trong dự án của bạn dựa trên các tài liệu cấu hình của Slim Framework 4.
+Kiểm tra các phần tử được sử dụng trong mã nguồn của bạn mà có sự thay đổi trong phiên bản 4 và sửa chúng tương ứng.
+
+4. Kiểm tra các tùy chọn khác:
+Xem qua tài liệu chính thức của Slim Framework để biết các thay đổi và cải tiến khác có liên quan đến việc cập nhật phiên bản.
+Kiểm tra các tài liệu hướng dẫn cập nhật phiên bản Slim Framework để biết những điều cần lưu ý trong quá trình cập nhật.
+
+
+
+
+
+///////////////////////////////////////////////////
+https://blog.chrisworfolk.com/upgrading-from-slim-3-to-slim-4
+
+https://blog.mansonthomas.com/2019/11/upgrade-slimframework-v3-to-v4-how-i.html
+
+
+
+
+
+
+
+

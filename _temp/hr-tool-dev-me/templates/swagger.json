@@ -8,7 +8,7 @@
     "produces": [
         "application\/json"
     ],
-    "host": "https:\/\/api-staging-hrm.ossigroup.net\/",
+    "host": "localhost:3002",
     "basePath": "\/",
     "paths": {
         "\/v1\/cv": {
@@ -17,9 +17,6 @@
                 "tags": [
                     "CV"
                 ],
-                "security": {
-                    "bearerAuth": []
-                },
                 "parameters": [
                     {
                         "name": "keyword",

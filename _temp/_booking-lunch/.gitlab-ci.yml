@@ -1,0 +1,53 @@
+stages:
+  - build
+  - deploy
+
+docker-build:
+  stage: build
+  only:
+    - main
+    - product
+  before_script:
+    - docker login -u $NEXUS_USER -p $NEXUS_PASS $NEXUS_REPO_ADDRESS;
+  script:
+    - docker build -t $NEXUS_REPO_ADDRESS/$IMAGE_NAME:$CI_COMMIT_BRANCH --file Dockerfile .;
+    - docker push $NEXUS_REPO_ADDRESS/$IMAGE_NAME:$CI_COMMIT_BRANCH;
+    - docker system prune -f;
+
+deploy-dev:
+  stage: deploy
+  only:
+    - main
+  variables:
+    GIT_STRATEGY: none
+  before_script:
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $SSH_SERVER_IP >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - ssh $SSH_USER@$SSH_SERVER_IP
+      "docker login -u $NEXUS_USER -p $NEXUS_PASS $NEXUS_REPO_ADDRESS;
+      docker service rm $SERVICE_NAME_DEV;
+      docker service create -d --mount type=bind,source=/mnt/db/booking-lunch/dev/uploads,target=/var/www/html/uploads --name $SERVICE_NAME_DEV --with-registry-auth --publish 8010:80 $NEXUS_REPO_ADDRESS/$IMAGE_NAME:$CI_COMMIT_BRANCH;"
+
+deploy-prod:
+  stage: deploy
+  only:
+    - product
+  variables:
+    GIT_STRATEGY: none
+  before_script:
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $SSH_SERVER_IP >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - ssh $SSH_USER@$SSH_SERVER_IP
+      "docker login -u $NEXUS_USER -p $NEXUS_PASS $NEXUS_REPO_ADDRESS;
+      docker service rm $SERVICE_NAME_PROD;
+      docker service create -d --mount type=bind,source=/mnt/db/booking-lunch/prod/uploads,target=/var/www/html/uploads --name $SERVICE_NAME_PROD --with-registry-auth --publish 8011:80 $NEXUS_REPO_ADDRESS/$IMAGE_NAME:$CI_COMMIT_BRANCH;"

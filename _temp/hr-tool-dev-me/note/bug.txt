@@ -9,7 +9,9 @@ https://stackoverflow.com/questions/37292628/1292-incorrect-date-value-0000-00-0
 smb://192.168.3.219/
 
 
-
+*sử lý conflict khi merge từ feature -> develop -> master trên hr-tool
+- ông hưng vì bản tính quan liêu mỗi lần làm tính năng mới chỉ push lên mà không pull về mà create branch mới từ branch local luôn 
+- vì vậy khi  merge từ develop -> master sảy ra conflict ()
 
 
 

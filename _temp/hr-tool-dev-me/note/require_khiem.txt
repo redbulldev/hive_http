@@ -328,9 +328,106 @@ id, id_template, id_criteria, comment, status
 
 
 
+--------------------------------------------
+--------------------------------------------
+
+--------------------------------------------
+--------------------------------------------
+*các table dự kiến() (new)
+
+*criteria(tiêu chí)
+id, id_criteria_group, name, description, status  
+
+*criteria_elements(các thành phần tiêu chí)
+id, id_criteria, name, status  
+
+----------
+*criteria_group(đưa vào bộ(ex: sale, be, fe))
+id, name, description, status
+
+*criteria_has_group(bảng trung gian của criteria_group và criteria)
+id, id_criteria_group, id_criteria
+
+*criteria_request(bảng trung gian của request và criteria)
+id, id_request, id_criteria, range(điểm cho từng tiêu chí)
+
+-----
+*cv_criteria_request
+id, id_request, id_criteria, range(điểm cho từng tiêu chí)
+
+-----------
+*criteria_review(bảng chứa khóa ngoại của comment với tiêu chí(QLCV))
+id, id_criteria, id_review, range
+
+*reviews(chứa comment của các tiêu chí)
+id, id_cv, review, status
 
 
 
 
 
 
+
+cv -> request -> criteria_request -> criteria -> criteria_review -> reviews
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+https://staging-hrm.ossigroup.net/request?limit=10&page=1
+1. cột trình độ 
+ví dụ muốn tuyển ứng viên từ level: intern, fesher, junior, middle,  sernior 
+thì chỉ cần hiển thị: intern -> sernior
+
+
+https://staging-hrm.ossigroup.net/cv/15687
+1. check cột
++ Người review Cv
++ Người phỏng vấn
+- xem có đúng không 
+2. phần  checklist setup như ý 
+
+
+
+
+https://staging-hrm.ossigroup.net/cv?limit=10&page=1&source_id=144
+1. thêm ô kiếm lọc ứng viên theo company 
+2. ô `Từ khoá` làm giống youtube
+
+
+
+
+https://j2.ossigroup.net/browse/HRT-928
+1. Nhân tướng 1 + Nhân tướng 2 cần điều chỉnh cách thức điền
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+*add follows 
+
+- với mỗi cv cho phép thêm các thành viên vào để theo dõi sự thay đổi của cv này 
+- mỗi khi có thành viên update status của cv thì sẽ gửi tin nhắn tới rocket chat của các thành viên được thêm vào theo dõi cv
+- 
+
+-----
+- page (group follows): list ra các cv có theo dõi bởi các thành viên 
+- khi vào cv nào đó có nút click cho phép thêm các thành viên vào page cv đó 
+-------------------------
+*database
+
+follower_group: cv_followers: 
+{
+    id,
+    id_cv,
+    author_id,
+    //members,
+    status
+}
+
+cv_has_follower_group:
+{
+    follower_group_id
+    user_id,
+}

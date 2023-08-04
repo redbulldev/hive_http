@@ -38,7 +38,7 @@ try {
             // Truy xuất trang tính đang hoạt động hiện tại
             $sheet = $spreadsheet->getActiveSheet(0);
 
-            // Duyệt qua từng Hàng của Trang tính với$sheet->getRowIterator()
+            // Duyệt qua từng Hàng của Trang tính với $sheet->getRowIterator()
             $list = $sheet->getRowIterator();
 
             // lấy Kích thước cột

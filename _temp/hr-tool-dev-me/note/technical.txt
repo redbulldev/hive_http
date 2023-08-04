@@ -133,11 +133,60 @@ function vi_to_en($str, $sep = ' ') {}
 $text = "Công nghệ, Cú pháp";
 echo vi_to_en($text); //Cong nghe Cu phap 
 echo vi_to_en($text, '-'); //Cong-nghe-Cu-phap 
+
+
+--------------------------
+--------------------------
+*chức năng check role-permission 
+
+- khi một người dùng login thì thông qua code trên in file require('./shared/getToken.php') 
+sẽ lấy toàn bộ permission của user đó(khi login success)
+ex:
+{
+    // ...
+    "cv": {
+        "add": true,
+        "all": true,
+        "edit": true,
+        "menu": true,
+        "view": true,
+        "delete": true,
+        "decision": true
+    },
+    "dashboard_cv": {
+        "menu": true,
+        "view": true
+    },
+    "email_history": {
+        "menu": true,
+        "view": true
+    },
+    "criteria_group": {
+        "add": true,
+        "all": true,
+        "edit": true,
+        "menu": true,
+        "view": true,
+        "delete": true
+    },
+    // ...
+}
+
+- tiếp đến sử dung checkRole($permission, $name, 'view/add/edit/delete')
++ giả sử  với permission
+"criteria_group": {
+    "view": true
+}
++ nếu user không có permission này thì sẽ bắn ra error
+ throw new Exception('Cannot access ' . $action . ' ' . $name);
++ nếu có sẽ vượt qua các kiểu check và sẽ không chạy vào đây
+if (!$ignoreUrl) checkRole($permission, $name, 'view/add/edit/delete');
+-> và sẽ đi tiếp theo từng function ứng với các action ex: crud/all.php; add.php; delete.php; delete-all.php; edit.php; one.php; 
+
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \crud/edit/language_after.php
-
 
 if (!empty($olddata) && !empty($olddata) && !empty($data->title)) {
     $oldtitle = $olddata->title;
